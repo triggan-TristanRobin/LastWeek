@@ -15,9 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.Android", "Mobile\Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile.iOS", "Mobile\Mobile.iOS\Mobile.iOS.csproj", "{EB563093-DD51-4CDD-8C42-8888EC92BF74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mobile", "Mobile\Mobile\Mobile.csproj", "{4D848D59-5A32-4017-8856-CDF9DF70C200}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mobile", "Mobile\Mobile\Mobile.csproj", "{4D848D59-5A32-4017-8856-CDF9DF70C200}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{ED578409-27AB-4786-BE4C-9190100B7C20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csproj", "{ED578409-27AB-4786-BE4C-9190100B7C20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataManager", "DataManager\DataManager.csproj", "{AEE48722-F686-43B3-97B4-020D143BD6C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataManager.Tests", "DataManager.Tests\DataManager.Tests.csproj", "{109FE620-98E7-451C-9524-AC97FF0A6C1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +109,30 @@ Global
 		{ED578409-27AB-4786-BE4C-9190100B7C20}.Release|iPhone.Build.0 = Release|Any CPU
 		{ED578409-27AB-4786-BE4C-9190100B7C20}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{ED578409-27AB-4786-BE4C-9190100B7C20}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Release|iPhone.Build.0 = Release|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{AEE48722-F686-43B3-97B4-020D143BD6C6}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhone.Build.0 = Release|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +143,8 @@ Global
 		{EB563093-DD51-4CDD-8C42-8888EC92BF74} = {CB138AA0-EF67-454B-8441-64C67C11A682}
 		{4D848D59-5A32-4017-8856-CDF9DF70C200} = {CB138AA0-EF67-454B-8441-64C67C11A682}
 		{ED578409-27AB-4786-BE4C-9190100B7C20} = {CB138AA0-EF67-454B-8441-64C67C11A682}
+		{AEE48722-F686-43B3-97B4-020D143BD6C6} = {8C26A26F-967B-4ACE-A1A3-6FEF7A876753}
+		{109FE620-98E7-451C-9524-AC97FF0A6C1A} = {8C26A26F-967B-4ACE-A1A3-6FEF7A876753}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DB6815D-090E-4A17-9D25-328BB36989AF}
