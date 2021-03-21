@@ -23,6 +23,9 @@
     <None Update="data\oneReview.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="data\doubleReviews.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="data\twoReviews.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

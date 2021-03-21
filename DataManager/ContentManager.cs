@@ -1,6 +1,8 @@
 ﻿using Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 
 namespace DataManager
@@ -28,12 +30,22 @@ namespace DataManager
             return reviews;
         }
 
-        /*public async Task<T> GetEntityAsync<T>(string slug) where T : Entity
+        public Review GetReview(Guid guid)
         {
-            return (await Http.GetFromJsonAsync<IEnumerable<T>>(Settings.GetFullUrl(typeof(T).Name))).SingleOrDefault(e => e.Slug == slug);
+            Review review = null;
+            if (File.Exists(filePath))
+            {
+                var fileStr = File.ReadAllText(filePath);
+                if (!string.IsNullOrEmpty(fileStr))
+                {
+                    var reviews = JsonSerializer.Deserialize<IEnumerable<Review>>(fileStr);
+                    review = reviews.Single(r => r.Guid == guid);
+                }
+            }
+            return review;
         }
 
-        public async Task<bool> PostEntityAsync<T>(string Slug, T entity) where T : Entity
+        /*public async Task<bool> PostEntityAsync<T>(string Slug, T entity) where T : Entity
         {
             var success = await Http.PostAsJsonAsync($"Commit/{typeof(T).Name}/{Slug}", entity);
 
