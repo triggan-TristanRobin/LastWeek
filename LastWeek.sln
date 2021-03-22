@@ -23,6 +23,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataManager", "DataManager\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataManager.Tests", "DataManager.Tests\DataManager.Tests.csproj", "{109FE620-98E7-451C-9524-AC97FF0A6C1A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model.Tests", "Model.Tests\Model.Tests.csproj", "{67352010-16B2-4509-945B-3EDA7DB67F9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,18 @@ Global
 		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhone.Build.0 = Release|Any CPU
 		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{109FE620-98E7-451C-9524-AC97FF0A6C1A}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Release|iPhone.Build.0 = Release|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{67352010-16B2-4509-945B-3EDA7DB67F9C}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +159,7 @@ Global
 		{ED578409-27AB-4786-BE4C-9190100B7C20} = {CB138AA0-EF67-454B-8441-64C67C11A682}
 		{AEE48722-F686-43B3-97B4-020D143BD6C6} = {8C26A26F-967B-4ACE-A1A3-6FEF7A876753}
 		{109FE620-98E7-451C-9524-AC97FF0A6C1A} = {8C26A26F-967B-4ACE-A1A3-6FEF7A876753}
+		{67352010-16B2-4509-945B-3EDA7DB67F9C} = {8C26A26F-967B-4ACE-A1A3-6FEF7A876753}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3DB6815D-090E-4A17-9D25-328BB36989AF}
