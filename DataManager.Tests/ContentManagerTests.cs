@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.IO.Abstractions.TestingHelpers;
+using DataManager.Tests;
 
 namespace DataManagerTests
 {
@@ -20,8 +22,9 @@ namespace DataManagerTests
         public void GetReviewsShouldReturnEmptyListIfFileNotExists()
         {
             // Arrange
+            var mockFileSystem = new MockFileSystem();
             string path = Path.Combine(Environment.CurrentDirectory, "data", "donotexist.json");
-            ContentManager contentManager = new ContentManager(path);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
 
             // Act
             List<Review> reviews = contentManager.GetReviews();
@@ -34,8 +37,11 @@ namespace DataManagerTests
         public void GetReviewsShouldReturnEmptyListIfFileIsEmpty()
         {
             // Arrange
-            string path = Path.Combine(Environment.CurrentDirectory, "data", "empty.json");
-            ContentManager contentManager = new ContentManager(path);
+            var mockFileSystem = new MockFileSystem();
+            var mockInputFile = new MockFileData(FileStrings.GetFile("empty"));
+            string path = @"C:\tmp\empty.json";
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
 
             // Act
             List<Review> reviews = contentManager.GetReviews();
@@ -51,8 +57,11 @@ namespace DataManagerTests
         public void GetReviewsShouldReturnStoredListIfFileIsCorrect(string fileName, int expectedCount)
         {
             // Arrange
-            string path = Path.Combine(Environment.CurrentDirectory, "data", $"{fileName}.json");
-            ContentManager contentManager = new ContentManager(path);
+            var mockFileSystem = new MockFileSystem();
+            var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
+            string path = $@"C:\tmp\{fileName}.json";
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
 
             // Act
             List<Review> reviews = contentManager.GetReviews();
@@ -65,8 +74,9 @@ namespace DataManagerTests
         public void GetReviewShouldReturnNullIfFileNotExists()
         {
             // Arrange
+            var mockFileSystem = new MockFileSystem();
             string path = Path.Combine(Environment.CurrentDirectory, "data", "donotexist.json");
-            ContentManager contentManager = new ContentManager(path);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
 
             // Act
             Review review = contentManager.GetReview(It.IsAny<Guid>());
@@ -79,8 +89,11 @@ namespace DataManagerTests
         public void GetReviewShouldReturnNullIfFileIsEmpty()
         {
             // Arrange
-            string path = Path.Combine(Environment.CurrentDirectory, "data", "empty.json");
-            ContentManager contentManager = new ContentManager(path);
+            var mockFileSystem = new MockFileSystem();
+            var mockInputFile = new MockFileData(FileStrings.GetFile("empty"));
+            string path = @"C:\tmp\empty.json";
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
 
             // Act
             Review review = contentManager.GetReview(It.IsAny<Guid>());
@@ -97,8 +110,11 @@ namespace DataManagerTests
         public void GetReviewShouldReturnReviewIfOnlyMatch(string fileName, string guidStr, ReviewStatus expectedStatus)
         {
             // Arrange
-            string path = Path.Combine(Environment.CurrentDirectory, "data", $"{fileName}.json");
-            ContentManager contentManager = new ContentManager(path);
+            var mockFileSystem = new MockFileSystem();
+            var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
+            string path = $@"C:\tmp\{fileName}.json";
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
             Guid guid = new Guid(guidStr);
 
             // Act
@@ -117,8 +133,12 @@ namespace DataManagerTests
         public void GetReviewShouldtThrowExceptionIfMultipleMatches()
         {
             // Arrange
-            string path = Path.Combine(Environment.CurrentDirectory, "data", "doubleReviews.json");
-            ContentManager contentManager = new ContentManager(path);
+            string fileName = "doubleReviews";
+            var mockFileSystem = new MockFileSystem();
+            var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
+            string path = $@"C:\tmp\{fileName}.json";
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
             Guid guid = new Guid("7176da9a-3670-4fe3-8d11-cb19d697620e");
 
             // Act
@@ -130,13 +150,47 @@ namespace DataManagerTests
         public void GetReviewShouldThrowExceptionWhenNoMatch()
         {
             // Arrange
-            string path = Path.Combine(Environment.CurrentDirectory, "data", "oneReview.json");
-            ContentManager contentManager = new ContentManager(path);
+            string fileName = "oneReview";
+            var mockFileSystem = new MockFileSystem();
+            var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
+            string path = $@"C:\tmp\{fileName}.json";
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
             Guid guid = new Guid("7176da9a-3670-4fe3-8d11-cb19d697620e");
 
             // Act
             // Assert
             Assert.Throws<InvalidOperationException>(() => contentManager.GetReview(guid));
         }
+
+        //[Test]
+        //public void PostReviewShouldThrowExceptionWhenNoMatch()
+        //{
+        //    // Arrange
+        //    string path = Path.Combine(Environment.CurrentDirectory, "data", "savedReview.json");
+        //    if (File.Exists(path))
+        //    {
+        //        File.Delete(path);
+        //    }
+        //    IContentManager contentManager = new ContentManager(path);
+        //    Review reviewToSave = new()
+        //    {
+        //        Guid = new Guid(),
+        //        EndDate = DateTime.MaxValue,
+        //        StartDate = DateTime.Today,
+        //        Status = ReviewStatus.Active,
+        //        Entries = new List<Entry>()
+        //    };
+
+        //    // Act
+        //    bool result = contentManager.PostReview(reviewToSave);
+
+        //    // Assert
+        //    Assert.IsTrue(result);
+        //    Assert.IsTrue(File.Exists(path));
+
+
+
+        //}
     }
 }

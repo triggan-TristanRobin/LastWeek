@@ -4,24 +4,29 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.IO.Abstractions;
 
 namespace DataManager
 {
     public class ContentManager : IContentManager
     {
         private readonly string filePath;
+        private readonly IFileSystem fileSystem;
 
-        public ContentManager(string filePath)
+        public ContentManager() : this(string.Empty, new FileSystem()) { }
+
+        public ContentManager(string filePath, IFileSystem fileSystem)
         {
             this.filePath = filePath;
+            this.fileSystem = fileSystem;
         }
 
         public  List<Review> GetReviews(int count = 0)
         {
             var reviews = new List<Review>();
-            if (File.Exists(filePath))
+            if (fileSystem.File.Exists(filePath))
             {
-                var fileStr = File.ReadAllText(filePath);
+                var fileStr = fileSystem.File.ReadAllText(filePath);
                 if (!string.IsNullOrEmpty(fileStr))
                 {
                     reviews = JsonSerializer.Deserialize<List<Review>>(fileStr);
@@ -33,9 +38,9 @@ namespace DataManager
         public Review GetReview(Guid guid)
         {
             Review review = null;
-            if (File.Exists(filePath))
+            if (fileSystem.File.Exists(filePath))
             {
-                var fileStr = File.ReadAllText(filePath);
+                var fileStr = fileSystem.File.ReadAllText(filePath);
                 if (!string.IsNullOrEmpty(fileStr))
                 {
                     var reviews = JsonSerializer.Deserialize<IEnumerable<Review>>(fileStr);
