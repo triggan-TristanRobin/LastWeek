@@ -19,30 +19,31 @@ namespace Model
         {
             if (obj is Review review)
             {
-                return this.Guid == review.Guid;
-                //foreach (var prop in typeof(Review).GetProperties())
-                //{
-                //    if (prop.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
-                //    {
-                //        IEnumerator rightEnumerator = (prop.GetValue(this) as IEnumerable).GetEnumerator();
-                //        rightEnumerator.Reset();
-                //        foreach (object leftItem in prop.GetValue(review) as IEnumerable)
-                //        {
-                //            // unequal amount of items
-                //            if (!rightEnumerator.MoveNext())
-                //                return false;
-                //            else
-                //            {
-                //                if (!leftItem.Equals(rightEnumerator.Current))
-                //                    return false;
-                //            }
-                //        }
-                //    }
-                //    else if (!prop.GetValue(this).Equals(prop.GetValue(review)))
-                //    {
-                //        return false;
-                //    }
-                //}
+                foreach (var prop in typeof(Review).GetProperties())
+                {
+                    var property = prop.GetValue(this);
+                    var toCompareProperty = prop.GetValue(review);
+                    if (property != null && !property.Equals(toCompareProperty))
+                    {
+                        if (prop.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(prop.PropertyType))
+                        {
+                            IEnumerator rightEnumerator = (property as IEnumerable).GetEnumerator();
+                            rightEnumerator.Reset();
+                            foreach (object leftItem in toCompareProperty as IEnumerable)
+                            {
+                                if (!rightEnumerator.MoveNext() || !leftItem.Equals(rightEnumerator.Current))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+                return true;
             }
             return false;
         }
