@@ -50,6 +50,19 @@ namespace DataManager
             return review;
         }
 
+        public bool PostReview(Review reviewToSave)
+        {
+            var reviews = GetReviews();
+            if (!reviews.Any(r => r.Guid == reviewToSave.Guid))
+            {
+                reviews.Add(reviewToSave);
+                var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
+                fileSystem.File.WriteAllText(filePath, jsonReview);
+                return true;
+            }
+            return false;
+        }
+
         /*public async Task<bool> PostEntityAsync<T>(string Slug, T entity) where T : Entity
         {
             var success = await Http.PostAsJsonAsync($"Commit/{typeof(T).Name}/{Slug}", entity);

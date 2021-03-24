@@ -163,34 +163,97 @@ namespace DataManagerTests
             Assert.Throws<InvalidOperationException>(() => contentManager.GetReview(guid));
         }
 
-        //[Test]
-        //public void PostReviewShouldThrowExceptionWhenNoMatch()
-        //{
-        //    // Arrange
-        //    string path = Path.Combine(Environment.CurrentDirectory, "data", "savedReview.json");
-        //    if (File.Exists(path))
-        //    {
-        //        File.Delete(path);
-        //    }
-        //    IContentManager contentManager = new ContentManager(path);
-        //    Review reviewToSave = new()
-        //    {
-        //        Guid = new Guid(),
-        //        EndDate = DateTime.MaxValue,
-        //        StartDate = DateTime.Today,
-        //        Status = ReviewStatus.Active,
-        //        Entries = new List<Entry>()
-        //    };
+        [Test]
+        public void PostReviewShouldCreateJsonfileWithReviewIfNoExist()
+        {
+            // Arrange
+            string fileName = "savedReview";
+            var mockFileSystem = new MockFileSystem();
+            mockFileSystem.AddDirectory(@"C:\tmp\");
+            string path = $@"C:\tmp\{fileName}.json";
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            Guid guid = new Guid("7176da9a-3670-4fe3-8d11-cb19d697620e");
+            Review reviewToSave = new()
+            {
+                Guid = guid,
+                EndDate = DateTime.MaxValue,
+                StartDate = DateTime.Today,
+                Status = ReviewStatus.Active,
+                Entries = new List<Entry>()
+            };
 
-        //    // Act
-        //    bool result = contentManager.PostReview(reviewToSave);
+            // Act
+            bool result = contentManager.PostReview(reviewToSave);
+            Review savedReview = contentManager.GetReviews()[0];
 
-        //    // Assert
-        //    Assert.IsTrue(result);
-        //    Assert.IsTrue(File.Exists(path));
+            // Assert
+            Assert.IsTrue(result);
+            Assert.IsTrue(mockFileSystem.File.Exists(path));
+            Assert.AreEqual(reviewToSave, savedReview);
+        }
 
+        [Test]
+        public void PostReviewShouldAddReviewToFileIfExistsWithoutSameReview()
+        {
+            // Arrange
+            string fileName = "oneReview";
+            var mockFileSystem = new MockFileSystem();
+            string path = $@"C:\tmp\{fileName}.json";
+            var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            Guid guid = new("7176da9a-3670-4fe3-8d11-cb19d697620e");
+            Review reviewToSave = new()
+            {
+                Guid = guid,
+                EndDate = DateTime.MaxValue,
+                StartDate = DateTime.Today,
+                Status = ReviewStatus.Active,
+                Entries = new List<Entry>()
+            };
 
+            // Act
+            bool result = contentManager.PostReview(reviewToSave);
+            List<Review> reviews = contentManager.GetReviews();
+            Review savedReview = reviews.FirstOrDefault(r => r.Guid == guid);
 
-        //}
+            // Assert
+            Assert.IsTrue(result);
+            Assert.IsTrue(mockFileSystem.File.Exists(path));
+            Assert.AreEqual(2, reviews.Count);
+            Assert.AreEqual(reviewToSave, savedReview);
+        }
+
+        [Test]
+        public void PostReviewShouldNotAddReviewToFileIfExistsWithSameReview()
+        {
+            // Arrange
+            string fileName = "twoReviews";
+            var mockFileSystem = new MockFileSystem();
+            string path = $@"C:\tmp\{fileName}.json";
+            var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
+            mockFileSystem.AddFile(path, mockInputFile);
+            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            Guid guid = new("7176da9a-3670-4fe3-8d11-cb19d697620e");
+            Review reviewToSave = new()
+            {
+                Guid = guid,
+                EndDate = DateTime.MaxValue,
+                StartDate = DateTime.Today,
+                Status = ReviewStatus.Active,
+                Entries = new List<Entry>()
+            };
+
+            // Act
+            bool result = contentManager.PostReview(reviewToSave);
+            List<Review> reviews = contentManager.GetReviews();
+            Review savedReview = reviews.FirstOrDefault(r => r.Guid == guid);
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.IsTrue(mockFileSystem.File.Exists(path));
+            Assert.AreEqual(2, reviews.Count);
+            Assert.AreEqual(DateTime.Parse("2009-02-15"), savedReview.EndDate);
+        }
     }
 }
