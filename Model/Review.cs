@@ -47,5 +47,19 @@ namespace Model
             }
             return false;
         }
+
+        public bool Update(Review updateDate)
+        {
+            if (updateDate.Guid != this.Guid)
+            {
+                return false;
+            }
+            foreach (var prop in typeof(Review).GetProperties())
+            {
+                var updatedProperty = prop.GetValue(updateDate);
+                prop.SetValue(this, updatedProperty);
+            }
+            return true;
+        }
     }
 }

@@ -267,5 +267,63 @@ namespace Model.Tests
             // Assert
             Assert.IsFalse(areEqual);
         }
+
+        [Test]
+        public void UpdateShouldChangeAllProperties()
+        {
+            // Arrange
+            Review firstReview = new()
+            {
+                Guid = Guid.NewGuid(),
+                EndDate = DateTime.MaxValue,
+                StartDate = DateTime.Today,
+                Status = ReviewStatus.Active,
+                Entries = new List<Entry>()
+            };
+            Review secondReview = new()
+            {
+                Guid = firstReview.Guid,
+                EndDate = DateTime.Today,
+                StartDate = DateTime.MinValue,
+                Status = ReviewStatus.Validated,
+                Entries = new List<Entry>() { new RangeEntry() }
+            };
+
+            // Act
+            bool result = firstReview.Update(secondReview);
+
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(firstReview, secondReview);
+        }
+
+        [Test]
+        public void UpdateShouldChangeNothingIfDifferentGuid()
+        {
+            // Arrange
+            Review firstReview = new()
+            {
+                Guid = Guid.NewGuid(),
+                EndDate = DateTime.MaxValue,
+                StartDate = DateTime.Today,
+                Status = ReviewStatus.Active,
+                Entries = new List<Entry>()
+            };
+            Review secondReview = new()
+            {
+                Guid = Guid.NewGuid(),
+                EndDate = DateTime.Today,
+                StartDate = DateTime.MinValue,
+                Status = ReviewStatus.Validated,
+                Entries = new List<Entry>() { new RangeEntry() }
+            };
+
+            // Act
+            bool result = firstReview.Update(secondReview);
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.AreNotEqual(firstReview, secondReview);
+        }
     }
 }

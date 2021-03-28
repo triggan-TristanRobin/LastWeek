@@ -63,15 +63,14 @@ namespace DataManager
             return false;
         }
 
-        public bool PutReview(Review reviewToSave)
+        public bool PutReview(Review reviewToUpdate)
         {
             if (fileSystem.File.Exists(filePath))
             {
                 var reviews = GetReviews();
-                if (reviews.Any(r => r.Guid == reviewToSave.Guid))
+                if (reviews.Any(r => r.Guid == reviewToUpdate.Guid))
                 {
-                    var rev = reviews.Single(r => r.Guid == reviewToSave.Guid);
-                    reviews[reviews.IndexOf(rev)] = reviewToSave;
+                    reviews.Single(r => r.Guid == reviewToUpdate.Guid).Update(reviewToUpdate);
                     var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
                     fileSystem.File.WriteAllText(filePath, jsonReview);
                     return true;
@@ -80,29 +79,5 @@ namespace DataManager
             }
             throw new FileNotFoundException();
         }
-
-        /*public async Task<bool> PostEntityAsync<T>(string Slug, T entity) where T : Entity
-        {
-            var success = await Http.PostAsJsonAsync($"Commit/{typeof(T).Name}/{Slug}", entity);
-
-            return success.IsSuccessStatusCode;
-        }
-
-        public async Task<bool> UpdateProjectAsync(string slug, Update update)
-        {
-            var savedProject = await GetEntityAsync<Project>(slug);
-            savedProject.Updates.Add(update);
-            return await PostEntityAsync(slug, savedProject);
-        }
-
-        public async Task<int> StarEntity<T>(string slug) where T : Entity
-        {
-            var entity = await GetEntityAsync<T>(slug);
-            entity.Stars++;
-            var success = await FunctionsHttp.GetAsync(Settings.GetFullUrl(typeof(T).Name, entity.Slug, "Star", local: false));
-
-            Console.WriteLine("Star result: " + await success.Content.ReadAsStringAsync());
-            return int.Parse(await success.Content.ReadAsStringAsync());
-        }*/
     }
 }
