@@ -21,7 +21,7 @@ namespace DataManager
             this.fileSystem = fileSystem;
         }
 
-        public  List<Review> GetReviews(int count = 0)
+        public List<Review> GetReviews(int count = 0)
         {
             var reviews = new List<Review>();
             if (fileSystem.File.Exists(filePath))
@@ -50,34 +50,37 @@ namespace DataManager
             return review;
         }
 
-        public bool PostReview(Review reviewToSave)
+        private bool Any(Review review)
         {
-            var reviews = GetReviews();
-            if (!reviews.Any(r => r.Guid == reviewToSave.Guid))
-            {
-                reviews.Add(reviewToSave);
-                var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
-                fileSystem.File.WriteAllText(filePath, jsonReview);
-                return true;
-            }
-            return false;
+            return GetReviews().Any(r => r.Guid == review.Guid);
         }
 
-        public bool PutReview(Review reviewToUpdate)
+        private void PostReview(Review reviewToSave)
         {
-            if (fileSystem.File.Exists(filePath))
+            var reviews = GetReviews();
+            reviews.Add(reviewToSave);
+            var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
+            fileSystem.File.WriteAllText(filePath, jsonReview);
+        }
+
+        private void PutReview(Review reviewToUpdate)
+        {
+            var reviews = GetReviews();
+            reviews.Single(r => r.Guid == reviewToUpdate.Guid).Update(reviewToUpdate);
+            var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
+            fileSystem.File.WriteAllText(filePath, jsonReview);
+        }
+
+        public void UpsertReview(Review reviewToSave)
+        {
+            if (Any(reviewToSave))
             {
-                var reviews = GetReviews();
-                if (reviews.Any(r => r.Guid == reviewToUpdate.Guid))
-                {
-                    reviews.Single(r => r.Guid == reviewToUpdate.Guid).Update(reviewToUpdate);
-                    var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
-                    fileSystem.File.WriteAllText(filePath, jsonReview);
-                    return true;
-                }
-                return false;
+                PutReview(reviewToSave);
             }
-            throw new FileNotFoundException();
+            else
+            {
+                PostReview(reviewToSave);
+            }
         }
     }
 }

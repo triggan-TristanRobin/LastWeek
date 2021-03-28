@@ -9,7 +9,6 @@ namespace DataManager
     {
         List<Review> GetReviews(int count = 0);
         Review GetReview(Guid guid);
-        bool PostReview(Review reviewToSave);
-        bool PutReview(Review reviewToSave);
+        void UpsertReview(Review reviewToSave);
     }
 }
