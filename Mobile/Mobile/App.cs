@@ -19,7 +19,7 @@ namespace Mobile
                 .Build();
 
             MainPage = new ContentPage();
-            host.AddComponent<HelloWorld>(parent: MainPage);
+            host.AddComponent<DateScroller>(parent: MainPage);
         }
 
         protected override void OnStart()
