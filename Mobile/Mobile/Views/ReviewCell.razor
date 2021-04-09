@@ -1,0 +1,25 @@
+﻿<Frame CornerRadius="10" BackgroundColor="Color.White">
+    <TapGestureRecognizer OnTapped="Edit" />
+    <StackLayout Orientation="StackOrientation.Horizontal" HorizontalOptions="LayoutOptions.CenterAndExpand" VerticalOptions="LayoutOptions.CenterAndExpand">
+
+        <Label Text="@($"Review from {Review.StartDate.Date.ToString()}")"
+               FontAttributes="FontAttributes.Bold"
+               VerticalTextAlignment="TextAlignment.Center" />
+        <Label Text="@(Review.Status.ToString())"
+               FontAttributes="FontAttributes.Bold"
+               VerticalTextAlignment="TextAlignment.Center" />
+    </StackLayout>
+</Frame>
+
+@code {
+    [Parameter]
+    public Review Review { get; set; }
+    [Parameter]
+    public EventCallback<Review> OnClick { get; set; }
+    void Edit()
+    {
+        Console.WriteLine("Clicked on review cell");
+        if (OnClick.HasDelegate)
+            OnClick.InvokeAsync(Review);
+    }
+}

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.MobileBlazorBindings;
 using System;
 using Xamarin.Essentials;
@@ -15,11 +16,12 @@ namespace Mobile
                 {
                     // Register app-specific services
                     //services.AddSingleton<AppState>();
+                    services.AddSingleton<ShellNavigationManager>();
                 })
                 .Build();
 
             MainPage = new ContentPage();
-            host.AddComponent<DateScroller>(parent: MainPage);
+            host.AddComponent<AppShell>(parent: this);
         }
 
         protected override void OnStart()

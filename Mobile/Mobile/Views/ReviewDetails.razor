@@ -1,0 +1,19 @@
+﻿@page "/review/{ReviewId}"
+
+<ContentPage BackgroundColor="@Color.FromHex("96d1ff")">
+    <ScrollView>
+        <StackLayout>
+            <Label Text="@Review.Status.ToString()"></Label>
+            <Label Text="@Review.StartDate.Date.ToString()"></Label>
+            <Label Text="@Review.EndDate.Date.ToString()"></Label>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
+
+@code {
+    Review Review;
+    [Parameter]
+    public Guid ReviewId
+    {
+        set => Review = new Review();
+    } }
