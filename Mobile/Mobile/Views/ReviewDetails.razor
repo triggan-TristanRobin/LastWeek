@@ -1,19 +1,26 @@
-﻿@page "/review/{ReviewId}"
-
-<ContentPage BackgroundColor="@Color.FromHex("96d1ff")">
-    <ScrollView>
-        <StackLayout>
-            <Label Text="@Review.Status.ToString()"></Label>
-            <Label Text="@Review.StartDate.Date.ToString()"></Label>
-            <Label Text="@Review.EndDate.Date.ToString()"></Label>
-        </StackLayout>
-    </ScrollView>
+﻿<ContentPage @ref="contentPage">
+    <StackLayout>
+        <Label Text="Review"></Label>
+        <Label Text="@Review.Status.ToString()"></Label>
+        <Label Text="@Review.StartDate.Date.ToString()"></Label>
+        <Label Text="@Review.EndDate.Date.ToString()"></Label>
+        <Button OnClick="Save">Save</Button>
+    </StackLayout>
 </ContentPage>
 
 @code {
-    Review Review;
+    Microsoft.MobileBlazorBindings.Elements.ContentPage contentPage;
     [Parameter]
-    public Guid ReviewId
+    public Review Review { get; set; }
+
+    protected override void OnInitialized()
     {
-        set => Review = new Review();
-    } }
+        Console.WriteLine("I'm in the good place");
+    }
+
+    public async Task Save()
+    {
+        Console.WriteLine("Review saved!");
+        await contentPage.PopModalAsync();
+    }
+}

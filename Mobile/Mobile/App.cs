@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.MobileBlazorBindings;
+using Mobile.Views;
 using System;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -14,14 +15,11 @@ namespace Mobile
             var host = MobileBlazorBindingsHost.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
-                    // Register app-specific services
-                    //services.AddSingleton<AppState>();
-                    services.AddSingleton<ShellNavigationManager>();
                 })
                 .Build();
 
-            MainPage = new ContentPage();
-            host.AddComponent<AppShell>(parent: this);
+            MainPage = new TabbedPage();
+            host.AddComponent<LastWeekApp>(parent: MainPage);
         }
 
         protected override void OnStart()

@@ -1,15 +1,11 @@
-﻿@inject ShellNavigationManager NavigationManager
-
-<ContentPage>
-    <ScrollView Orientation="ScrollOrientation.Vertical" HorizontalOptions="LayoutOptions.CenterAndExpand" BackgroundColor="Color.LightBlue">
-        <StackLayout Orientation="StackOrientation.Vertical">
-            @foreach (var review in Periods)
-            {
-                <ReviewCell Review="@review" OnClick="ReviewClicked" />
-            }
-        </StackLayout>
-    </ScrollView>
-</ContentPage>
+﻿<ScrollView Orientation="ScrollOrientation.Vertical" HorizontalOptions="LayoutOptions.CenterAndExpand" BackgroundColor="Color.LightBlue">
+    <StackLayout Orientation="StackOrientation.Vertical">
+        @foreach (var review in Periods)
+        {
+            <ReviewCell Review="@review" />
+        }
+    </StackLayout>
+</ScrollView>
 
 @code
 {
@@ -23,11 +19,5 @@
             date = date.AddDays(-1);
             Periods.Add(new Review { StartDate = date, Entries = new List<Model.Entry>() });
         }
-    }
-
-    async Task ReviewClicked(Review review)
-    {
-        Console.WriteLine($"Clicked on review cell from {review.StartDate}");
-        await NavigationManager.NavigateToAsync($"/review/{review.Guid}");
     }
 }

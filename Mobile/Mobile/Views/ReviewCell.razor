@@ -1,4 +1,4 @@
-﻿<Frame CornerRadius="10" BackgroundColor="Color.White">
+﻿<Frame BackgroundColor="Color.White" Margin="10">
     <TapGestureRecognizer OnTapped="Edit" />
     <StackLayout Orientation="StackOrientation.Horizontal" HorizontalOptions="LayoutOptions.CenterAndExpand" VerticalOptions="LayoutOptions.CenterAndExpand">
 
@@ -8,18 +8,28 @@
         <Label Text="@(Review.Status.ToString())"
                FontAttributes="FontAttributes.Bold"
                VerticalTextAlignment="TextAlignment.Center" />
+        @*<i class="fas fa-check"></i>*@
     </StackLayout>
 </Frame>
 
+<ModalContainer @ref="reviewDetailsDialog" OnClosed="OnDetailsClosed">
+    <ReviewDetails Review="Review" />
+</ModalContainer>
+
 @code {
+    ModalContainer reviewDetailsDialog;
     [Parameter]
     public Review Review { get; set; }
-    [Parameter]
-    public EventCallback<Review> OnClick { get; set; }
+
     void Edit()
     {
         Console.WriteLine("Clicked on review cell");
-        if (OnClick.HasDelegate)
-            OnClick.InvokeAsync(Review);
+        reviewDetailsDialog.ShowDialog();
+    }
+
+    // NOTE: This method shouldn't be needed and is a temporary workaround
+    public void OnDetailsClosed()
+    {
+        reviewDetailsDialog.FinishClosingDialog();
     }
 }
