@@ -1,10 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Model
 {
     public class RangeEntry : Entry
     {
-        public Vector<int> Boundaries { get; set; }
-        public int Selected { get; set; }
+        public Range Boundaries { get; set; }
+        public Double Selected { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Model
     public class ChoiceEntry : Entry
     {
         public List<string> Choices { get; set; }
-        public List<string> Selected { get; set; }
+        public string Selected { get; set; }
     }
 }

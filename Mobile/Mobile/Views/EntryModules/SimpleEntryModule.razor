@@ -1,0 +1,16 @@
+﻿<StackLayout>
+    @foreach (var answer in Entry.Answers.Select((a, i) => new { Answer = a, Index = i }))
+    {
+        <Entry Placeholder="@Entry.Question" Text="@answer.Answer" TextChanged="@(e => Entry.Answers[answer.Index] = e)" />
+    }
+    <Button OnClick="AddAnswer">Add</Button>
+</StackLayout>
+
+@code {
+    [Parameter]
+    public SimpleEntry Entry { get; set; }
+    void AddAnswer()
+    {
+        Entry.Answers.Add(string.Empty);
+    }
+}

@@ -1,0 +1,23 @@
+﻿<StackLayout>
+    <Label Text="@Entry.Question"></Label>
+    @switch (Entry)
+    {
+        case ChoiceEntry entry:
+            <ChoiceEntryModule Entry="entry" />
+            break;
+        case RangeEntry entry:
+            <RangeEntryModule Entry="entry" />
+            break;
+        case SimpleEntry entry:
+            <SimpleEntryModule Entry="entry" />
+            break;
+        case TextEntry entry:
+            <TextEntryModule Entry="entry" />
+            break;
+    }
+</StackLayout>
+
+@code {
+    [Parameter]
+    public Model.Entry Entry { get; set; }
+}

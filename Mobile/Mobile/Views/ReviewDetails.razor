@@ -4,6 +4,10 @@
         <Label Text="@Review.Status.ToString()"></Label>
         <Label Text="@Review.StartDate.Date.ToString()"></Label>
         <Label Text="@Review.EndDate.Date.ToString()"></Label>
+        @foreach(var entry in Review.Entries)
+        {
+            <EntryTemplate Entry="@entry"/>
+        }
         <Button OnClick="Save">Save</Button>
     </StackLayout>
 </ContentPage>
@@ -12,11 +16,6 @@
     Microsoft.MobileBlazorBindings.Elements.ContentPage contentPage;
     [Parameter]
     public Review Review { get; set; }
-
-    protected override void OnInitialized()
-    {
-        Console.WriteLine("I'm in the good place");
-    }
 
     public async Task Save()
     {

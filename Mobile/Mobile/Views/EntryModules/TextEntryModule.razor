@@ -1,0 +1,8 @@
+﻿<StackLayout>
+    <Entry Placeholder="@Entry.Question" @bind-Text="@Entry.Answer" />
+</StackLayout>
+
+@code {
+    [Parameter]
+    public TextEntry Entry { get; set; }
+}

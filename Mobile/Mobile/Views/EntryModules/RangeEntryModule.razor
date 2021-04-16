@@ -1,0 +1,8 @@
+﻿<StackLayout>
+    <Slider Minimum="@Entry.Boundaries.Start.Value" Maximum="@Entry.Boundaries.End.Value" @bind-Value="@Entry.Selected"></Slider>
+</StackLayout>
+
+@code {
+    [Parameter]
+    public RangeEntry Entry { get; set; }
+}

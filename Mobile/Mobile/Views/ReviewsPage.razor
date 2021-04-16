@@ -14,10 +14,24 @@
     protected override void OnInitialized()
     {
         var date = DateTime.Today;
-        for (int i = 0; i < 50; i++)
+        Periods.Add(new Review
+        {
+            StartDate = date,
+            EndDate = date.AddDays(1),
+            Status = ReviewStatus.Active,
+            Entries = new List<Model.Entry>
+            {
+                new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
+                new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
+                new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
+                new TextEntry() { Answer = string.Empty, Question = "Next question?"}
+        }
+        }); ;
+
+        for (int i = 1; i < 50; i++)
         {
             date = date.AddDays(-1);
-            Periods.Add(new Review { StartDate = date, Entries = new List<Model.Entry>() });
+            Periods.Add(new Review { StartDate = date, EndDate = date.AddDays(1), Entries = new List<Model.Entry>() });
         }
     }
 }

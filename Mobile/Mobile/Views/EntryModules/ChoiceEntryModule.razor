@@ -1,0 +1,9 @@
+﻿<StackLayout>
+    <Picker ItemsSource="Entry.Choices" Title="Select answer" @bind-SelectedItem="Entry.Selected" >
+    </Picker>
+</StackLayout>
+
+@code {
+    [Parameter]
+    public ChoiceEntry Entry { get; set; }
+}
