@@ -9,41 +9,42 @@ using System.Linq;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using DataManager.Tests;
+using System.Threading.Tasks;
 
 namespace DataManagerTests
 {
     [TestFixture]
-    public class ContentManagerTests
+    public class FileContentManagerTests
     {
-        public IContentManager ContentManager { get; set; }
+        public IAsyncContentManager ContentManager { get; set; }
 
         [Test]
-        public void GetReviewsShouldReturnEmptyListIfFileNotExists()
+        public async Task GetReviewsShouldReturnEmptyListIfFileNotExists()
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             string path = Path.Combine(Environment.CurrentDirectory, "data", "donotexist.json");
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
 
             // Act
-            List<Review> reviews = contentManager.GetReviews();
+            List<Review> reviews = await contentManager.GetReviewsAsync();
 
             // Assert
             Assert.IsFalse(reviews.Any());
         }
 
         [Test]
-        public void GetReviewsShouldReturnEmptyListIfFileIsEmpty()
+        public async Task GetReviewsShouldReturnEmptyListIfFileIsEmpty()
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             var mockInputFile = new MockFileData(FileStrings.GetFile("empty"));
             string path = @"C:\tmp\empty.json";
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
 
             // Act
-            List<Review> reviews = contentManager.GetReviews();
+            List<Review> reviews = await contentManager.GetReviewsAsync();
 
             // Assert
             Assert.IsFalse(reviews.Any());
@@ -53,71 +54,71 @@ namespace DataManagerTests
         [TestCase("oneReview", 1)]
         [TestCase("twoReviews", 2)]
         [TestCase("tenReviews", 10)]
-        public void GetReviewsShouldReturnStoredListIfFileIsCorrect(string fileName, int expectedCount)
+        public async Task GetReviewsShouldReturnStoredListIfFileIsCorrect(string fileName, int expectedCount)
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
             string path = $@"C:\tmp\{fileName}.json";
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
 
             // Act
-            List<Review> reviews = contentManager.GetReviews();
+            List<Review> reviews = await contentManager.GetReviewsAsync();
 
             // Assert
             Assert.AreEqual(expectedCount, reviews.Count());
         }
 
         [Test]
-        public void GetReviewShouldReturnNullIfFileNotExists()
+        public async Task GetReviewShouldReturnNullIfFileNotExists()
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             string path = Path.Combine(Environment.CurrentDirectory, "data", "donotexist.json");
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
 
             // Act
-            Review review = contentManager.GetReview(It.IsAny<Guid>());
+            Review review = await contentManager.GetReviewAsync(It.IsAny<Guid>());
 
             // Assert
             Assert.IsNull(review);
         }
 
         [Test]
-        public void GetReviewShouldReturnNullIfFileIsEmpty()
+        public async Task GetReviewShouldReturnNullIfFileIsEmpty()
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             var mockInputFile = new MockFileData(FileStrings.GetFile("empty"));
             string path = @"C:\tmp\empty.json";
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
 
             // Act
-            Review review = contentManager.GetReview(It.IsAny<Guid>());
+            Review review = await contentManager.GetReviewAsync(It.IsAny<Guid>());
 
             // Assert
             Assert.IsNull(review);
         }
 
         [Test]
-        [TestCase("oneReview", "30394e3f-e9bc-44ba-a889-0c9d781f93ff", ReviewStatus.Active)]
-        [TestCase("twoReviews", "f92c9883-a2cf-4adb-bb69-f34b6ab29aad", ReviewStatus.Validated)]
-        [TestCase("tenReviews", "1e2c617c-5e23-41a4-bc32-c2d8e73c683f", ReviewStatus.Archived)]
-        [TestCase("tenReviews", "64941463-e6d1-4053-8619-9ba6b2882154", ReviewStatus.Validated)]
-        public void GetReviewShouldReturnReviewIfOnlyMatch(string fileName, string guidStr, ReviewStatus expectedStatus)
+        [TestCase("oneReview", "30394e3f-e9bc-44ba-a889-0c9d781f93ff", ReviewStatus.New)]
+        [TestCase("twoReviews", "f92c9883-a2cf-4adb-bb69-f34b6ab29aad", ReviewStatus.Active)]
+        [TestCase("tenReviews", "1e2c617c-5e23-41a4-bc32-c2d8e73c683f", ReviewStatus.Validated)]
+        [TestCase("tenReviews", "64941463-e6d1-4053-8619-9ba6b2882154", ReviewStatus.Active)]
+        public async Task GetReviewShouldReturnReviewIfOnlyMatch(string fileName, string guidStr, ReviewStatus expectedStatus)
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
             string path = $@"C:\tmp\{fileName}.json";
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
             Guid guid = new Guid(guidStr);
 
             // Act
-            Review review = contentManager.GetReview(guid);
+            Review review = await contentManager.GetReviewAsync(guid);
 
             // Assert
             Assert.AreEqual(guid, review.Guid);
@@ -137,12 +138,12 @@ namespace DataManagerTests
             var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
             string path = $@"C:\tmp\{fileName}.json";
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
             Guid guid = new Guid("7176da9a-3670-4fe3-8d11-cb19d697620e");
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => contentManager.GetReview(guid));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await contentManager.GetReviewAsync(guid));
         }
 
         [Test]
@@ -154,23 +155,23 @@ namespace DataManagerTests
             var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
             string path = $@"C:\tmp\{fileName}.json";
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
             Guid guid = new Guid("7176da9a-3670-4fe3-8d11-cb19d697620e");
 
             // Act
             // Assert
-            Assert.Throws<InvalidOperationException>(() => contentManager.GetReview(guid));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await contentManager.GetReviewAsync(guid));
         }
 
         [Test]
-        public void UpsertReviewShouldCreateJsonfileWithReviewIfNoneExist()
+        public async Task UpsertReviewShouldCreateJsonfileWithReviewIfNoneExist()
         {
             // Arrange
             string fileName = "savedReview";
             var mockFileSystem = new MockFileSystem();
             mockFileSystem.AddDirectory(@"C:\tmp\");
             string path = $@"C:\tmp\{fileName}.json";
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
             Guid guid = new Guid("7176da9a-3670-4fe3-8d11-cb19d697620e");
             Review reviewToSave = new()
             {
@@ -182,8 +183,8 @@ namespace DataManagerTests
             };
 
             // Act
-            contentManager.UpsertReview(reviewToSave);
-            Review savedReview = contentManager.GetReviews()[0];
+            await contentManager.UpsertReviewAsync(reviewToSave);
+            Review savedReview = (await contentManager.GetReviewsAsync())[0];
 
             // Assert
             Assert.IsTrue(mockFileSystem.File.Exists(path));
@@ -191,7 +192,7 @@ namespace DataManagerTests
         }
 
         [Test]
-        public void UpsertReviewShouldAddReviewToFileIfExistsWithoutSameReview()
+        public async Task UpsertReviewShouldAddReviewToFileIfExistsWithoutSameReview()
         {
             // Arrange
             string fileName = "oneReview";
@@ -199,7 +200,7 @@ namespace DataManagerTests
             string path = $@"C:\tmp\{fileName}.json";
             var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
             Guid guid = new("7176da9a-3670-4fe3-8d11-cb19d697620e");
             Review reviewToSave = new()
             {
@@ -211,8 +212,8 @@ namespace DataManagerTests
             };
 
             // Act
-            contentManager.UpsertReview(reviewToSave);
-            List<Review> reviews = contentManager.GetReviews();
+            await contentManager.UpsertReviewAsync(reviewToSave);
+            List<Review> reviews = await contentManager.GetReviewsAsync();
             Review savedReview = reviews.FirstOrDefault(r => r.Guid == guid);
 
             // Assert
@@ -317,14 +318,14 @@ namespace DataManagerTests
         [TestCase("oneReview", "30394e3f-e9bc-44ba-a889-0c9d781f93ff", 1)]
         [TestCase("twoReviews", "7176da9a-3670-4fe3-8d11-cb19d697620e", 2)]
         [TestCase("tenReviews", "3b5e6356-394f-45dd-b10a-3cb5466720f7", 10)]
-        public void UpsertReviewShouldUpdateReviewInFileIfExistsWithSameReview(string fileName, string guidStr, int itemCount)
+        public async Task UpsertReviewShouldUpdateReviewInFileIfExistsWithSameReview(string fileName, string guidStr, int itemCount)
         {
             // Arrange
             var mockFileSystem = new MockFileSystem();
             string path = $@"C:\tmp\{fileName}.json";
             var mockInputFile = new MockFileData(FileStrings.GetFile(fileName));
             mockFileSystem.AddFile(path, mockInputFile);
-            IContentManager contentManager = new ContentManager(path, mockFileSystem);
+            IAsyncContentManager contentManager = new FileContentManager(path, mockFileSystem);
             Guid guid = new(guidStr);
             Review reviewToSave = new()
             {
@@ -336,8 +337,8 @@ namespace DataManagerTests
             };
 
             // Act
-            contentManager.UpsertReview(reviewToSave);
-            List<Review> reviews = contentManager.GetReviews();
+            await contentManager.UpsertReviewAsync(reviewToSave);
+            List<Review> reviews = await contentManager.GetReviewsAsync();
             Review savedReview = reviews.FirstOrDefault(r => r.Guid == guid);
 
             // Assert

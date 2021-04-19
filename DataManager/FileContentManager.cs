@@ -5,28 +5,29 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.IO.Abstractions;
+using System.Threading.Tasks;
 
 namespace DataManager
 {
-    public class ContentManager : IContentManager
+    public class FileContentManager : IAsyncContentManager
     {
         private readonly string filePath;
         private readonly IFileSystem fileSystem;
 
-        public ContentManager() : this(string.Empty, new FileSystem()) { }
+        public FileContentManager() : this(string.Empty, new FileSystem()) { }
 
-        public ContentManager(string filePath, IFileSystem fileSystem)
+        public FileContentManager(string filePath, IFileSystem fileSystem)
         {
             this.filePath = filePath;
             this.fileSystem = fileSystem;
         }
 
-        public List<Review> GetReviews(int count = 0)
+        public async Task<List<Review>> GetReviewsAsync(int count = 0)
         {
             var reviews = new List<Review>();
             if (fileSystem.File.Exists(filePath))
             {
-                var fileStr = fileSystem.File.ReadAllText(filePath);
+                var fileStr = await fileSystem.File.ReadAllTextAsync(filePath);
                 if (!string.IsNullOrEmpty(fileStr))
                 {
                     reviews = JsonSerializer.Deserialize<List<Review>>(fileStr);
@@ -35,12 +36,12 @@ namespace DataManager
             return reviews;
         }
 
-        public Review GetReview(Guid guid)
+        public async Task<Review> GetReviewAsync(Guid guid)
         {
             Review review = null;
             if (fileSystem.File.Exists(filePath))
             {
-                var fileStr = fileSystem.File.ReadAllText(filePath);
+                var fileStr = await fileSystem.File.ReadAllTextAsync(filePath);
                 if (!string.IsNullOrEmpty(fileStr))
                 {
                     var reviews = JsonSerializer.Deserialize<IEnumerable<Review>>(fileStr);
@@ -50,36 +51,38 @@ namespace DataManager
             return review;
         }
 
-        private bool Any(Review review)
+        private async Task<bool> AnyAsync(Review review)
         {
-            return GetReviews().Any(r => r.Guid == review.Guid);
+            return (await GetReviewsAsync()).Any(r => r.Guid == review.Guid);
         }
 
-        private void PostReview(Review reviewToSave)
+        private async Task<int> PostReviewAsync(Review reviewToSave)
         {
-            var reviews = GetReviews();
+            var reviews = await GetReviewsAsync();
             reviews.Add(reviewToSave);
             var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
             fileSystem.File.WriteAllText(filePath, jsonReview);
+            return 1;
         }
 
-        private void PutReview(Review reviewToUpdate)
+        private async Task<int> PutReviewAsync(Review reviewToUpdate)
         {
-            var reviews = GetReviews();
+            var reviews = await GetReviewsAsync();
             reviews.Single(r => r.Guid == reviewToUpdate.Guid).Update(reviewToUpdate);
             var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
             fileSystem.File.WriteAllText(filePath, jsonReview);
+            return 1;
         }
 
-        public void UpsertReview(Review reviewToSave)
+        public async Task<int> UpsertReviewAsync(Review reviewToSave)
         {
-            if (Any(reviewToSave))
+            if (await AnyAsync(reviewToSave))
             {
-                PutReview(reviewToSave);
+                return await PutReviewAsync(reviewToSave);
             }
             else
             {
-                PostReview(reviewToSave);
+                return await PostReviewAsync(reviewToSave);
             }
         }
     }

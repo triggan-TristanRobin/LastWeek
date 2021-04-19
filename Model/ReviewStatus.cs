@@ -8,6 +8,7 @@ namespace Model
 {
     public enum ReviewStatus
     {
+        New,
         Active,
         Validated,
         Archived
