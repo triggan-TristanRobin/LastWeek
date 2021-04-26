@@ -1,7 +1,8 @@
 ﻿namespace Model
 {
-    public abstract class Entry
+    public class Entry
     {
+        public int Id { get; set; }
         public string Question { get; set; }
     }
 }

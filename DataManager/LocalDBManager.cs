@@ -3,54 +3,67 @@ using System;
 using System.Collections.Generic;
 using SQLite;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using DataManager.Helpers;
+using System.Linq;
 
 namespace DataManager
 {
-    public class LocalDBtManager : IAsyncContentManager
+    public class LocalDBManager<T> : IAsyncContentManager
     {
-        private readonly SQLiteAsyncConnection database;
-        private readonly Func<Task> dbChanged;
-
-        public LocalDBtManager(string dbPath, Func<Task> dbChanged)
+        private readonly ReviewDatabaseContext context;
+        private ReviewDatabaseContext GetContext()
         {
-            database = new SQLiteAsyncConnection(dbPath);
-            database.CreateTableAsync<Review>().Wait();
-            this.dbChanged = dbChanged ?? throw new ArgumentNullException(nameof(dbChanged));
+            var context = this.context ?? new ReviewDatabaseContext();
+            return context;
         }
 
-        public LocalDBtManager(SQLiteAsyncConnection database, Func<Task> dbChanged)
+        public LocalDBManager(string localDBPath = "")
         {
-            this.database = database;
-            this.dbChanged = dbChanged ?? throw new ArgumentNullException(nameof(dbChanged));
+            localDBPath = string.IsNullOrEmpty(localDBPath) ? Environment.GetFolderPath(Environment.SpecialFolder.Personal) : localDBPath;
+            ReviewDatabaseContext.SetDatabasePath(localDBPath);
+            DatabaseInitializer.Initialize(GetContext());
+        }
+
+        public LocalDBManager(ReviewDatabaseContext context)
+        {
+            this.context = context;
+            DatabaseInitializer.Initialize(this.context);
         }
 
         public async Task<List<Review>> GetReviewsAsync(int count = 0)
         {
-            return await database.Table<Review>().ToListAsync();
+            using var context = GetContext();
+            return await context.Reviews
+                                .AsNoTracking().Include(r => r.Entries)
+                                .OrderByDescending(review => review.StartDate)
+                                .ToListAsync();
         }
 
         public async Task<Review> GetReviewAsync(Guid guid)
         {
-            return await database.Table<Review>().Where(r => r.Guid == guid).FirstOrDefaultAsync();
+            using var context = GetContext();
+            return await context.Reviews.Include(r => r.Entries).Where(r => r.Guid == guid).FirstOrDefaultAsync();
         }
 
         private async Task<bool> AnyAsync(Review review)
         {
-            return await database.Table<Review>().CountAsync(r => r.Guid == review.Guid) > 0;
+            using var context = GetContext();
+            return await context.Reviews.CountAsync(r => r.Guid == review.Guid) > 0;
         }
 
         private async Task<int> PostReviewAsync(Review reviewToSave)
         {
-            var result = await database.InsertAsync(reviewToSave);
-            await dbChanged();
-            return result;
+            using var context = GetContext();
+            await context.Reviews.AddAsync(reviewToSave);
+            return await context.SaveChangesAsync();
         }
 
         private async Task<int> PutReviewAsync(Review reviewToUpdate)
         {
-            var result = await database.UpdateAsync(reviewToUpdate);
-            await dbChanged();
-            return result;
+            using var context = GetContext();
+            context.Entry(reviewToUpdate).State = EntityState.Modified;
+            return await context.SaveChangesAsync();
         }
 
         public async Task<int> UpsertReviewAsync(Review reviewToSave)
