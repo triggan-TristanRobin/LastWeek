@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace DataManager
 {
-    public class LocalDBManager<T> : IAsyncContentManager
+    public class LocalDBManager : IAsyncContentManager
     {
         private readonly ReviewDatabaseContext context;
         private ReviewDatabaseContext GetContext()

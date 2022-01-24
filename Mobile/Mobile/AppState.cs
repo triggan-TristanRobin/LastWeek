@@ -8,15 +8,15 @@ namespace Mobile
 {
     public class AppState
     {
-        private LocalDBManager<ReviewDatabaseContext> dbManager;
+        private LocalDBManager dbManager;
 
-        public LocalDBManager<ReviewDatabaseContext> DBManager
+        public LocalDBManager DBManager
         {
             get
             {
                 if (dbManager == null)
                 {
-                    dbManager = new LocalDBManager<ReviewDatabaseContext>();
+                    dbManager = new LocalDBManager();
                 }
                 return dbManager;
             }

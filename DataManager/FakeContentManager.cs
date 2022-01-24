@@ -46,7 +46,7 @@ namespace DataManager
                 }
             });
 
-            for (int i = 1; i < 50; i++)
+            for (int i = 1; i < (count == 0 ? 50 : count); i++)
             {
                 date = date.AddDays(-1);
                 reviews.Add(new Review { StartDate = date, EndDate = date.AddDays(1) });
