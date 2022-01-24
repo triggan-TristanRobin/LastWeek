@@ -1,5 +1,5 @@
 ﻿<StackLayout>
-    <Picker ItemsSource="Entry.Choices" Title="Select answer" @bind-SelectedItem="Entry.Selected" >
+    <Picker ItemsSource="Entry.Choices.ToList()" Title="Select answer" @bind-SelectedItem="Entry.Selected" >
     </Picker>
 </StackLayout>
 

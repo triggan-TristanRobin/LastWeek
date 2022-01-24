@@ -1,11 +1,10 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DataManager
 {
@@ -15,6 +14,12 @@ namespace DataManager
         private readonly IFileSystem fileSystem;
 
         public FileContentManager() : this(string.Empty, new FileSystem()) { }
+
+        public FileContentManager(string filePath)
+        {
+            this.filePath = filePath;
+            this.fileSystem = new FileSystem();
+        }
 
         public FileContentManager(string filePath, IFileSystem fileSystem)
         {
@@ -30,7 +35,7 @@ namespace DataManager
                 var fileStr = await fileSystem.File.ReadAllTextAsync(filePath);
                 if (!string.IsNullOrEmpty(fileStr))
                 {
-                    reviews = JsonSerializer.Deserialize<List<Review>>(fileStr);
+                    reviews = JsonConvert.DeserializeObject<List<Review>>(fileStr);
                 }
             }
             return reviews;
@@ -44,7 +49,7 @@ namespace DataManager
                 var fileStr = await fileSystem.File.ReadAllTextAsync(filePath);
                 if (!string.IsNullOrEmpty(fileStr))
                 {
-                    var reviews = JsonSerializer.Deserialize<IEnumerable<Review>>(fileStr);
+                    var reviews = JsonConvert.DeserializeObject<IEnumerable<Review>>(fileStr);
                     review = reviews.Single(r => r.Guid == guid);
                 }
             }
@@ -60,7 +65,7 @@ namespace DataManager
         {
             var reviews = await GetReviewsAsync();
             reviews.Add(reviewToSave);
-            var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
+            var jsonReview = JsonConvert.SerializeObject(reviews);
             fileSystem.File.WriteAllText(filePath, jsonReview);
             return 1;
         }
@@ -69,7 +74,7 @@ namespace DataManager
         {
             var reviews = await GetReviewsAsync();
             reviews.Single(r => r.Guid == reviewToUpdate.Guid).Update(reviewToUpdate);
-            var jsonReview = JsonSerializer.Serialize<IEnumerable<Review>>(reviews);
+            var jsonReview = JsonConvert.SerializeObject(reviews);
             fileSystem.File.WriteAllText(filePath, jsonReview);
             return 1;
         }

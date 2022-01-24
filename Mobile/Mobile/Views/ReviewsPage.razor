@@ -1,6 +1,8 @@
-﻿<ScrollView Orientation="ScrollOrientation.Vertical" HorizontalOptions="LayoutOptions.CenterAndExpand" BackgroundColor="Color.LightBlue">
+﻿@inject IAsyncContentManager ContentManager
+
+<ScrollView Orientation="ScrollOrientation.Vertical" HorizontalOptions="LayoutOptions.CenterAndExpand" BackgroundColor="Color.LightBlue">
     <StackLayout Orientation="StackOrientation.Vertical">
-        @foreach (var review in Periods)
+        @foreach (var review in Reviews)
         {
             <ReviewCell Review="@review" />
         }
@@ -9,29 +11,43 @@
 
 @code
 {
-    public List<Review> Periods { get; } = new List<Review>();
+    public List<Review> Reviews { get; private set; } = new List<Review>();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var date = DateTime.Today;
-        Periods.Add(new Review
+        Reviews = await ContentManager.GetReviewsAsync();
+        Console.WriteLine($"I found {Reviews.Count} reviews!");
+        if (!Reviews.Any())
         {
-            StartDate = date,
-            EndDate = date.AddDays(1),
-            Status = ReviewStatus.Active,
-            Entries = new List<Model.Entry>
+            Console.WriteLine($"Adding base reviews...");
+            var date = DateTime.Today;
+            await ContentManager.UpsertReviewAsync(new Review
             {
-                new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
-                new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
-                new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
-                new TextEntry() { Answer = string.Empty, Question = "Next question?"}
-        }
-        }); ;
+                StartDate = date,
+                EndDate = date.AddDays(1),
+                Status = ReviewStatus.Active,
+                Entries = new List<Model.Entry>
+                {
+                    new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
+                    new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
+                    new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
+                    new TextEntry() { Answer = string.Empty, Question = "Next question?"}
+                }
+            });
 
-        for (int i = 1; i < 50; i++)
-        {
-            date = date.AddDays(-1);
-            Periods.Add(new Review { StartDate = date, EndDate = date.AddDays(1), Entries = new List<Model.Entry>() });
+            for (int i = 1; i < 50; i++)
+            {
+                date = date.AddDays(-1);
+                await ContentManager.UpsertReviewAsync(new Review { StartDate = date, EndDate = date.AddDays(1) });
+            }
         }
+        Reviews = await ContentManager.GetReviewsAsync();
+        Console.WriteLine($"I found {Reviews.Count} reviews!");
+    }
+
+    private async Task OnItemsChanged()
+    {
+        Reviews = await ContentManager.GetReviewsAsync();
+        StateHasChanged();
     }
 }

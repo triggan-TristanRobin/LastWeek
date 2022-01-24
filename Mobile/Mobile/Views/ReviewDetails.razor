@@ -1,12 +1,14 @@
-﻿<ContentPage @ref="contentPage">
+﻿@inject IAsyncContentManager ContentManager
+
+<ContentPage @ref="contentPage">
     <StackLayout>
         <Label Text="Review"></Label>
         <Label Text="@Review.Status.ToString()"></Label>
         <Label Text="@Review.StartDate.Date.ToString()"></Label>
         <Label Text="@Review.EndDate.Date.ToString()"></Label>
-        @foreach(var entry in Review.Entries)
+        @foreach (var entry in Review.Entries)
         {
-            <EntryTemplate Entry="@entry"/>
+            <EntryTemplate Entry="@entry" />
         }
         <Button OnClick="Save">Save</Button>
     </StackLayout>
@@ -20,6 +22,8 @@
     public async Task Save()
     {
         Console.WriteLine("Review saved!");
+        Review.Status = ReviewStatus.Active;
+        await ContentManager.UpsertReviewAsync(Review);
         await contentPage.PopModalAsync();
     }
 }

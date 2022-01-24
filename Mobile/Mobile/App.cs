@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DataManager;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.MobileBlazorBindings;
 using Mobile.Views;
@@ -15,6 +16,8 @@ namespace Mobile
             var host = MobileBlazorBindingsHost.CreateDefaultBuilder()
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddSingleton<AppState>();
+                    services.AddSingleton<IAsyncContentManager>(b => b.GetRequiredService<AppState>().DBManager);
                 })
                 .Build();
 
