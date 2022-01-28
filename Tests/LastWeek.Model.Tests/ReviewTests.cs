@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace Model.Tests
+namespace LastWeek.Model.Tests
 {
     [TestFixture]
     public class ReviewTests

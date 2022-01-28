@@ -1,6 +1,6 @@
 using DataManager;
 using Microsoft.AspNetCore.Mvc;
-using Model;
+using LastWeek.Model;
 
 namespace LastWeek.API.Controllers
 {

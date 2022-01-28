@@ -1,4 +1,4 @@
-using Model;
+using LastWeek.Model;
 using Moq;
 using DataManager;
 using NUnit.Framework;

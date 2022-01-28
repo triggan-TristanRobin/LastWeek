@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Model;
+using LastWeek.Model;
 using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataManager.Helpers
+namespace DataManager.Context
 {
-    public class ReviewDatabaseContext : DbContext
+    public class SQLiteContext : DbContext
     {
         /// <summary>
         /// Manipulate the posts table
         /// </summary>
         /// <value>The property that allows to access the Posts table</value>
         public DbSet<Review> Reviews { get; set; }
-        public DbSet<Model.Entry> Entries { get; set; }
+        public DbSet<Entry> Entries { get; set; }
         public DbSet<ChoiceEntry> ChoiceEntries { get; set; }
         public DbSet<RangeEntry> RangeEntries { get; set; }
         public DbSet<SimpleEntry> SimpleEntries { get; set; }

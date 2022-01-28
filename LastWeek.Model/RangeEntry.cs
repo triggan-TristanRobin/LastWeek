@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace Model
+namespace LastWeek.Model
 {
     public class RangeEntry : Entry
     {

@@ -1,21 +1,36 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Model;
+using LastWeek.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataManager.Context;
 
 namespace DataManager.Helpers
 {
     public static class DatabaseInitializer
     {
-        public static void Initialize(ReviewDatabaseContext context)
+        public static void Initialize(SQLiteContext context)
         {
 #if DEBUG
             context.Database.EnsureDeleted();
 #endif
             context.Database.EnsureCreated();
 
-            if (!context.Reviews.Any())
+            DbSet<Review> reviewDbSet = context.Reviews;
+            InitializeReviews(context, reviewDbSet);
+        }
+
+        public static void Initialize(LastWeekContext context)
+        {
+            context.Database.Migrate();
+
+            DbSet<Review> reviewDbSet = context.Reviews;
+            InitializeReviews(context, reviewDbSet);
+        }
+
+        private static void InitializeReviews(DbContext context, DbSet<Review> reviewDbSet)
+        {
+            if (!reviewDbSet.Any())
             {
                 var reviews = new List<Review>();
                 var date = DateTime.Today;

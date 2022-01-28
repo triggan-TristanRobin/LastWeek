@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace LastWeek.Model
 {
-    public class SimpleEntry : Entry
+    public class TextEntry : Entry
     {
-        public List<string> Answers { get; set; }
+        public string Answer { get; set; }
     }
 }
