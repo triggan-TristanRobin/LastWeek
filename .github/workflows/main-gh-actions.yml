@@ -1,0 +1,48 @@
+name: LastWeek API deployment
+
+on:
+  push:
+    branches:
+      - release
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - release
+
+jobs:
+  Build-Deploy-API:
+    runs-on: windows-latest
+    env:
+      PROJECT_DIRECTORY_PATH: "LastWeek.API"
+      IIS_SERVER_COMPUTER_NAME: ${{ secrets.IIS_SERVER_COMPUTER_NAME }}
+      IIS_WEBSITE_NAME: ${{ secrets.IIS_WEBSITE_NAME }}
+      IIS_SERVER_USERNAME: ${{ secrets.IIS_SERVER_USERNAME }}
+      IIS_SERVER_PASSWORD: ${{ secrets.IIS_SERVER_PASSWORD }}
+      WEBSITE_CONTENT_PATH: ${{ secrets.WEBSITE_CONTENT_PATH }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+        
+    - name: Build with dotnet
+      run: dotnet publish
+           ${{ env.PROJECT_DIRECTORY_PATH }}/${{ env.PROJECT_DIRECTORY_PATH }}.csproj
+           --configuration Release
+    
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: '${{ env.PROJECT_DIRECTORY_PATH }}\bin\Release\net6.0\publish\appsettings.json'
+      env:
+        ConnectionStrings.LastWeek: ${{ secrets.LASTWEEK_CONNECTIONSTRING }}
+
+    - name: Deploy Application
+      shell: cmd
+      run: '"C:/Program Files (x86)/IIS/Microsoft Web Deploy V3/msdeploy.exe" -verb:sync -allowUntrusted -source:contentPath="%CD%\${{ env.PROJECT_DIRECTORY_PATH }}\bin\Release\net6.0\publish\" -dest:contentPath="${{ env.WEBSITE_CONTENT_PATH }}",computerName="${{ env.IIS_SERVER_COMPUTER_NAME }}/msdeploy.axd?site=${{ env.IIS_WEBSITE_NAME }}",username="${{ env.IIS_SERVER_USERNAME }}",password="${{ env.IIS_SERVER_PASSWORD }}",authtype="Basic"'
