@@ -1,0 +1,15 @@
+﻿<div @onclick="Edit">
+        <label>@($"Review from {Review.StartDate.Date.ToString()} to  {Review.EndDate.Date.ToString()}")</label>
+        <label>@(Review.Status.ToString())</label>
+        @*<i class="fas fa-check"></i>*@
+</div>
+
+@code {
+    [Parameter]
+    public Review Review { get; set; } = new Review();
+
+    void Edit()
+    {
+        Console.WriteLine("Clicked on review cell");
+    }
+}

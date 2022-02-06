@@ -1,0 +1,28 @@
+﻿<div>
+    @foreach (var review in Reviews)
+    {
+        <MinimizedReview Review="@review" />
+    }
+</div>
+
+@code
+{
+    public List<Review> Reviews { get; private set; } = new List<Review>
+    {
+        new Review
+        {
+            StartDate = DateTime.Today.AddDays(-19),
+            EndDate = DateTime.Today.AddDays(-12)
+        }, 
+        new Review
+        {
+            StartDate = DateTime.Today.AddDays(-11),
+            EndDate = DateTime.Today.AddDays(-4)
+        }, 
+        new Review
+        {
+            StartDate = DateTime.Today.AddDays(-3),
+            EndDate = DateTime.Today.AddDays(4)
+        }
+    };
+}
