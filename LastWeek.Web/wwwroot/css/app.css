@@ -1,0 +1,306 @@
+﻿@import url('https://use.fontawesome.com/releases/v5.12.0/css/all.css');
+
+:root {
+    --background-color: #0c1526;
+    --dark-blue: #052767;
+    --blue: #007bff;
+    --grey-blue: #1a3466;
+    --indigo: #6610f2;
+    --cyan: #17a2b8;
+    --white: #d7d7d7;
+    --gray: #646464;
+    --gray-dark: #353535;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #34c9fb;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #85c2ff;
+    --dark: #343a40;
+    --transparent: #00000000;
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+html, body {
+    font-family: 'Roboto', Georgia, Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    line-height: 30px;
+    background-color: var(--background-color) !important;
+    color: var(--light) !important;
+    margin: 0;
+}
+
+a, .btn-link {
+    color: var(--info);
+    text-decoration: none;
+}
+
+h1, h2, h3 {
+    color: var(--blue);
+    font-weight: bold;
+}
+
+.a:hover {
+    color: var(--white);
+}
+
+.btn-primary {
+    color: var(--light);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.small {
+    font-size: small;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.collapse:not(.show) {
+    display: none;
+}
+
+.quote {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-radius: .25rem;
+    color: var(--dark-blue);
+    background-color: var(--gray);
+    border-color: var(--blue);
+}
+
+.tile {
+    border-left: solid 0.1rem var(--dark-blue);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.post.tile:hover {
+    box-shadow: 0em 0em 0.35em var(--dark-blue);
+    padding-left: 1em;
+}
+
+.tag {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.content-list {
+    -ms-flex-direction: column;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+form {
+    margin: 1.5em auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+    .form-group div {
+        width: 100%;
+    }
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+form input, form textarea, form select {
+    max-width: 100%;
+    min-width: 95%;
+    background-color: var(--grey-blue);
+    border: none;
+    resize: none;
+    padding: 0.5em;
+    font-size: 1.1em;
+}
+
+.row div {
+    flex-shrink: 2;
+}
+
+form label {
+    width: 100%;
+    padding: 0.5em;
+}
+
+form i {
+    padding-right: 0.5em;
+}
+
+form .row label, form .row input, form .row textarea {
+    max-width: max-content;
+    min-width: auto;
+}
+
+button {
+    text-transform: capitalize;
+    font-weight: bold;
+    margin: 1em auto;
+    border: 3px solid var(--blue);
+    outline: 0;
+    border-radius: 2em;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0.5em;
+    transition: all .3s ease-in-out;
+    background: var(--blue);
+}
+
+    button:hover {
+        color: var(--light);
+        background-image: initial;
+        background-color: initial;
+        color: var(--blue);
+        border: 3px solid var(--blue);
+        background: 0 0;
+    }
+
+.post h3 {
+    cursor: pointer;
+}
+
+img {
+    width: 100%;
+}
+
+.scale-on-hover:hover {
+    transform: scale(1.05);
+}
+
+.grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.card {
+    max-width: 30%;
+    border: none;
+    cursor: pointer;
+}
+
+    .card:hover {
+        box-shadow: 0 0 0.5em var(--blue);
+    }
+
+        .card:hover img {
+            transform: scale(1.05);
+        }
+
+.skill-tile {
+    margin: 0.25em;
+    width: 30%;
+    border: var(--light) 0.1em solid;
+    padding: 0.25em;
+}
+
+    .skill-tile i {
+        color: var(--info);
+    }
+
+    .skill-tile:hover {
+        box-shadow: none;
+    }
+
+@media (max-width: 767.98px) {
+    .row {
+        flex-direction: column !important;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+}
+
+#blazor-error-ui {
+    width: auto !important;
+}
+
+.fa, .fas, .far, .fab {
+    margin: 0.5em;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
+
+    select::-ms-expand {
+        display: none;
+    }
+
+    select + i.fa, select + i.fas {
+        float: right;
+        margin-top: -26px;
+        margin-right: 10px;
+        pointer-events: none;
+        padding-right: 5px;
+    }
