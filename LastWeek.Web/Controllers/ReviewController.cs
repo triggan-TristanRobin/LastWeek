@@ -2,7 +2,7 @@ using DataManager;
 using Microsoft.AspNetCore.Mvc;
 using LastWeek.Model;
 
-namespace LastWeek.API.Controllers
+namespace LastWeek.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]

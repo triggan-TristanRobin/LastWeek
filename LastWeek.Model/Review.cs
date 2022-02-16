@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace LastWeek.Model
 {
-    public class Review
+    public class Review : Entity
     {
-        public Guid Guid { get; set; }
         public ReviewStatus Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -46,6 +45,11 @@ namespace LastWeek.Model
                 return true;
             }
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Guid, Created, Updated, Deleted, Status, StartDate, EndDate, Entries);
         }
 
         public bool Update(Review updateDate)

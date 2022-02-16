@@ -8,6 +8,7 @@ namespace LastWeek.Model
         public virtual string Username { get; set; }
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
         public virtual string Password { get; set; }
         public string Token { get; set; }
         public string Role { get; set; }

@@ -1,0 +1,58 @@
+﻿@page "/Signin"
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h1>Login</h1>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="signinInfos" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="Username">Username</label>
+                <InputText Id="email" Class="form-control" @bind-Value="signinInfos.Username" />
+                <ValidationMessage For="@(() => signinInfos.Username)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password" Class="form-control" @bind-Value="signinInfos.Password" />
+                <ValidationMessage For="@(() => signinInfos.Password)" />
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </EditForm>
+        <a href="Register" class="small">Don't have an account yet?</a>
+    </div>
+</div>
+
+@code {
+
+    private UserSigninInfos signinInfos = new();
+    private bool ShowErrors;
+    private string Error = "";
+
+    private async Task HandleLogin()
+    {
+        ShowErrors = false;
+
+        var signedInUser = await AuthService.Signin(signinInfos);
+        
+        if (signedInUser.Guid != new Guid())
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Error = "There was an error during the signin process, please try again later.";
+            ShowErrors = true;
+        }
+    }
+}

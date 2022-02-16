@@ -27,7 +27,10 @@ namespace DataManager
                     int.Parse(s.Split("%%", StringSplitOptions.RemoveEmptyEntries)[1])));
 
             modelBuilder.Entity<User>().HasKey(u => u.Guid);
+            modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<User>().Ignore(u => u.Token);
+            modelBuilder.Entity<User>().Ignore(u => u.FullName);
             modelBuilder.Entity<Review>().HasKey(r => r.Guid);
             modelBuilder.Entity<Entry>().HasKey(r => r.Guid);
 
