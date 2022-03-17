@@ -1,5 +1,7 @@
-﻿<div @onclick="Edit">
-        <label>@($"Review from {Review.StartDate.Date.ToString()} to  {Review.EndDate.Date.ToString()}")</label>
+﻿@inject NavigationManager NavigationManager
+
+<div @onclick="Edit">
+        <label>@($"Review from {Review.StartDate.ToShortDateString()} to  {Review.EndDate.ToShortDateString()}")</label>
         <label>@(Review.Status.ToString())</label>
         @*<i class="fas fa-check"></i>*@
 </div>
@@ -10,6 +12,7 @@
 
     void Edit()
     {
+        NavigationManager.NavigateTo($"/Review/{Review.Guid}", true);
         Console.WriteLine("Clicked on review cell");
     }
 }

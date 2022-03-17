@@ -1,28 +1,69 @@
-﻿<div>
-    @foreach (var review in Reviews)
-    {
-        <MinimizedReview Review="@review" />
-    }
+﻿@inject IAuthService AuthService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject HttpClient apiClient
+
+<div>
+    <AuthorizeView>
+        <Authorized>
+            @if (!Reviews.Any())
+            {
+                <div>Loading ...</div>
+            }
+            else
+            {
+                foreach (var review in Reviews)
+                {
+                    <MinimizedReview Review="@review" />
+                }
+            }
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code
 {
-    public List<Review> Reviews { get; private set; } = new List<Review>
+    public List<Review> Reviews { get; private set; } = new();
+    private User signedUser = new User();
+
+    protected override async Task OnInitializedAsync()
     {
-        new Review
+        var hasKey = await localStorage.ContainKeyAsync("user");
+        var saved = await localStorage.GetItemAsync<User>("user");
+
+        Console.WriteLine($"Tried to retrieve key: {hasKey} - {saved?.Guid}");
+
+        if (hasKey)
         {
-            StartDate = DateTime.Today.AddDays(-19),
-            EndDate = DateTime.Today.AddDays(-12)
-        }, 
-        new Review
-        {
-            StartDate = DateTime.Today.AddDays(-11),
-            EndDate = DateTime.Today.AddDays(-4)
-        }, 
-        new Review
-        {
-            StartDate = DateTime.Today.AddDays(-3),
-            EndDate = DateTime.Today.AddDays(4)
+            this.signedUser = saved!;
+            await GetUserReviews();
         }
-    };
+        else
+        {
+            Reviews = new List<Review>
+            {
+                new Review
+                {
+                    StartDate = DateTime.Today.AddDays(-19),
+                    EndDate = DateTime.Today.AddDays(-12)
+                },
+                new Review
+                {
+                    StartDate = DateTime.Today.AddDays(-11),
+                    EndDate = DateTime.Today.AddDays(-4)
+                },
+                new Review
+                {
+                    StartDate = DateTime.Today.AddDays(-3),
+                    EndDate = DateTime.Today.AddDays(4)
+                }
+            };
+        }
+    }
+
+    protected async Task GetUserReviews()
+    {
+        Reviews = await apiClient.GetFromJsonAsync<List<Review>>("Review") ?? new();
+    }
 }
