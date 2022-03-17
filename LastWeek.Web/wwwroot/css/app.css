@@ -108,44 +108,6 @@ ul {
     display: none;
 }
 
-.quote {
-    position: relative;
-    padding: .75rem 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid transparent;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
-    border-radius: .25rem;
-    color: var(--dark-blue);
-    background-color: var(--gray);
-    border-color: var(--blue);
-}
-
-.tile {
-    border-left: solid 0.1rem var(--dark-blue);
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.post.tile:hover {
-    box-shadow: 0em 0em 0.35em var(--dark-blue);
-    padding-left: 1em;
-}
-
-.tag {
-    margin-left: 0.5em;
-    margin-right: 0.5em;
-}
-
-.content-list {
-    -ms-flex-direction: column;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
 form {
     margin: 1.5em auto;
 }
@@ -167,8 +129,6 @@ form {
 }
 
 form input, form textarea, form select {
-    max-width: 100%;
-    min-width: 95%;
     background-color: var(--grey-blue);
     border: none;
     resize: none;
@@ -181,7 +141,6 @@ form input, form textarea, form select {
 }
 
 form label {
-    width: 100%;
     padding: 0.5em;
 }
 
@@ -217,14 +176,6 @@ button {
         background: 0 0;
     }
 
-.post h3 {
-    cursor: pointer;
-}
-
-img {
-    width: 100%;
-}
-
 .scale-on-hover:hover {
     transform: scale(1.05);
 }
@@ -250,33 +201,9 @@ img {
             transform: scale(1.05);
         }
 
-.skill-tile {
-    margin: 0.25em;
-    width: 30%;
-    border: var(--light) 0.1em solid;
-    padding: 0.25em;
-}
-
-    .skill-tile i {
-        color: var(--info);
-    }
-
-    .skill-tile:hover {
-        box-shadow: none;
-    }
-
-@media (max-width: 767.98px) {
-    .row {
-        flex-direction: column !important;
-    }
-
-    .card {
-        max-width: 100%;
-    }
-}
-
-@media (min-width: 768px) {
-}
+        .card-body {
+            padding: 0.25em;
+        }
 
 #blazor-error-ui {
     width: auto !important;
@@ -304,3 +231,16 @@ select {
         pointer-events: none;
         padding-right: 5px;
     }
+
+@media (max-width: 767.98px) {
+    .row {
+        flex-direction: column !important;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+}

@@ -15,12 +15,12 @@
 <AuthorizeView>
     <Authorized>
     <nav class="flex-column">
-        <div class="nav-item px-3">
+        <div class="nav-item">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                Home
             </NavLink>
         </div>
-        <div class="nav-item px-3">
+        <div class="nav-item">
             <NavLink class="nav-link" @onclick="Logout">
                 Log out
             </NavLink>
@@ -29,12 +29,12 @@
     </Authorized>
     <NotAuthorized>
         <nav class="nav flex-column">
-            <div class="nav-item px-3">
+            <div class="nav-item">
                 <NavLink class="nav-link" href="Register">
                     Register
                 </NavLink>
             </div>
-            <div class="nav-item px-3">
+            <div class="nav-item">
                 <NavLink class="nav-link" href="Signin">
                     Signin
                 </NavLink>
