@@ -25,12 +25,13 @@ builder.Services.AddDbContext<LastWeekContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Last Week", Version = "v1" }); });
 
-builder.Services.AddHttpClient();
-
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
-var jwt = appSettingsSection.Get<AppSettings>().JwtSecret;
+var settings = appSettingsSection.Get<AppSettings>();
+var jwt = settings.JwtSecret;
 if (jwt == null) throw new Exception("JWT secret required to run the application");
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(settings.APIBaseURL!) });
 
 var key = Encoding.ASCII.GetBytes(jwt);
 builder.Services.AddAuthentication(x =>
