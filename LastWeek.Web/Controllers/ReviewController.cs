@@ -23,7 +23,9 @@ namespace LastWeek.Web.Controllers
             if(guid != null)
             {
                 var review = await contentManager.GetReviewAsync(guid.Value);
-                return new JsonResult(review);
+                var res = new JsonResult(review);
+                // TODO: add type inheritence serialization
+                return res;
             }
             else
             {

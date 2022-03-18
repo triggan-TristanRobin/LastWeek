@@ -1,0 +1,19 @@
+﻿@namespace LastWeek.Shared.EntryModules
+
+<div>
+    @foreach (var answer in Entry.Answers.Select((a, i) => new { Answer = a, Index = i }))
+    {
+        <InputText placeholder="@Entry.Question" @bind-Value="@Entry.Answers[answer.Index]"/>
+    }
+    <button OnClick="AddAnswer">Add</button>
+</div>
+
+@code {
+    [Parameter]
+    public SimpleEntry Entry { get; set; } = new() { Answers = new () };
+
+    void AddAnswer()
+    {
+        Entry.Answers.Add(string.Empty);
+    }
+}

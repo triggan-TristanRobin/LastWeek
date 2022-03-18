@@ -1,0 +1,13 @@
+﻿@namespace LastWeek.Shared.EntryModules
+
+<div>
+    @*Minimum="@Entry.Boundaries.Start.Value" Maximum="@Entry.Boundaries.End.Value"*@
+    <InputNumber @bind-Value="@Entry.Selected">
+    </InputNumber>
+</div>
+
+
+@code {
+    [Parameter]
+    public RangeEntry Entry { get; set; } = new();
+}

@@ -1,0 +1,10 @@
+﻿@namespace LastWeek.Shared.EntryModules
+
+<div>
+    <InputTextArea Placeholder="@Entry.Question" @bind-Value="@Entry.Answer" />
+</div>
+
+@code {
+    [Parameter]
+    public TextEntry Entry { get; set; } = new();
+}

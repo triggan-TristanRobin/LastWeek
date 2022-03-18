@@ -1,0 +1,23 @@
+﻿<div class="entry-container">
+    <label>@Entry.Question</label>
+    @switch (Entry)
+        {
+            case ChoiceEntry entry:
+                <ChoiceEntryModule Entry="@entry" />
+                break;
+            case RangeEntry entry:
+                <RangeEntryModule Entry="@entry" />
+                break;
+            case SimpleEntry entry:
+                <SimpleEntryModule Entry="@entry" />
+                break;
+            case TextEntry entry:
+                <TextEntryModule Entry="@entry" />
+                break;
+        }
+</div>
+
+@code {
+    [Parameter]
+    public Entry Entry { get; set; } = new();
+}

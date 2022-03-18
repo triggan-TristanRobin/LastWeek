@@ -1,0 +1,18 @@
+﻿@namespace LastWeek.Shared.EntryModules
+
+<div>
+    <InputSelect @bind-Value="Entry.Selected">
+        @if (Entry?.Choices != null)
+        {
+           @foreach (var choice in Entry.Choices)
+           {
+               <option value="@choice">@choice</option>
+           }
+        }
+    </InputSelect>
+</div>
+
+@code {
+    [Parameter]
+    public ChoiceEntry Entry { get; set; } = new();
+}

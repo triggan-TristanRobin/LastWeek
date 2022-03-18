@@ -1,0 +1,59 @@
+﻿@page "/Review/{ReviewId}"
+@inject IAuthService AuthService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject HttpClient apiClient
+
+<section>
+    @if (Review == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <h1>@Review.Status</h1>
+        <label>@($"Review from {Review.StartDate.ToShortDateString()} to  {Review.EndDate.ToShortDateString()}")</label>
+        @if (Review.Entries != null)
+        {
+            @foreach (var entry in Review.Entries)
+            {
+                <EntryTemplate Entry="@entry" />
+            }
+        }
+        <a href="/">Back</a>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public string? ReviewId { get; set; }
+    [Parameter]
+    public Review Review { get; set; } = new();
+    private User signedUser = new User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var hasKey = await localStorage.ContainKeyAsync("user");
+        var saved = await localStorage.GetItemAsync<User>("user");
+
+        Console.WriteLine($"Tried to retrieve key: {hasKey} - {saved?.Guid}");
+
+        if (hasKey)
+        {
+            this.signedUser = saved!;
+            await GetUserReview();
+        }
+        else
+        {
+            Review = new()
+                {
+                    StartDate = DateTime.Today.AddDays(-19),
+                    EndDate = DateTime.Today.AddDays(-12),
+                };
+        }
+    }
+
+    protected async Task GetUserReview()
+    {
+        Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}") ?? new();
+    }
+}
