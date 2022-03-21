@@ -1,19 +1,38 @@
 ﻿@namespace LastWeek.Shared.EntryModules
 
 <div>
-    @foreach (var answer in Entry.Answers.Select((a, i) => new { Answer = a, Index = i }))
+    @if (Entry.Answers != null)
     {
-        <InputText placeholder="@Entry.Question" @bind-Value="@Entry.Answers[answer.Index]"/>
+        @foreach (var answer in Entry.Answers.Select((a, i) => new { Answer = a, Index = i }))
+        {
+            <InputText placeholder="@Entry.Question" Value="@answers[answer.Index].Value" ValueExpression="@(() => answers[answer.Index].Value)"
+                @onkeyup="@(() => OnValueChanged(answer.Index))"
+            ValueChanged="@((string value) => OnValueChanged(answer.Index))" />
+        }
     }
-    <button OnClick="AddAnswer">Add</button>
+    <button @onclick="AddAnswer">Add</button>
 </div>
 
 @code {
     [Parameter]
-    public SimpleEntry Entry { get; set; } = new() { Answers = new () };
+    public SimpleEntry Entry { get; set; } = new() { Answers = new() };
+    private List<FormResponse> answers = new();
 
-    void AddAnswer()
+    protected override void OnParametersSet()
     {
+        base.OnParametersSet();
+        answers = Entry.Answers.Select(s => new FormResponse { Value = s }).ToList();
+    }
+
+    protected void AddAnswer()
+    {
+        if (Entry.Answers == null) Entry.Answers = new();
         Entry.Answers.Add(string.Empty);
+        answers.Add(new FormResponse { Value = string.Empty });
+    }
+
+    private void OnValueChanged(int index)
+    {
+        Entry.Answers[index] = answers[index].Value;
     }
 }

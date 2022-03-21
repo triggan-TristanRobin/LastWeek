@@ -1,4 +1,6 @@
 ﻿@page "/Review/{ReviewId}"
+@using System.Text.Json
+@using DataManager.Helpers
 @inject IAuthService AuthService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient apiClient
@@ -11,6 +13,7 @@
     else
     {
         <h1>@Review.Status</h1>
+        <EditForm Model="@Review">
         <label>@($"Review from {Review.StartDate.ToShortDateString()} to  {Review.EndDate.ToShortDateString()}")</label>
         @if (Review.Entries != null)
         {
@@ -19,6 +22,7 @@
                 <EntryTemplate Entry="@entry" />
             }
         }
+        </EditForm>
         <a href="/">Back</a>
     }
 </section>
@@ -27,7 +31,7 @@
     [Parameter]
     public string? ReviewId { get; set; }
     [Parameter]
-    public Review Review { get; set; } = new();
+    public Review? Review { get; set; }
     private User signedUser = new User();
 
     protected override async Task OnInitializedAsync()
@@ -54,6 +58,8 @@
 
     protected async Task GetUserReview()
     {
-        Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}") ?? new();
+        var serializeOptions = new JsonSerializerOptions();
+        serializeOptions.Converters.Add(new EntryConverter());
+        Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
     }
 }

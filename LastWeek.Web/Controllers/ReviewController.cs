@@ -1,6 +1,8 @@
 using DataManager;
 using Microsoft.AspNetCore.Mvc;
 using LastWeek.Model;
+using System.Text.Json;
+using DataManager.Helpers;
 
 namespace LastWeek.Web.Controllers
 {
@@ -23,9 +25,9 @@ namespace LastWeek.Web.Controllers
             if(guid != null)
             {
                 var review = await contentManager.GetReviewAsync(guid.Value);
-                var res = new JsonResult(review);
-                // TODO: add type inheritence serialization
-                return res;
+                var serializeOptions = new JsonSerializerOptions();
+                serializeOptions.Converters.Add(new EntryConverter());
+                return new JsonResult(review, serializeOptions);
             }
             else
             {
