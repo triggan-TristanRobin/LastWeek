@@ -1,8 +1,9 @@
 ﻿@namespace LastWeek.Shared.EntryModules
 
 <div>
-    @*Minimum="@Entry.Boundaries.Start.Value" Maximum="@Entry.Boundaries.End.Value"*@
-    <InputNumber @bind-Value="@Entry.Selected">
+    <InputNumber min="@Entry.Boundaries.Start.Value" max="@Entry.Boundaries.End.Value"
+    Value="@Entry.Selected" ValueExpression="@(() => Entry.Selected)" @onkeyup="ValidateInput"
+            ValueChanged="@((double value) => ValidateInput())">
     </InputNumber>
 </div>
 
@@ -10,4 +11,15 @@
 @code {
     [Parameter]
     public RangeEntry Entry { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        ValidateInput();
+    }
+
+    private void ValidateInput()
+    {
+        Entry.Selected = Math.Clamp(Entry.Selected, Entry.Boundaries.Start.Value, Entry.Boundaries.End.Value);
+    }
 }
