@@ -37,6 +37,7 @@ namespace DataManager
             modelBuilder.Entity<ChoiceEntry>().Property(e => e.Choices).HasConversion(splitStringConverter);
             modelBuilder.Entity<SimpleEntry>().Property(e => e.Answers).HasConversion(splitListStringConverter);
             modelBuilder.Entity<RangeEntry>().Property(e => e.Boundaries).HasConversion(rangeConverter);
+            modelBuilder.Entity<TextEntry>();
 
             base.OnModelCreating(modelBuilder);
         }

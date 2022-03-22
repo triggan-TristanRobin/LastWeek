@@ -40,21 +40,15 @@ namespace DataManager.Helpers
                     EndDate = date.AddDays(1),
                     Status = ReviewStatus.Active,
                     Entries = new List<Entry>
-                {
-                    //new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
-                    new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
-                    new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
-                    new TextEntry() { Answer = string.Empty, Question = "Next question?"},
-                    new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
-                    new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
-                    new TextEntry() { Answer = string.Empty, Question = "Next question?"},
-                    new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
-                    new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
-                    new TextEntry() { Answer = string.Empty, Question = "Next question?"}
-                }
+                    {
+                        new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
+                        new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
+                        new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
+                        new TextEntry() { Answer = string.Empty, Question = "Next question?"},
+                    }
                 });
 
-                for (int i = 1; i < 10; i++)
+                for (int i = 0; i < 10; i++)
                 {
                     date = date.AddDays(-1);
                     reviews.Add(new Review
@@ -63,7 +57,7 @@ namespace DataManager.Helpers
                         EndDate = date.AddDays(1),
                         Entries = new List<Entry>
                         {
-                            //new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
+                            new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
                             new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
                             new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
                             new TextEntry() { Answer = string.Empty, Question = "Next question?"}
