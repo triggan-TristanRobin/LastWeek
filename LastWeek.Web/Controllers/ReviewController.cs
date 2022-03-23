@@ -39,13 +39,18 @@ namespace LastWeek.Web.Controllers
         [HttpPost(Name = "Reviews")]
         public async Task<IActionResult> UpsertReviewAsync(Review review)
         {
+            var guid = Guid.NewGuid();
+            review.Guid = review.Guid == new Guid() ? guid : review.Guid;
             var result = await contentManager.UpsertReviewAsync(review);
 
-            return result >= 1
-                    ? StatusCode(200)
-                    : result == 0
-                        ? StatusCode(204)
-                        : BadRequest();
+            if(result >= 0)
+            {
+                var serializeOptions = new JsonSerializerOptions();
+                serializeOptions.Converters.Add(new EntryConverter());
+                var savedReview = await contentManager.GetReviewAsync(guid);
+                return new JsonResult(savedReview, serializeOptions);
+            }
+            return StatusCode(500);
         }
     }
 }

@@ -3,16 +3,18 @@
 @inject IAuthService AuthService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient apiClient
+@inject NavigationManager NavigationManager
 
 <div>
     <AuthorizeView>
         <Authorized>
-            @if (!Reviews.Any())
+            @if (loading)
             {
                 <div>Loading ...</div>
             }
             else
             {
+                <input type="button" @onclick="NewReview" value="New review" />
                 foreach (var review in Reviews)
                 {
                     <MinimizedReview Review="@review" />
@@ -26,6 +28,7 @@
 
 @code
 {
+    private bool loading = true;
     public List<Review> Reviews { get; private set; } = new();
     private User signedUser = new User();
     JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
@@ -45,6 +48,7 @@
         }
         else
         {
+            loading = false;
             Reviews = new List<Review>
             {
                 new Review
@@ -69,5 +73,20 @@
     protected async Task GetUserReviews()
     {
         Reviews = await apiClient.GetFromJsonAsync<List<Review>>("Review", serializeOptions) ?? new();
+        loading = false;
+    }
+
+    protected async Task NewReview()
+    {
+        Review templateReview = Reviews.FirstOrDefault()?.GetTemplate() ?? new Review();
+        templateReview.StartDate = DateTime.Today.AddDays(-6);
+        templateReview.EndDate = DateTime.Today;
+        var response = await apiClient.PostAsJsonAsync<Review>("Review", templateReview, serializeOptions);
+        if(response.IsSuccessStatusCode)
+        {
+            var review = await response.Content.ReadFromJsonAsync<Review>(serializeOptions);
+            if (review == null) return;
+            NavigationManager.NavigateTo($"/Review/{review.Guid}");
+        }
     }
 }

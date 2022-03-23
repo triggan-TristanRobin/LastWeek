@@ -65,5 +65,20 @@ namespace LastWeek.Model
             }
             return true;
         }
+
+        public Review GetTemplate()
+        {
+            var template = new Review
+            {
+                Guid = new Guid(),
+                Status = ReviewStatus.New,
+                Entries = new()
+            };
+            foreach(var entry in Entries)
+            {
+                template.Entries.Add(entry.GetTemplate());
+            }
+            return template;
+        }
     }
 }

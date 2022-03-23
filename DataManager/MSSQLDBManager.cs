@@ -34,11 +34,13 @@ namespace DataManager
 
         private async Task<bool> AnyAsync(Review review)
         {
-            return await context.Reviews.CountAsync(r => r.Guid == review.Guid) > 0;
+            return review.Guid == new Guid() || await context.Reviews.CountAsync(r => r.Guid == review.Guid) > 0;
         }
 
         private async Task<int> PostReviewAsync(Review reviewToSave)
         {
+            if(reviewToSave.Guid == new Guid()) reviewToSave.Guid = Guid.NewGuid();
+            reviewToSave.Entries.ForEach(e => e.Guid = e.Guid == new Guid() ? Guid.NewGuid() : e.Guid);
             await context.Reviews.AddAsync(reviewToSave);
             return await context.SaveChangesAsync();
         }

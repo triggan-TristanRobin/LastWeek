@@ -44,6 +44,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        if (Entry.Choices == null) Entry.Choices = new();
         choices = Entry.Choices.Select(s => new FormResponse { Value = s }).ToList();
     }
 

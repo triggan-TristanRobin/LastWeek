@@ -20,6 +20,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        if (Entry.Answers == null) Entry.Answers = new();
         answers = Entry.Answers.Select(s => new FormResponse { Value = s }).ToList();
     }
 
