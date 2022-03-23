@@ -6,11 +6,10 @@
         @foreach (var answer in Entry.Answers.Select((a, i) => new { Answer = a, Index = i }))
         {
             <InputText placeholder="@Entry.Question" Value="@answers[answer.Index].Value" ValueExpression="@(() => answers[answer.Index].Value)"
-                @onkeyup="@(() => OnValueChanged(answer.Index))"
-            ValueChanged="@((string value) => OnValueChanged(answer.Index))" />
+            ValueChanged="@((string value) => OnValueChanged(value, answer.Index))" />
         }
     }
-    <button @onclick="AddAnswer">Add</button>
+    <input type="button" @onclick="AddAnswer" value="Add" />
 </div>
 
 @code {
@@ -31,8 +30,8 @@
         answers.Add(new FormResponse { Value = string.Empty });
     }
 
-    private void OnValueChanged(int index)
+    private void OnValueChanged(string value, int index)
     {
-        Entry.Answers[index] = answers[index].Value;
+        Entry.Answers[index] = answers[index].Value = value;
     }
 }

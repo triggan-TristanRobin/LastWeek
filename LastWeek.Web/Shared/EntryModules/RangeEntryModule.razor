@@ -1,25 +1,47 @@
 ﻿@namespace LastWeek.Shared.EntryModules
 
 <div>
+    <div>
+    <label>Min</label>
+    <InputNumber Value="@startIndex" ValueExpression="@(() => startIndex)"
+            ValueChanged="@((int value) => SetBoundaries(value, Entry.Boundaries.End.Value))" />
+    </div>
     <InputNumber min="@Entry.Boundaries.Start.Value" max="@Entry.Boundaries.End.Value"
-    Value="@Entry.Selected" ValueExpression="@(() => Entry.Selected)"
+            Value="@Entry.Selected" ValueExpression="@(() => Entry.Selected)"
             ValueChanged="@((double value) => ValidateInput(value))">
     </InputNumber>
+    <div>
+    <label>Max</label>
+    <InputNumber Value="@endIndex" ValueExpression="@(() => endIndex)"
+            ValueChanged="@((int value) => SetBoundaries(Entry.Boundaries.Start.Value, value))" />
+    </div>
 </div>
 
 
 @code {
     [Parameter]
     public RangeEntry Entry { get; set; } = new();
+    private int startIndex;
+    private int endIndex;
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        startIndex = Entry.Boundaries.Start.Value;
+        endIndex = Entry.Boundaries.End.Value;
         ValidateInput(Entry.Selected);
     }
 
     private void ValidateInput(double value)
     {
         Entry.Selected = Math.Clamp(value, Entry.Boundaries.Start.Value, Entry.Boundaries.End.Value);
+    }
+
+    private void SetBoundaries(int start, int end)
+    {
+        startIndex = start;
+        endIndex = end;
+        Entry.Boundaries = new Range(start, end);
+        ValidateInput(Entry.Selected);
     }
 }

@@ -20,7 +20,6 @@ namespace DataManager
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var splitStringConverter = new ValueConverter<IEnumerable<string>, string>(v => string.Join("%%", v), v => v.Split("%%", StringSplitOptions.RemoveEmptyEntries));
             var splitListStringConverter = new ValueConverter<List<string>, string>(v => string.Join("%%", v), v => v.Split("%%", StringSplitOptions.RemoveEmptyEntries).ToList());
             var rangeConverter = new ValueConverter<Range, string>(r => $"{r.Start}%%{r.End}", s
                 => new Range(int.Parse(s.Split("%%", StringSplitOptions.RemoveEmptyEntries)[0]),
@@ -34,7 +33,7 @@ namespace DataManager
             modelBuilder.Entity<Review>().HasKey(r => r.Guid);
             modelBuilder.Entity<Entry>().HasKey(r => r.Guid);
 
-            modelBuilder.Entity<ChoiceEntry>().Property(e => e.Choices).HasConversion(splitStringConverter);
+            modelBuilder.Entity<ChoiceEntry>().Property(e => e.Choices).HasConversion(splitListStringConverter);
             modelBuilder.Entity<SimpleEntry>().Property(e => e.Answers).HasConversion(splitListStringConverter);
             modelBuilder.Entity<RangeEntry>().Property(e => e.Boundaries).HasConversion(rangeConverter);
             modelBuilder.Entity<TextEntry>();

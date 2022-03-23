@@ -26,7 +26,14 @@
         }
         <h1>@Review.Status</h1>
         <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
-            <label>@($"Review from {Review.StartDate.ToShortDateString()} to  {Review.EndDate.ToShortDateString()}")</label>
+            <div>
+                <label>Review from </label>
+                <InputDate @bind-Value="Review.StartDate"></InputDate>
+            </div>
+            <div>
+                <label>To </label>
+                <InputDate @bind-Value="Review.EndDate"></InputDate>
+            </div>
             @if (Review.Entries != null)
             {
                 @foreach (var entry in Review.Entries)
@@ -80,6 +87,8 @@
 
     private async Task HandleValidSubmit()
     {
+        if (Review == null) return;
+        Review.Status = ReviewStatus.Active;
         HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
         if (response.IsSuccessStatusCode)
         {

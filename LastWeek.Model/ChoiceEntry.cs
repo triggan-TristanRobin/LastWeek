@@ -8,7 +8,7 @@ namespace LastWeek.Model
 {
     public class ChoiceEntry : Entry
     {
-        public IEnumerable<string> Choices { get; set; }
+        public List<string> Choices { get; set; }
         public string Selected { get; set; }
     }
 }

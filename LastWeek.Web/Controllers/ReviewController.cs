@@ -22,17 +22,17 @@ namespace LastWeek.Web.Controllers
         [HttpGet(Name = "Reviews")]
         public async Task<JsonResult> GetReviewAsync(Guid? guid, int? count = 0)
         {
-            if(guid != null)
+            var serializeOptions = new JsonSerializerOptions();
+            serializeOptions.Converters.Add(new EntryConverter());
+            if (guid != null)
             {
                 var review = await contentManager.GetReviewAsync(guid.Value);
-                var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new EntryConverter());
                 return new JsonResult(review, serializeOptions);
             }
             else
             {
                 var reviews = await contentManager.GetReviewsAsync(count ?? 0);
-                return new JsonResult(reviews);
+                return new JsonResult(reviews, serializeOptions);
             }
         }
 

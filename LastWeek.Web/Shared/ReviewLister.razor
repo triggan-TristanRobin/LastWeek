@@ -1,4 +1,6 @@
-﻿@inject IAuthService AuthService
+﻿@using System.Text.Json
+@using DataManager.Helpers
+@inject IAuthService AuthService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient apiClient
 
@@ -26,9 +28,11 @@
 {
     public List<Review> Reviews { get; private set; } = new();
     private User signedUser = new User();
+    JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
 
     protected override async Task OnInitializedAsync()
     {
+        serializeOptions.Converters.Add(new EntryConverter());
         var hasKey = await localStorage.ContainKeyAsync("user");
         var saved = await localStorage.GetItemAsync<User>("user");
 
@@ -64,6 +68,6 @@
 
     protected async Task GetUserReviews()
     {
-        Reviews = await apiClient.GetFromJsonAsync<List<Review>>("Review") ?? new();
+        Reviews = await apiClient.GetFromJsonAsync<List<Review>>("Review", serializeOptions) ?? new();
     }
 }

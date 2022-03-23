@@ -1,5 +1,5 @@
 ﻿<div class="entry-container">
-    <label>@Entry.Question</label>
+    <InputTextArea Placeholder="Your question" @bind-Value="@Entry.Question" />
     @switch (Entry)
         {
             case ChoiceEntry entry:
