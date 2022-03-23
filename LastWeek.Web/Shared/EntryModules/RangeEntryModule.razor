@@ -2,8 +2,8 @@
 
 <div>
     <InputNumber min="@Entry.Boundaries.Start.Value" max="@Entry.Boundaries.End.Value"
-    Value="@Entry.Selected" ValueExpression="@(() => Entry.Selected)" @onkeyup="ValidateInput"
-            ValueChanged="@((double value) => ValidateInput())">
+    Value="@Entry.Selected" ValueExpression="@(() => Entry.Selected)"
+            ValueChanged="@((double value) => ValidateInput(value))">
     </InputNumber>
 </div>
 
@@ -15,11 +15,11 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        ValidateInput();
+        ValidateInput(Entry.Selected);
     }
 
-    private void ValidateInput()
+    private void ValidateInput(double value)
     {
-        Entry.Selected = Math.Clamp(Entry.Selected, Entry.Boundaries.Start.Value, Entry.Boundaries.End.Value);
+        Entry.Selected = Math.Clamp(value, Entry.Boundaries.Start.Value, Entry.Boundaries.End.Value);
     }
 }

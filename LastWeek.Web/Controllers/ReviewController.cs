@@ -37,10 +37,15 @@ namespace LastWeek.Web.Controllers
         }
 
         [HttpPost(Name = "Reviews")]
-        public async Task<JsonResult> UpsertReviewAsync(Review reviewToSave)
+        public async Task<IActionResult> UpsertReviewAsync(Review review)
         {
-            var result = await contentManager.UpsertReviewAsync(reviewToSave);
-            return new JsonResult(result);
+            var result = await contentManager.UpsertReviewAsync(review);
+
+            return result >= 1
+                    ? StatusCode(200)
+                    : result == 0
+                        ? StatusCode(204)
+                        : BadRequest();
         }
     }
 }

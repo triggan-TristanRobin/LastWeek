@@ -46,6 +46,10 @@ namespace DataManager
         private async Task<int> PutReviewAsync(Review reviewToUpdate)
         {
             context.Entry(reviewToUpdate).State = EntityState.Modified;
+            foreach (var entry in reviewToUpdate.Entries)
+            {
+                context.Entry(entry).State = EntityState.Modified;
+            }
             return await context.SaveChangesAsync();
         }
 

@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using DataManager;
+using DataManager.Helpers;
 using LastWeek.Web.Helpers;
 using LastWeek.Web.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAsyncContentManager, MSSQLDBManager>();
 builder.Services.AddScoped<UserManager>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new EntryConverter());
+});
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 

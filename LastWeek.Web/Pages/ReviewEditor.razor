@@ -1,0 +1,93 @@
+﻿@page "/Review/{ReviewId}"
+@using System.Text.Json
+@using DataManager.Helpers
+@inject IAuthService AuthService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject HttpClient apiClient
+
+<section>
+    @if (Review == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="message">
+                <span>@message</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="errorMessage">
+                <span>@errorMessage</span>
+            </div>
+        }
+        <h1>@Review.Status</h1>
+        <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
+            <label>@($"Review from {Review.StartDate.ToShortDateString()} to  {Review.EndDate.ToShortDateString()}")</label>
+            @if (Review.Entries != null)
+            {
+                @foreach (var entry in Review.Entries)
+                {
+                    <EntryTemplate Entry="@entry" />
+                }
+            }
+            <button type="submit" class="btn btn-primary">Save</button>
+        </EditForm>
+        <a href="/">Back</a>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public string? ReviewId { get; set; }
+    [Parameter]
+    public Review? Review { get; set; }
+    private User signedUser = new User();
+    JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
+    private string message = string.Empty;
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serializeOptions.Converters.Add(new EntryConverter());
+        var hasKey = await localStorage.ContainKeyAsync("user");
+        var saved = await localStorage.GetItemAsync<User>("user");
+
+        Console.WriteLine($"Tried to retrieve key: {hasKey} - {saved?.Guid}");
+
+        if (hasKey)
+        {
+            this.signedUser = saved!;
+            await GetUserReview();
+        }
+        else
+        {
+            Review = new()
+                {
+                    StartDate = DateTime.Today.AddDays(-19),
+                    EndDate = DateTime.Today.AddDays(-12),
+                };
+        }
+    }
+
+    protected async Task GetUserReview()
+    {
+        Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        if (response.IsSuccessStatusCode)
+        {
+            message = "Review saved!";
+        }
+        else
+        {
+            errorMessage = "Could not save your review.";
+        }
+    }
+}

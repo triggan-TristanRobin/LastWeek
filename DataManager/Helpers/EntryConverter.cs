@@ -98,7 +98,8 @@ namespace DataManager.Helpers
             var text = properties.Select(pi => pi.Name).ToArray();
             foreach (var pi in properties)
             {
-                writer.WriteString(pi.Name, JsonSerializer.Serialize(pi.GetValue(data)));
+                var serialized = JsonSerializer.Serialize(pi.GetValue(data));
+                writer.WriteString(pi.Name, serialized);
             }
 
             writer.WriteEndObject();
