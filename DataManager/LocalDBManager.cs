@@ -32,7 +32,7 @@ namespace DataManager
             DatabaseInitializer.Initialize(this.context);
         }
 
-        public async Task<List<Review>> GetReviewsAsync(int count = 0)
+        public async Task<List<Review>> GetReviewsAsync(int count = 0, Guid? userId = null)
         {
             using var context = GetContext();
             return await context.Reviews
@@ -41,7 +41,7 @@ namespace DataManager
                                 .ToListAsync();
         }
 
-        public async Task<Review> GetReviewAsync(Guid guid)
+        public async Task<Review> GetReviewAsync(Guid guid, Guid? userId = null)
         {
             using var context = GetContext();
             return await context.Reviews.Include(r => r.Entries).Where(r => r.Guid == guid).FirstOrDefaultAsync();
@@ -67,7 +67,7 @@ namespace DataManager
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> UpsertReviewAsync(Review reviewToSave)
+        public async Task<int> UpsertReviewAsync(Review reviewToSave, Guid? userId = null)
         {
             if (await AnyAsync(reviewToSave))
             {

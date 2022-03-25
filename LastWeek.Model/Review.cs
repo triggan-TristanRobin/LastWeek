@@ -13,6 +13,7 @@ namespace LastWeek.Model
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public List<Entry> Entries { get; set; }
+        public User User { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -60,6 +61,7 @@ namespace LastWeek.Model
             }
             foreach (var prop in typeof(Review).GetProperties())
             {
+                if (prop.Name == "User") continue;
                 var updatedProperty = prop.GetValue(updateDate);
                 prop.SetValue(this, updatedProperty);
             }

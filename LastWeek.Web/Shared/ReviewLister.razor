@@ -78,7 +78,7 @@
 
     protected async Task NewReview()
     {
-        Review templateReview = Reviews.FirstOrDefault()?.GetTemplate() ?? new Review();
+        Review templateReview = Reviews.FirstOrDefault()?.GetTemplate() ?? new Review { Entries = new List<Entry>() };
         templateReview.StartDate = DateTime.Today.AddDays(-6);
         templateReview.EndDate = DateTime.Today;
         var response = await apiClient.PostAsJsonAsync<Review>("Review", templateReview, serializeOptions);

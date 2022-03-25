@@ -8,7 +8,7 @@ namespace DataManager
 {
     public class FakeContentManager : IAsyncContentManager
     {
-        public async Task<Review> GetReviewAsync(Guid guid)
+        public async Task<Review> GetReviewAsync(Guid guid, Guid? userId = null)
         {
             var date = DateTime.Today;
             await Task.Delay(100);
@@ -27,7 +27,7 @@ namespace DataManager
             };
         }
 
-        public async Task<List<Review>> GetReviewsAsync(int count = 0)
+        public async Task<List<Review>> GetReviewsAsync(int count = 0, Guid? userId = null)
         {
 
             var reviews = new List<Review>();
@@ -55,7 +55,7 @@ namespace DataManager
             return reviews;
         }
 
-        public async Task<int> UpsertReviewAsync(Review reviewToSave)
+        public async Task<int> UpsertReviewAsync(Review reviewToSave, Guid? userId = null)
         {
             await Task.Delay(100);
             return 1;
