@@ -1,6 +1,7 @@
 ﻿@page "/Review/{ReviewId}"
 @using System.Text.Json
 @using DataManager.Helpers
+@using LastWeek.Model.Enums
 @inject IAuthService AuthService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient apiClient
@@ -38,10 +39,22 @@
             {
                 @foreach (var entry in Review.Entries)
                 {
-                    <EntryTemplate Entry="@entry" />
+                    <div>
+                        <EntryTemplate Entry="@entry" />
+                        <button type="button" class="btn-link btn-primary" @onclick="@(() => RemoveEntry(entry))">X</button>
+                    </div>
                 }
             }
             <button type="submit" class="btn btn-primary">Save</button>
+            <div>
+                <InputSelect @bind-Value="newEntryType">
+                    @foreach (var type in Enum.GetValues<EntryType>().Where(t => t != EntryType.Entry))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </InputSelect>
+                <button type="button" class="btn btn-primary" @onclick="AddEntry">+</button>
+            </div>
         </EditForm>
         <a href="/">Back</a>
     }
@@ -56,6 +69,7 @@
     JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
     private string message = string.Empty;
     private string errorMessage = string.Empty;
+    private EntryType newEntryType;
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,5 +112,23 @@
         {
             errorMessage = "Could not save your review.";
         }
+    }
+
+    private void AddEntry()
+    {
+        Entry newEntry = newEntryType switch
+        {
+            EntryType.ChoiceEntry => new ChoiceEntry(),
+            EntryType.RangeEntry => new RangeEntry(),
+            EntryType.SimpleEntry => new SimpleEntry(),
+            EntryType.TextEntry => new TextEntry(),
+            _ => new SimpleEntry(),
+        };
+        Review!.Entries.Add(newEntry);
+    }
+
+    private void RemoveEntry(Entry entry)
+    {
+        Review!.Entries.Remove(entry);
     }
 }

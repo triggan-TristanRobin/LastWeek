@@ -48,9 +48,17 @@ namespace DataManager
         private async Task<int> PutReviewAsync(Review reviewToUpdate)
         {
             context.Entry(reviewToUpdate).State = EntityState.Modified;
-            foreach (var entry in reviewToUpdate.Entries)
+            var dbReview = await context.Reviews.Include(r => r.Entries).AsNoTracking().Where(r => r.Guid == reviewToUpdate.Guid).FirstOrDefaultAsync();
+            foreach (var entry in dbReview.Entries)
             {
-                context.Entry(entry).State = EntityState.Modified;
+                if(reviewToUpdate.Entries.Any(e => e.Guid == entry.Guid))
+                    context.Entry(entry).State = EntityState.Modified;
+                else
+                    context.Entry(entry).State = EntityState.Deleted;
+            }
+            foreach (var entry in reviewToUpdate.Entries.Where(e => !dbReview.Entries.Any(dbE => dbE.Guid == e.Guid)))
+            {
+                context.Entry(entry).State = EntityState.Added;
             }
             return await context.SaveChangesAsync();
         }
