@@ -35,9 +35,9 @@
                 <label>To </label>
                 <InputDate @bind-Value="Review.EndDate"></InputDate>
             </div>
-            @if (Review.Entries != null)
+            @if (Review.Records != null)
             {
-                @foreach (var entry in Review.Entries)
+                @foreach (var entry in Review.Records)
                 {
                     <div>
                         <EntryTemplate Entry="@entry" />
@@ -116,19 +116,19 @@
 
     private void AddEntry()
     {
-        Entry newEntry = newEntryType switch
+        Record newEntry = newEntryType switch
         {
-            EntryType.ChoiceEntry => new ChoiceEntry(),
-            EntryType.RangeEntry => new RangeEntry(),
-            EntryType.SimpleEntry => new SimpleEntry(),
-            EntryType.TextEntry => new TextEntry(),
-            _ => new SimpleEntry(),
+            EntryType.ChoiceEntry => new ChoiceRecord(),
+            EntryType.RangeEntry => new RangeRecord(),
+            EntryType.SimpleEntry => new SimpleRecord(),
+            EntryType.TextEntry => new TextRecord(),
+            _ => new SimpleRecord(),
         };
-        Review!.Entries.Add(newEntry);
+        Review!.Records.Add(newEntry);
     }
 
-    private void RemoveEntry(Entry entry)
+    private void RemoveEntry(Record entry)
     {
-        Review!.Entries.Remove(entry);
+        Review!.Records.Remove(entry);
     }
 }

@@ -2,16 +2,16 @@
     <InputTextArea Placeholder="Your question" @bind-Value="@Entry.Question" />
     @switch (Entry)
         {
-            case ChoiceEntry entry:
+            case ChoiceRecord entry:
                 <ChoiceEntryModule Entry="@entry" />
                 break;
-            case RangeEntry entry:
+            case RangeRecord entry:
                 <RangeEntryModule Entry="@entry" />
                 break;
-            case SimpleEntry entry:
+            case SimpleRecord entry:
                 <SimpleEntryModule Entry="@entry" />
                 break;
-            case TextEntry entry:
+            case TextRecord entry:
                 <TextEntryModule Entry="@entry" />
                 break;
         }
@@ -19,5 +19,5 @@
 
 @code {
     [Parameter]
-    public Entry Entry { get; set; } = new();
+    public Record Entry { get; set; } = new();
 }

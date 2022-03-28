@@ -24,7 +24,7 @@ namespace DataManager
             var query = context.Reviews.AsQueryable();
             if (userId != null)
                 query = query.Where(review => review.User != null && review.User.Guid == userId);
-            return await query.AsNoTracking().Include(r => r.Entries)
+            return await query.AsNoTracking().Include(r => r.Records)
                                 .OrderByDescending(review => review.StartDate)
                                 .ToListAsync();
         }
@@ -34,7 +34,7 @@ namespace DataManager
             var query = context.Reviews.AsQueryable();
             if (userId != null)
                 query = query.Where(review => review.User != null && review.User.Guid == userId);
-            return await query.Include(r => r.Entries).Where(r => r.Guid == guid).FirstOrDefaultAsync();
+            return await query.Include(r => r.Records).Where(r => r.Guid == guid).FirstOrDefaultAsync();
         }
 
         private async Task<bool> AnyAsync(Review review)
@@ -47,7 +47,7 @@ namespace DataManager
             if (reviewToSave.Guid == new Guid()) reviewToSave.Guid = Guid.NewGuid();
             if (userId != null) reviewToSave.User = context.Users.SingleOrDefault(u => u.Guid == userId);
 
-            reviewToSave.Entries?.ForEach(e => e.Guid = e.Guid == new Guid() ? Guid.NewGuid() : e.Guid);
+            reviewToSave.Records?.ForEach(e => e.Guid = e.Guid == new Guid() ? Guid.NewGuid() : e.Guid);
             await context.Reviews.AddAsync(reviewToSave);
             return await context.SaveChangesAsync();
         }
@@ -55,17 +55,17 @@ namespace DataManager
         private async Task<int> PutReviewAsync(Review reviewToUpdate, Guid? userId = null)
         {
             context.Entry(reviewToUpdate).State = EntityState.Modified;
-            var dbReview = await context.Reviews.Include(r => r.Entries).Include(r => r.User).AsNoTracking().Where(r => r.Guid == reviewToUpdate.Guid).FirstOrDefaultAsync();
+            var dbReview = await context.Reviews.Include(r => r.Records).Include(r => r.User).AsNoTracking().Where(r => r.Guid == reviewToUpdate.Guid).FirstOrDefaultAsync();
             if (dbReview.User.Guid != userId) throw new Exception("Cannot update review which does not belong to the user");
             
-            foreach (var entry in dbReview.Entries)
+            foreach (var entry in dbReview.Records)
             {
-                if(reviewToUpdate.Entries.Any(e => e.Guid == entry.Guid))
+                if(reviewToUpdate.Records.Any(e => e.Guid == entry.Guid))
                     context.Entry(entry).State = EntityState.Modified;
                 else
                     context.Entry(entry).State = EntityState.Deleted;
             }
-            foreach (var entry in reviewToUpdate.Entries.Where(e => !dbReview.Entries.Any(dbE => dbE.Guid == e.Guid)))
+            foreach (var entry in reviewToUpdate.Records.Where(e => !dbReview.Records.Any(dbE => dbE.Guid == e.Guid)))
             {
                 context.Entry(entry).State = EntityState.Added;
             }

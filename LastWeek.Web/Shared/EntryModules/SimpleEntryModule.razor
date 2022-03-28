@@ -14,7 +14,7 @@
 
 @code {
     [Parameter]
-    public SimpleEntry Entry { get; set; } = new() { Answers = new() };
+    public SimpleRecord Entry { get; set; } = new() { Answers = new() };
     private List<FormResponse> answers = new();
 
     protected override void OnParametersSet()

@@ -36,7 +36,7 @@ namespace DataManager
         {
             using var context = GetContext();
             return await context.Reviews
-                                .AsNoTracking().Include(r => r.Entries)
+                                .AsNoTracking().Include(r => r.Records)
                                 .OrderByDescending(review => review.StartDate)
                                 .ToListAsync();
         }
@@ -44,7 +44,7 @@ namespace DataManager
         public async Task<Review> GetReviewAsync(Guid guid, Guid? userId = null)
         {
             using var context = GetContext();
-            return await context.Reviews.Include(r => r.Entries).Where(r => r.Guid == guid).FirstOrDefaultAsync();
+            return await context.Reviews.Include(r => r.Records).Where(r => r.Guid == guid).FirstOrDefaultAsync();
         }
 
         private async Task<bool> AnyAsync(Review review)

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataManager.Context;
+using LastWeek.Model.Enums;
 
 namespace DataManager.Helpers
 {
@@ -39,12 +40,12 @@ namespace DataManager.Helpers
                     StartDate = date,
                     EndDate = date.AddDays(1),
                     Status = ReviewStatus.Active,
-                    Entries = new List<Entry>
+                    Records = new List<Record>
                     {
-                        new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
-                        new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
-                        new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
-                        new TextEntry() { Answer = string.Empty, Question = "Next question?"},
+                        new ChoiceRecord() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
+                        new RangeRecord() { Boundaries = 1..10, Question = "Second question?"},
+                        new SimpleRecord() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
+                        new TextRecord() { Answer = string.Empty, Question = "Next question?"},
                     }
                 });
 
@@ -55,12 +56,12 @@ namespace DataManager.Helpers
                     {
                         StartDate = date,
                         EndDate = date.AddDays(1),
-                        Entries = new List<Entry>
+                        Records = new List<Record>
                         {
-                            new ChoiceEntry() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
-                            new RangeEntry() { Boundaries = 1..10, Question = "Second question?"},
-                            new SimpleEntry() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
-                            new TextEntry() { Answer = string.Empty, Question = "Next question?"}
+                            new ChoiceRecord() { Choices = new List<string> { "Choice1", "Choice2", "Choice3"}, Question = "First question?"},
+                            new RangeRecord() { Boundaries = 1..10, Question = "Second question?"},
+                            new SimpleRecord() { Answers = new List<string>() { string.Empty }, Question = "Third question?"},
+                            new TextRecord() { Answer = string.Empty, Question = "Next question?"}
                         }
                     });
                 }

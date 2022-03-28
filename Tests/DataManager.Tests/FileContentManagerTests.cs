@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using DataManager.Tests;
 using System.Threading.Tasks;
+using LastWeek.Model.Enums;
 
 namespace DataManagerTests
 {
@@ -125,8 +126,8 @@ namespace DataManagerTests
             Assert.AreEqual(expectedStatus, review.Status);
             Assert.AreEqual(new DateTime(2009, 02, 15), review.StartDate);
             Assert.AreEqual(new DateTime(2009, 02, 15), review.EndDate);
-            Assert.IsNotNull(review.Entries);
-            Assert.IsFalse(review.Entries.Any());
+            Assert.IsNotNull(review.Records);
+            Assert.IsFalse(review.Records.Any());
         }
 
         [Test]
@@ -179,7 +180,7 @@ namespace DataManagerTests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
 
             // Act
@@ -208,7 +209,7 @@ namespace DataManagerTests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
 
             // Act
@@ -333,7 +334,7 @@ namespace DataManagerTests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Archived,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
 
             // Act

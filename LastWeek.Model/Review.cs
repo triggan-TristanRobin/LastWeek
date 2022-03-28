@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LastWeek.Model.Enums;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,24 @@ using System.Threading.Tasks;
 
 namespace LastWeek.Model
 {
-    public class Review : Entity
+    public class Review : Entity, IComparable<Review>
     {
         public ReviewStatus Status { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public List<Entry> Entries { get; set; }
+        public List<Record> Records { get; set; }
         public User User { get; set; }
+        public ReviewType Type { get; set; }
+
+        public Review() : this(ReviewStatus.New)
+        {
+        }
+
+        public Review(ReviewStatus status = ReviewStatus.New, List<Record> records = null)
+        {
+            Status = status;
+            Records = records ?? new List<Record>();
+        }
 
         public override bool Equals(object obj)
         {
@@ -50,7 +62,7 @@ namespace LastWeek.Model
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Created, Updated, Deleted, Status, StartDate, EndDate, Entries);
+            return HashCode.Combine(Guid, Created, Updated, Deleted, Status, StartDate, EndDate, Records);
         }
 
         public bool Update(Review updateDate)
@@ -74,13 +86,39 @@ namespace LastWeek.Model
             {
                 Guid = new Guid(),
                 Status = ReviewStatus.New,
-                Entries = new()
+                Records = new()
             };
-            foreach(var entry in Entries)
+            foreach(var entry in Records)
             {
-                template.Entries.Add(entry.GetTemplate());
+                template.Records.Add(entry.GetTemplate());
             }
             return template;
+        }
+
+        public void Activate()
+        {
+            Status = Status == ReviewStatus.New ? ReviewStatus.Active : Status;
+        }
+
+        public void Validate()
+        {
+            Status = Status != ReviewStatus.Archived ? ReviewStatus.Validated : Status;
+        }
+
+        public void Archive()
+        {
+            Status = ReviewStatus.Archived;
+        }
+
+        public int CompareTo(Review other)
+        {
+            return other == null ? 1 : other.StartDate.CompareTo(StartDate);
+        }
+
+        public Period GetPeriod()
+        {
+            var days = (EndDate - StartDate).Days;
+            return Enum.IsDefined(typeof(Period), days) ? (Period)days : Period.Custom;
         }
     }
 }

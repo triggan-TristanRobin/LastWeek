@@ -9,11 +9,11 @@ using LastWeek.Model.Enums;
 
 namespace DataManager.Helpers
 {
-    public class EntryConverter : JsonConverter<Entry>
+    public class EntryConverter : JsonConverter<Record>
     {
-        public override bool CanConvert(Type typeToConvert) => typeof(Entry).IsAssignableFrom(typeToConvert);
+        public override bool CanConvert(Type typeToConvert) => typeof(Record).IsAssignableFrom(typeToConvert);
 
-        public override Entry Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Record Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
@@ -39,13 +39,13 @@ namespace DataManager.Helpers
             }
 
             EntryType typeDiscriminator = Enum.Parse<EntryType>(reader.GetString());
-            Entry data = typeDiscriminator switch
+            Record data = typeDiscriminator switch
             {
-                EntryType.ChoiceEntry => new ChoiceEntry(),
-                EntryType.RangeEntry => new RangeEntry(),
-                EntryType.SimpleEntry => new SimpleEntry(),
-                EntryType.TextEntry => new TextEntry(),
-                EntryType.Entry => new Entry(),
+                EntryType.ChoiceEntry => new ChoiceRecord(),
+                EntryType.RangeEntry => new RangeRecord(),
+                EntryType.SimpleEntry => new SimpleRecord(),
+                EntryType.TextEntry => new TextRecord(),
+                EntryType.Entry => new Record(),
                 _ => throw new JsonException()
             };
 
@@ -88,7 +88,7 @@ namespace DataManager.Helpers
             return new Range(startIndex, endIndex);
         }
 
-        public override void Write(Utf8JsonWriter writer, Entry data, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Record data, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 

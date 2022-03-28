@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace LastWeek.Model
 {
-    public class SimpleEntry : Entry
+    public class SimpleRecord : Record
     {
         public List<string> Answers { get; set; }
+
+        public override IEnumerable<string> AnswersAsTextEnumerable()
+        {
+            return Answers;
+        }
     }
 }
