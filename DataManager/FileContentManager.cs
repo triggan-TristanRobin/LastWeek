@@ -27,7 +27,7 @@ namespace DataManager
             this.fileSystem = fileSystem;
         }
 
-        public async Task<List<Review>> GetReviewsAsync(int count = 0)
+        public async Task<List<Review>> GetReviewsAsync(int count = 0, Guid? userId = null)
         {
             var reviews = new List<Review>();
             if (fileSystem.File.Exists(filePath))
@@ -41,7 +41,7 @@ namespace DataManager
             return reviews;
         }
 
-        public async Task<Review> GetReviewAsync(Guid guid)
+        public async Task<Review> GetReviewAsync(Guid guid, Guid? userId = null)
         {
             Review review = null;
             if (fileSystem.File.Exists(filePath))
@@ -79,7 +79,7 @@ namespace DataManager
             return 1;
         }
 
-        public async Task<int> UpsertReviewAsync(Review reviewToSave)
+        public async Task<int> UpsertReviewAsync(Review reviewToSave, Guid? userId = null)
         {
             if (await AnyAsync(reviewToSave))
             {

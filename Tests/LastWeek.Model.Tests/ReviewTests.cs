@@ -1,3 +1,4 @@
+using LastWeek.Model.Enums;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ namespace LastWeek.Model.Tests
     [TestFixture]
     public class ReviewTests
     {
-        private class FakeEntry : Entry { }
+        private class FakeRecord : Record { }
 
         [Test]
         public void EqualsSameObjectReturnsTrue()
@@ -19,7 +20,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = firstReview;
 
@@ -40,7 +41,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             object notAReview = new object();
 
@@ -61,7 +62,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -69,7 +70,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate,
                 StartDate = firstReview.StartDate,
                 Status = firstReview.Status,
-                Entries = firstReview.Entries
+                Records = firstReview.Records
             };
 
             // Act
@@ -89,7 +90,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -97,7 +98,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate.AddDays(-1),
                 StartDate = firstReview.StartDate,
                 Status = firstReview.Status,
-                Entries = firstReview.Entries
+                Records = firstReview.Records
             };
 
             // Act
@@ -117,7 +118,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -125,7 +126,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate,
                 StartDate = firstReview.StartDate.AddDays(-1),
                 Status = firstReview.Status,
-                Entries = firstReview.Entries
+                Records = firstReview.Records
             };
 
             // Act
@@ -145,7 +146,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -153,7 +154,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate,
                 StartDate = firstReview.StartDate,
                 Status = ReviewStatus.Validated,
-                Entries = firstReview.Entries
+                Records = firstReview.Records
             };
 
             // Act
@@ -173,7 +174,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = null
+                Records = null
             };
             Review secondReview = new()
             {
@@ -181,7 +182,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate,
                 StartDate = firstReview.StartDate,
                 Status = firstReview.Status,
-                Entries = null
+                Records = null
             };
 
             // Act
@@ -201,7 +202,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -209,7 +210,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate,
                 StartDate = firstReview.StartDate,
                 Status = firstReview.Status,
-                Entries = new List<Entry>() { new RangeEntry() }
+                Records = new List<Record>() { new RangeRecord() }
             };
 
             // Act
@@ -227,18 +228,18 @@ namespace LastWeek.Model.Tests
         public void EqualsSameReviewWithDifferentEntriesReturnsFalse(int listLength, int[] difIds)
         {
             // Arrange
-            List<Entry> firstList = new();
-            List<Entry> secondList = new();
+            List<Record> firstList = new();
+            List<Record> secondList = new();
             for (int i = 0; i < listLength; i++)
             {
                 if (Array.IndexOf(difIds, i) != -1)
                 {
-                    firstList.Add(new FakeEntry());
-                    secondList.Add(new FakeEntry());
+                    firstList.Add(new FakeRecord());
+                    secondList.Add(new FakeRecord());
                 }
                 else
                 {
-                    Entry fake = new FakeEntry();
+                    Record fake = new FakeRecord();
                     firstList.Add(fake);
                     secondList.Add(fake);
                 }
@@ -250,7 +251,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = firstList
+                Records = firstList
             };
             Review secondReview = new()
             {
@@ -258,7 +259,7 @@ namespace LastWeek.Model.Tests
                 EndDate = firstReview.EndDate,
                 StartDate = firstReview.StartDate,
                 Status = firstReview.Status,
-                Entries = secondList
+                Records = secondList
             };
 
             // Act
@@ -278,7 +279,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -286,7 +287,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.Today,
                 StartDate = DateTime.MinValue,
                 Status = ReviewStatus.Validated,
-                Entries = new List<Entry>() { new RangeEntry() }
+                Records = new List<Record>() { new RangeRecord() }
             };
 
             // Act
@@ -307,7 +308,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.MaxValue,
                 StartDate = DateTime.Today,
                 Status = ReviewStatus.Active,
-                Entries = new List<Entry>()
+                Records = new List<Record>()
             };
             Review secondReview = new()
             {
@@ -315,7 +316,7 @@ namespace LastWeek.Model.Tests
                 EndDate = DateTime.Today,
                 StartDate = DateTime.MinValue,
                 Status = ReviewStatus.Validated,
-                Entries = new List<Entry>() { new RangeEntry() }
+                Records = new List<Record>() { new RangeRecord() }
             };
 
             // Act

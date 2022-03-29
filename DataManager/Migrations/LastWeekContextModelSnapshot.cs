@@ -22,7 +22,7 @@ namespace DataManager.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("LastWeek.Model.Entry", b =>
+            modelBuilder.Entity("LastWeek.Model.Record", b =>
                 {
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
@@ -51,9 +51,9 @@ namespace DataManager.Migrations
 
                     b.HasIndex("ReviewGuid");
 
-                    b.ToTable("Entries");
+                    b.ToTable("Records");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Entry");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Record");
                 });
 
             modelBuilder.Entity("LastWeek.Model.Review", b =>
@@ -61,6 +61,12 @@ namespace DataManager.Migrations
                     b.Property<Guid>("Guid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -71,7 +77,18 @@ namespace DataManager.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UserGuid")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Guid");
+
+                    b.HasIndex("UserGuid");
 
                     b.ToTable("Reviews");
                 });
@@ -89,7 +106,7 @@ namespace DataManager.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -107,61 +124,88 @@ namespace DataManager.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Guid");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasFilter("[Username] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("LastWeek.Model.ChoiceEntry", b =>
+            modelBuilder.Entity("LastWeek.Model.ChoiceRecord", b =>
                 {
-                    b.HasBaseType("LastWeek.Model.Entry");
+                    b.HasBaseType("LastWeek.Model.Record");
 
                     b.Property<string>("Choices")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Selected")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ChoiceRecord_Selected");
 
-                    b.HasDiscriminator().HasValue("ChoiceEntry");
+                    b.HasDiscriminator().HasValue("ChoiceRecord");
                 });
 
-            modelBuilder.Entity("LastWeek.Model.RangeEntry", b =>
+            modelBuilder.Entity("LastWeek.Model.RangeRecord", b =>
                 {
-                    b.HasBaseType("LastWeek.Model.Entry");
+                    b.HasBaseType("LastWeek.Model.Record");
 
                     b.Property<string>("Boundaries")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Selected")
-                        .HasColumnType("float")
-                        .HasColumnName("RangeEntry_Selected");
+                        .HasColumnType("float");
 
-                    b.HasDiscriminator().HasValue("RangeEntry");
+                    b.HasDiscriminator().HasValue("RangeRecord");
                 });
 
-            modelBuilder.Entity("LastWeek.Model.SimpleEntry", b =>
+            modelBuilder.Entity("LastWeek.Model.SimpleRecord", b =>
                 {
-                    b.HasBaseType("LastWeek.Model.Entry");
+                    b.HasBaseType("LastWeek.Model.Record");
 
                     b.Property<string>("Answers")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("SimpleEntry");
+                    b.HasDiscriminator().HasValue("SimpleRecord");
                 });
 
-            modelBuilder.Entity("LastWeek.Model.Entry", b =>
+            modelBuilder.Entity("LastWeek.Model.TextRecord", b =>
+                {
+                    b.HasBaseType("LastWeek.Model.Record");
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("TextRecord");
+                });
+
+            modelBuilder.Entity("LastWeek.Model.Record", b =>
                 {
                     b.HasOne("LastWeek.Model.Review", null)
-                        .WithMany("Entries")
+                        .WithMany("Records")
                         .HasForeignKey("ReviewGuid");
                 });
 
             modelBuilder.Entity("LastWeek.Model.Review", b =>
                 {
-                    b.Navigation("Entries");
+                    b.HasOne("LastWeek.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserGuid");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("LastWeek.Model.Review", b =>
+                {
+                    b.Navigation("Records");
                 });
 #pragma warning restore 612, 618
         }

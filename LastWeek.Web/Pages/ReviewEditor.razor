@@ -1,0 +1,145 @@
+﻿@page "/Review/{ReviewId}"
+@using System.Text.Json
+@using BlazorDownloadFile
+@using DataManager.Helpers
+@using LastWeek.Exporter.Interfaces
+@using LastWeek.Model.Enums
+@inject IAuthService AuthService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject HttpClient apiClient
+@inject IReviewExporter exporter
+@inject IBlazorDownloadFileService Downloader
+
+<section>
+    @if (Review == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="message">
+                <span>@message</span>
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="errorMessage">
+                <span>@errorMessage</span>
+            </div>
+        }
+        <h1>@Review.Status</h1>
+        <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
+            <div>
+                <label>Review from </label>
+                <InputDate @bind-Value="Review.StartDate"></InputDate>
+            </div>
+            <div>
+                <label>To </label>
+                <InputDate @bind-Value="Review.EndDate"></InputDate>
+            </div>
+            @if (Review.Records != null)
+            {
+                @foreach (var record in Review.Records)
+                {
+                    <div>
+                        <RecordTemplate Record="@record" />
+                        <button type="button" class="btn-link btn-primary" @onclick="@(() => RemoveRecord(record))">X</button>
+                    </div>
+                }
+            }
+            <div>
+                <InputSelect @bind-Value="newRecordType">
+                    @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </InputSelect>
+                <button type="button" class="btn btn-primary" @onclick="AddRecord">+</button>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" @onclick="ExportReview">Export</button>
+        </EditForm>
+        <a href="/">Back</a>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public string? ReviewId { get; set; }
+    [Parameter]
+    public Review? Review { get; set; }
+    private User signedUser = new User();
+    JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
+    private string message = string.Empty;
+    private string errorMessage = string.Empty;
+    private RecordType newRecordType;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serializeOptions.Converters.Add(new RecordConverter());
+        var hasKey = await localStorage.ContainKeyAsync("user");
+        var saved = await localStorage.GetItemAsync<User>("user");
+
+        Console.WriteLine($"Tried to retrieve key: {hasKey} - {saved?.Guid}");
+
+        if (hasKey)
+        {
+            this.signedUser = saved!;
+            await GetUserReview();
+        }
+        else
+        {
+            Review = new()
+                {
+                    StartDate = DateTime.Today.AddDays(-19),
+                    EndDate = DateTime.Today.AddDays(-12),
+                };
+        }
+    }
+
+    protected async Task GetUserReview()
+    {
+        Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Review == null) return;
+        Review.Status = ReviewStatus.Active;
+        HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        if (response.IsSuccessStatusCode)
+        {
+            message = "Review saved!";
+        }
+        else
+        {
+            errorMessage = "Could not save your review.";
+        }
+    }
+
+    private void AddRecord()
+    {
+        Record newRevord = newRecordType switch
+        {
+            RecordType.ChoiceRecord => new ChoiceRecord(),
+            RecordType.RangeRecord => new RangeRecord(),
+            RecordType.SimpleRecord => new SimpleRecord(),
+            RecordType.TextRecord => new TextRecord(),
+            _ => new SimpleRecord(),
+        };
+        Review!.Records.Add(newRevord);
+    }
+
+    private void RemoveRecord(Record record)
+    {
+        Review!.Records.Remove(record);
+    }
+
+    private async Task ExportReview()
+    {
+        var file = exporter.WriteDoc(Review);
+        await Downloader.DownloadFile("Review.docx", new MemoryStream(file), "application/octet-stream");
+    }
+}

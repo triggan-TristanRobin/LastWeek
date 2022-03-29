@@ -1,0 +1,61 @@
+﻿@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">LastWeek.Web</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+<AuthorizeView>
+    <Authorized>
+    <nav class="flex-column">
+        <div class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                Home
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <NavLink class="nav-link" @onclick="Logout">
+                Log out
+            </NavLink>
+        </div>
+    </nav>
+    </Authorized>
+    <NotAuthorized>
+        <nav class="nav flex-column">
+            <div class="nav-item">
+                <NavLink class="nav-link" href="Register">
+                    Register
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="Signin">
+                    Signin
+                </NavLink>
+            </div>
+        </nav>
+    </NotAuthorized>
+</AuthorizeView>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.Signout();
+        NavigationManager.NavigateTo("/", true);
+    }
+}

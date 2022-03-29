@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="DocumentFormat.OpenXml" Version="2.16.0" />
+	  <PackageReference Include="Google.Apis.Drive.v3" Version="1.57.0.2601" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+	  <PackageReference Include="Microsoft.Graph" Version="4.22.0" />
+	  <PackageReference Include="Microsoft.Identity.Client" Version="4.42.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\LastWeek.Model\LastWeek.Model.csproj" />
+	  <ProjectReference Include="..\Tools\Tools.csproj" />
+	</ItemGroup>
+
+</Project>

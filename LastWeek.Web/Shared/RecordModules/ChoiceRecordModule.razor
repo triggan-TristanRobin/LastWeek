@@ -1,0 +1,75 @@
+﻿@namespace LastWeek.Shared.RecordModules
+
+<div>
+    @if (!edit)
+    {
+        <InputSelect @bind-Value="Record.Selected">
+            @if (Record?.Choices != null)
+            {
+            @foreach (var choice in Record.Choices)
+                {
+                <option value="@choice">@choice</option>
+                }
+            }
+        </InputSelect>
+    }
+    else
+    {
+        if (Record?.Choices != null)
+        {
+            @foreach (var choice in Record.Choices.Select((a, i) => new { Choice = a, Index = i }))
+            {
+                <InputText placeholder="@Record.Question" Value="@choices[choice.Index].Value"
+               ValueExpression="@(() => choices[choice.Index].Value)"
+               @onkeyup="@(() => OnValueChanged(choice.Index))"
+               ValueChanged="@((string value) => OnValueChanged(choice.Index))" />
+                <input type="button" @onclick="@(() => RemoveOption(choice.Index))" value="X"></input>
+            }
+        }
+    }
+    <input type="button" @onclick="ToggleEdit" value="Edit" />
+    <div>
+        <InputText @bind-Value="newChoice" />
+        <input type="button" @onclick="AddChoice" value="+" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ChoiceRecord Record { get; set; } = new();
+    private bool edit = false;
+    private string newChoice = string.Empty;
+    private List<FormResponse> choices = new();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Record.Choices == null) Record.Choices = new();
+        choices = Record.Choices.Select(s => new FormResponse { Value = s }).ToList();
+    }
+
+    protected void ToggleEdit()
+    {
+        edit = !edit;
+    }
+
+    protected void AddChoice()
+    {
+        if (Record.Choices == null) Record.Choices = new();
+        Record.Choices.Add(newChoice);
+        choices.Add(new FormResponse { Value = newChoice });
+        Record.Selected = newChoice;
+        newChoice = string.Empty;
+    }
+
+    private void OnValueChanged(int index)
+    {
+        Record.Choices[index] = choices[index].Value;
+    }
+
+    private void RemoveOption(int index)
+    {
+        Record.Choices.RemoveAt(index);
+        choices.RemoveAt(index);
+    }
+}

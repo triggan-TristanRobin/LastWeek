@@ -1,0 +1,23 @@
+﻿<div class="record-container">
+    <InputTextArea Placeholder="Your question" @bind-Value="@Record.Question" />
+    @switch (Record)
+        {
+            case ChoiceRecord record:
+                <ChoiceRecordModule Record="@record" />
+                break;
+            case RangeRecord record:
+                <RangeRecordModule Record="@record" />
+                break;
+            case SimpleRecord record:
+                <SimpleRecordModule Record="@record" />
+                break;
+            case TextRecord record:
+                <TextRecordModule Record="@record" />
+                break;
+        }
+</div>
+
+@code {
+    [Parameter]
+    public Record Record { get; set; } = new();
+}
