@@ -88,9 +88,9 @@ namespace LastWeek.Model
                 Status = ReviewStatus.New,
                 Records = new()
             };
-            foreach(var entry in Records)
+            foreach(var record in Records)
             {
-                template.Records.Add(entry.GetTemplate());
+                template.Records.Add(record.GetTemplate());
             }
             return template;
         }

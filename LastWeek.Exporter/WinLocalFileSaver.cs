@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
-using ReviewExporter.Interfaces;
+using LastWeek.Exporter.Interfaces;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Tools;
 
-namespace ReviewExporter
+namespace LastWeek.Exporter
 {
     public class WinLocalFileSaver : IFileSaver
     {

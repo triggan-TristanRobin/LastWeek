@@ -2,7 +2,7 @@
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Upload;
 using Microsoft.Extensions.Logging;
-using ReviewExporter.Interfaces;
+using LastWeek.Exporter.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Tools;
 
-namespace ReviewExporter
+namespace LastWeek.Exporter
 {
     public class GoogleUploader : IFileSaver
     {

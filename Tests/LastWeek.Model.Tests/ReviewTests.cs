@@ -8,7 +8,7 @@ namespace LastWeek.Model.Tests
     [TestFixture]
     public class ReviewTests
     {
-        private class FakeEntry : Record { }
+        private class FakeRecord : Record { }
 
         [Test]
         public void EqualsSameObjectReturnsTrue()
@@ -234,12 +234,12 @@ namespace LastWeek.Model.Tests
             {
                 if (Array.IndexOf(difIds, i) != -1)
                 {
-                    firstList.Add(new FakeEntry());
-                    secondList.Add(new FakeEntry());
+                    firstList.Add(new FakeRecord());
+                    secondList.Add(new FakeRecord());
                 }
                 else
                 {
-                    Record fake = new FakeEntry();
+                    Record fake = new FakeRecord();
                     firstList.Add(fake);
                     secondList.Add(fake);
                 }

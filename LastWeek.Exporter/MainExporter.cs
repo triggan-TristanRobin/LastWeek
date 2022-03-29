@@ -13,10 +13,10 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Validation;
 using System.Threading.Tasks;
-using ReviewExporter.Interfaces;
+using LastWeek.Exporter.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace ReviewExporter
+namespace LastWeek.Exporter
 {
     public class MainExporter : IReviewExporter
     {
@@ -50,10 +50,12 @@ namespace ReviewExporter
                 using (File.Create(Path.Combine(ResourcesPath, "Labels.list"))) { }
         }
 
-        public void WriteDoc(Review review)
+        public byte[] WriteDoc(Review review)
         {
             this.review = review;
             logger.LogInformation("Records saving (using docx file)");
+            byte[] resultFile = null;
+
             // Create Stream
             using (MemoryStream mem = new MemoryStream())
             {
@@ -113,7 +115,10 @@ namespace ReviewExporter
                     mem.Position = 0;
                     mem.CopyTo(file);
                 }
+                mem.Position = 0;
+                resultFile = mem.ToArray();
             }
+            return resultFile;
         }
 
         /// <inheritdoc />

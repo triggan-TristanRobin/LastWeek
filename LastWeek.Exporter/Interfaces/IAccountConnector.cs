@@ -1,6 +1,6 @@
 ﻿using Google.Apis.Drive.v3.Data;
 
-namespace ReviewExporter.Interfaces
+namespace LastWeek.Exporter.Interfaces
 {
     public interface IAccountConnector
 	{

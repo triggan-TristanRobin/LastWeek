@@ -58,16 +58,16 @@ namespace DataManager
             var dbReview = await context.Reviews.Include(r => r.Records).Include(r => r.User).AsNoTracking().Where(r => r.Guid == reviewToUpdate.Guid).FirstOrDefaultAsync();
             if (dbReview.User.Guid != userId) throw new Exception("Cannot update review which does not belong to the user");
             
-            foreach (var entry in dbReview.Records)
+            foreach (var record in dbReview.Records)
             {
-                if(reviewToUpdate.Records.Any(e => e.Guid == entry.Guid))
-                    context.Entry(entry).State = EntityState.Modified;
+                if(reviewToUpdate.Records.Any(e => e.Guid == record.Guid))
+                    context.Entry(record).State = EntityState.Modified;
                 else
-                    context.Entry(entry).State = EntityState.Deleted;
+                    context.Entry(record).State = EntityState.Deleted;
             }
-            foreach (var entry in reviewToUpdate.Records.Where(e => !dbReview.Records.Any(dbE => dbE.Guid == e.Guid)))
+            foreach (var record in reviewToUpdate.Records.Where(e => !dbReview.Records.Any(dbE => dbE.Guid == e.Guid)))
             {
-                context.Entry(entry).State = EntityState.Added;
+                context.Entry(record).State = EntityState.Added;
             }
             return await context.SaveChangesAsync();
         }

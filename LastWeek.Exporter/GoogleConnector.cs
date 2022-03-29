@@ -6,11 +6,11 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using Google.Apis.Drive.v3.Data;
-using ReviewExporter.Interfaces;
+using LastWeek.Exporter.Interfaces;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 
-namespace ReviewExporter
+namespace LastWeek.Exporter
 {
 	public class GoogleConnector : IAccountConnector
 	{

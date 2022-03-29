@@ -35,7 +35,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        serializeOptions.Converters.Add(new EntryConverter());
+        serializeOptions.Converters.Add(new RecordConverter());
         var hasKey = await localStorage.ContainKeyAsync("user");
         var saved = await localStorage.GetItemAsync<User>("user");
 

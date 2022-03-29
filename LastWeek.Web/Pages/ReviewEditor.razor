@@ -1,10 +1,14 @@
 ﻿@page "/Review/{ReviewId}"
 @using System.Text.Json
+@using BlazorDownloadFile
 @using DataManager.Helpers
+@using LastWeek.Exporter.Interfaces
 @using LastWeek.Model.Enums
 @inject IAuthService AuthService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient apiClient
+@inject IReviewExporter exporter
+@inject IBlazorDownloadFileService Downloader
 
 <section>
     @if (Review == null)
@@ -37,24 +41,25 @@
             </div>
             @if (Review.Records != null)
             {
-                @foreach (var entry in Review.Records)
+                @foreach (var record in Review.Records)
                 {
                     <div>
-                        <EntryTemplate Entry="@entry" />
-                        <button type="button" class="btn-link btn-primary" @onclick="@(() => RemoveEntry(entry))">X</button>
+                        <RecordTemplate Record="@record" />
+                        <button type="button" class="btn-link btn-primary" @onclick="@(() => RemoveRecord(record))">X</button>
                     </div>
                 }
             }
-            <button type="submit" class="btn btn-primary">Save</button>
             <div>
-                <InputSelect @bind-Value="newEntryType">
-                    @foreach (var type in Enum.GetValues<EntryType>().Where(t => t != EntryType.Entry))
+                <InputSelect @bind-Value="newRecordType">
+                    @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
                     {
                         <option value="@type">@type</option>
                     }
                 </InputSelect>
-                <button type="button" class="btn btn-primary" @onclick="AddEntry">+</button>
+                <button type="button" class="btn btn-primary" @onclick="AddRecord">+</button>
             </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary" @onclick="ExportReview">Export</button>
         </EditForm>
         <a href="/">Back</a>
     }
@@ -69,11 +74,11 @@
     JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
     private string message = string.Empty;
     private string errorMessage = string.Empty;
-    private EntryType newEntryType;
+    private RecordType newRecordType;
 
     protected override async Task OnInitializedAsync()
     {
-        serializeOptions.Converters.Add(new EntryConverter());
+        serializeOptions.Converters.Add(new RecordConverter());
         var hasKey = await localStorage.ContainKeyAsync("user");
         var saved = await localStorage.GetItemAsync<User>("user");
 
@@ -114,21 +119,27 @@
         }
     }
 
-    private void AddEntry()
+    private void AddRecord()
     {
-        Record newEntry = newEntryType switch
+        Record newRevord = newRecordType switch
         {
-            EntryType.ChoiceEntry => new ChoiceRecord(),
-            EntryType.RangeEntry => new RangeRecord(),
-            EntryType.SimpleEntry => new SimpleRecord(),
-            EntryType.TextEntry => new TextRecord(),
+            RecordType.ChoiceRecord => new ChoiceRecord(),
+            RecordType.RangeRecord => new RangeRecord(),
+            RecordType.SimpleRecord => new SimpleRecord(),
+            RecordType.TextRecord => new TextRecord(),
             _ => new SimpleRecord(),
         };
-        Review!.Records.Add(newEntry);
+        Review!.Records.Add(newRevord);
     }
 
-    private void RemoveEntry(Record entry)
+    private void RemoveRecord(Record record)
     {
-        Review!.Records.Remove(entry);
+        Review!.Records.Remove(record);
+    }
+
+    private async Task ExportReview()
+    {
+        var file = exporter.WriteDoc(Review);
+        await Downloader.DownloadFile("Review.docx", new MemoryStream(file), "application/octet-stream");
     }
 }

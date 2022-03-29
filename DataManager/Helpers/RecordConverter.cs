@@ -9,7 +9,7 @@ using LastWeek.Model.Enums;
 
 namespace DataManager.Helpers
 {
-    public class EntryConverter : JsonConverter<Record>
+    public class RecordConverter : JsonConverter<Record>
     {
         public override bool CanConvert(Type typeToConvert) => typeof(Record).IsAssignableFrom(typeToConvert);
 
@@ -27,7 +27,7 @@ namespace DataManager.Helpers
             }
 
             string propertyName = reader.GetString();
-            if (propertyName != "EntryType")
+            if (propertyName != "RecordType")
             {
                 throw new JsonException();
             }
@@ -38,14 +38,14 @@ namespace DataManager.Helpers
                 throw new JsonException();
             }
 
-            EntryType typeDiscriminator = Enum.Parse<EntryType>(reader.GetString());
+            RecordType typeDiscriminator = Enum.Parse<RecordType>(reader.GetString());
             Record data = typeDiscriminator switch
             {
-                EntryType.ChoiceEntry => new ChoiceRecord(),
-                EntryType.RangeEntry => new RangeRecord(),
-                EntryType.SimpleEntry => new SimpleRecord(),
-                EntryType.TextEntry => new TextRecord(),
-                EntryType.Entry => new Record(),
+                RecordType.ChoiceRecord => new ChoiceRecord(),
+                RecordType.RangeRecord => new RangeRecord(),
+                RecordType.SimpleRecord => new SimpleRecord(),
+                RecordType.TextRecord => new TextRecord(),
+                RecordType.Record => new Record(),
                 _ => throw new JsonException()
             };
 
@@ -63,8 +63,8 @@ namespace DataManager.Helpers
                     var value = reader.GetString();
                     // Each object will have to handle its way to read data from json (to avoid a huge switch for all properties here)
 
-                    var entryType = data.GetType();
-                    var pi = entryType.GetProperty(propertyName);
+                    var recordType = data.GetType();
+                    var pi = recordType.GetProperty(propertyName);
                     var des = JsonSerializer.Deserialize(value, pi.PropertyType);
                     if (pi.PropertyType == typeof(Range))
                     {
@@ -93,7 +93,7 @@ namespace DataManager.Helpers
             writer.WriteStartObject();
 
             // Required to be first property written as it's used to determine instantiation type at deserialization
-            writer.WriteString("EntryType", data.GetType().Name);
+            writer.WriteString("RecordType", data.GetType().Name);
             var properties = data.GetType().GetProperties();
             var text = properties.Select(pi => pi.Name).ToArray();
             foreach (var pi in properties)

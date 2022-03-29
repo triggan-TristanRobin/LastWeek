@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Tools;
 
-namespace ReviewExporter.Interfaces
+namespace LastWeek.Exporter.Interfaces
 {
     public interface IFileSaver
     {

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace LastWeek.Model.Enums
 {
-    public enum EntryType
+    public enum RecordType
     {
-        ChoiceEntry,
-        RangeEntry,
-        SimpleEntry,
-        TextEntry,
-        Entry
+        ChoiceRecord,
+        RangeRecord,
+        SimpleRecord,
+        TextRecord,
+        Record
     }
 }

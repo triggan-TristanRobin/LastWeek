@@ -27,7 +27,7 @@ namespace LastWeek.Web.Controllers
         public async Task<JsonResult> GetReviewAsync(Guid? guid, int? count = 0)
         {
             var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new EntryConverter());
+            serializeOptions.Converters.Add(new RecordConverter());
             if (guid != null)
             {
                 var review = await contentManager.GetReviewAsync(guid.Value, userId);
@@ -50,7 +50,7 @@ namespace LastWeek.Web.Controllers
             if(result >= 0)
             {
                 var serializeOptions = new JsonSerializerOptions();
-                serializeOptions.Converters.Add(new EntryConverter());
+                serializeOptions.Converters.Add(new RecordConverter());
                 var savedReview = await contentManager.GetReviewAsync(guid, userId);
                 return new JsonResult(savedReview, serializeOptions);
             }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Client;
-using ReviewExporter.Interfaces;
+using LastWeek.Exporter.Interfaces;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,12 +10,13 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Tools;
 
-namespace ReviewExporter
+namespace LastWeek.Exporter
 {
     public class OneDriveUploader : IFileSaver
     {
         private const string AADClientId = "9c03d7c4-de27-4478-a829-f1f4363bca0c";
         private const string GraphAPIEndpointPrefix = "https://graph.microsoft.com/v1.0/";
+        private static string Tenant = "common";
         private string[] AADScopes = { "files.readwrite.all" };
         private IPublicClientApplication AADAppContext = null;
         private GraphServiceClient graphClient = null;
@@ -60,7 +61,7 @@ namespace ReviewExporter
 
             // Instantiate the app with AAD 
             AADAppContext = PublicClientApplicationBuilder.Create(AADClientId)
-                                                            .WithRedirectUri($"msal{AADClientId}://auth")
+                                                            .WithRedirectUri("http://localhost:7111")
                                                             .Build();
 
             string status;
@@ -75,8 +76,8 @@ namespace ReviewExporter
                 catch (MsalUiRequiredException)
                 {
                     UserCredentials = await AADAppContext.AcquireTokenInteractive(AADScopes)
-                                                              .WithParentActivityOrWindow(parentWindow)
-                                                              .ExecuteAsync();
+                        .WithAuthority(AzureCloudInstance.AzurePublic, Tenant)
+                        .ExecuteAsync();
                 }
                 if (UserCredentials != null)
                 {

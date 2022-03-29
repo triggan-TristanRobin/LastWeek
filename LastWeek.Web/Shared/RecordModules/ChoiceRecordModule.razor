@@ -1,12 +1,12 @@
-﻿@namespace LastWeek.Shared.EntryModules
+﻿@namespace LastWeek.Shared.RecordModules
 
 <div>
     @if (!edit)
     {
-        <InputSelect @bind-Value="Entry.Selected">
-            @if (Entry?.Choices != null)
+        <InputSelect @bind-Value="Record.Selected">
+            @if (Record?.Choices != null)
             {
-            @foreach (var choice in Entry.Choices)
+            @foreach (var choice in Record.Choices)
                 {
                 <option value="@choice">@choice</option>
                 }
@@ -15,11 +15,11 @@
     }
     else
     {
-        if (Entry?.Choices != null)
+        if (Record?.Choices != null)
         {
-            @foreach (var choice in Entry.Choices.Select((a, i) => new { Choice = a, Index = i }))
+            @foreach (var choice in Record.Choices.Select((a, i) => new { Choice = a, Index = i }))
             {
-                <InputText placeholder="@Entry.Question" Value="@choices[choice.Index].Value"
+                <InputText placeholder="@Record.Question" Value="@choices[choice.Index].Value"
                ValueExpression="@(() => choices[choice.Index].Value)"
                @onkeyup="@(() => OnValueChanged(choice.Index))"
                ValueChanged="@((string value) => OnValueChanged(choice.Index))" />
@@ -36,7 +36,7 @@
 
 @code {
     [Parameter]
-    public ChoiceRecord Entry { get; set; } = new();
+    public ChoiceRecord Record { get; set; } = new();
     private bool edit = false;
     private string newChoice = string.Empty;
     private List<FormResponse> choices = new();
@@ -44,8 +44,8 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (Entry.Choices == null) Entry.Choices = new();
-        choices = Entry.Choices.Select(s => new FormResponse { Value = s }).ToList();
+        if (Record.Choices == null) Record.Choices = new();
+        choices = Record.Choices.Select(s => new FormResponse { Value = s }).ToList();
     }
 
     protected void ToggleEdit()
@@ -55,21 +55,21 @@
 
     protected void AddChoice()
     {
-        if (Entry.Choices == null) Entry.Choices = new();
-        Entry.Choices.Add(newChoice);
+        if (Record.Choices == null) Record.Choices = new();
+        Record.Choices.Add(newChoice);
         choices.Add(new FormResponse { Value = newChoice });
-        Entry.Selected = newChoice;
+        Record.Selected = newChoice;
         newChoice = string.Empty;
     }
 
     private void OnValueChanged(int index)
     {
-        Entry.Choices[index] = choices[index].Value;
+        Record.Choices[index] = choices[index].Value;
     }
 
     private void RemoveOption(int index)
     {
-        Entry.Choices.RemoveAt(index);
+        Record.Choices.RemoveAt(index);
         choices.RemoveAt(index);
     }
 }

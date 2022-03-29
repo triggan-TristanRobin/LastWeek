@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 
-namespace ReviewExporter.Interfaces
+namespace LastWeek.Exporter.Interfaces
 {
     public interface IReviewExporter
     {
-        void WriteDoc(Review review);
+        byte[] WriteDoc(Review review);
         bool GetFile();
         Task<Result> StoreReviewAsync(string path, List<object> additionalParams);
     }

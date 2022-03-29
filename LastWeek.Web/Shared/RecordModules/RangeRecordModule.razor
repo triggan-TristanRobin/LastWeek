@@ -1,0 +1,47 @@
+﻿@namespace LastWeek.Shared.RecordModules
+
+<div>
+    <div>
+    <label>Min</label>
+    <InputNumber Value="@startIndex" ValueExpression="@(() => startIndex)"
+            ValueChanged="@((int value) => SetBoundaries(value, Record.Boundaries.End.Value))" />
+    </div>
+    <InputNumber min="@Record.Boundaries.Start.Value" max="@Record.Boundaries.End.Value"
+            Value="@Record.Selected" ValueExpression="@(() => Record.Selected)"
+            ValueChanged="@((double value) => ValidateInput(value))">
+    </InputNumber>
+    <div>
+    <label>Max</label>
+    <InputNumber Value="@endIndex" ValueExpression="@(() => endIndex)"
+            ValueChanged="@((int value) => SetBoundaries(Record.Boundaries.Start.Value, value))" />
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public RangeRecord Record { get; set; } = new();
+    private int startIndex;
+    private int endIndex;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        startIndex = Record.Boundaries.Start.Value;
+        endIndex = Record.Boundaries.End.Value;
+        ValidateInput(Record.Selected);
+    }
+
+    private void ValidateInput(double value)
+    {
+        Record.Selected = Math.Clamp(value, Record.Boundaries.Start.Value, Record.Boundaries.End.Value);
+    }
+
+    private void SetBoundaries(int start, int end)
+    {
+        startIndex = start;
+        endIndex = end;
+        Record.Boundaries = new Range(start, end);
+        ValidateInput(Record.Selected);
+    }
+}

@@ -8,15 +8,21 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using LastWeek.Exporter;
+using LastWeek.Exporter.Interfaces;
 using System.Text;
+using BlazorDownloadFile;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAsyncContentManager, MSSQLDBManager>();
 builder.Services.AddScoped<UserManager>();
+builder.Services.AddSingleton<IReviewExporter, MainExporter>();
+builder.Services.AddSingleton<IFileSaver, OneDriveUploader>();
+builder.Services.AddBlazorDownloadFile();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.Converters.Add(new EntryConverter());
+    options.JsonSerializerOptions.Converters.Add(new RecordConverter());
 });
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
