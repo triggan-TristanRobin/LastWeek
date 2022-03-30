@@ -43,9 +43,11 @@
             {
                 @foreach (var record in Review.Records)
                 {
-                    <div>
+                    <div class="record-box">
+                        <div class="record-delete">
+                            <button type="button" class="btn-link btn-primary border-round" @onclick="@(() => RemoveRecord(record))">X</button>
+                        </div>
                         <RecordTemplate Record="@record" />
-                        <button type="button" class="btn-link btn-primary" @onclick="@(() => RemoveRecord(record))">X</button>
                     </div>
                 }
             }
@@ -108,6 +110,8 @@
     {
         if (Review == null) return;
         Review.Status = ReviewStatus.Active;
+        message = "";
+        errorMessage = "";
         HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
         if (response.IsSuccessStatusCode)
         {

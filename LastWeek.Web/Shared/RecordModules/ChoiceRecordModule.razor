@@ -23,14 +23,14 @@
                ValueExpression="@(() => choices[choice.Index].Value)"
                @onkeyup="@(() => OnValueChanged(choice.Index))"
                ValueChanged="@((string value) => OnValueChanged(choice.Index))" />
-                <input type="button" @onclick="@(() => RemoveOption(choice.Index))" value="X"></input>
+                <button type="button" @onclick="@(() => RemoveOption(choice.Index))">X</button>
             }
         }
     }
     <input type="button" @onclick="ToggleEdit" value="Edit" />
     <div>
-        <InputText @bind-Value="newChoice" />
-        <input type="button" @onclick="AddChoice" value="+" />
+        <InputText @bind-Value="newChoice" placeholder="Add new choice" />
+        <button type="button" @onclick="AddChoice">+</button>
     </div>
 </div>
 

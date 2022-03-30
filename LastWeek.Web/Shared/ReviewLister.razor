@@ -14,11 +14,13 @@
             }
             else
             {
-                <input type="button" @onclick="NewReview" value="New review" />
-                foreach (var review in Reviews)
-                {
-                    <MinimizedReview Review="@review" />
-                }
+                <button type="button" @onclick="NewReview">New review</button>
+                <div class="review-list">
+                    @foreach (var review in Reviews)
+                    {
+                        <MinimizedReview Review="@review" />
+                    }
+                </div>
             }
         </Authorized>
         <NotAuthorized>
@@ -82,7 +84,7 @@
         templateReview.StartDate = DateTime.Today.AddDays(-6);
         templateReview.EndDate = DateTime.Today;
         var response = await apiClient.PostAsJsonAsync<Review>("Review", templateReview, serializeOptions);
-        if(response.IsSuccessStatusCode)
+        if (response.IsSuccessStatusCode)
         {
             var review = await response.Content.ReadFromJsonAsync<Review>(serializeOptions);
             if (review == null) return;
