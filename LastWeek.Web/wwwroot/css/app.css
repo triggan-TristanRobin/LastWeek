@@ -16,6 +16,7 @@
     --info: #34c9fb;
     --warning: #ffc107;
     --danger: #dc3545;
+    --hover-color: #85c2ffdd;
     --light: #85c2ff;
     --dark: #343a40;
     --transparent: #00000000;
@@ -154,26 +155,20 @@ form .row label, form .row input, form .row textarea {
 }
 
 button {
-    text-transform: capitalize;
-    font-weight: bold;
     margin: 1em auto;
-    border: 3px solid var(--blue);
+    background: 0 0;
+    color: var(--blue);
+    border: 0.1em solid var(--blue);
     outline: 0;
-    border-radius: 2em;
     font-size: 1.2em;
     cursor: pointer;
     padding: 0.5em;
     transition: all .3s ease-in-out;
-    background: var(--blue);
 }
 
     button:hover {
         color: var(--light);
-        background-image: initial;
-        background-color: initial;
-        color: var(--blue);
-        border: 3px solid var(--blue);
-        background: 0 0;
+        background: var(--blue);
     }
 
 .scale-on-hover:hover {
@@ -214,10 +209,6 @@ button {
 }
 
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -o-appearance: none;
-    appearance: none;
 }
 
     select::-ms-expand {
@@ -231,6 +222,26 @@ select {
         pointer-events: none;
         padding-right: 5px;
     }
+
+.review-line {
+    padding: 0.5em;
+    border: 0.1em solid var(--transparent);
+    transition: all .3s ease-in-out;
+    margin: 0.5em 0;
+}
+
+    .review-line:hover {
+        border-color: var(--blue);
+        cursor: pointer;
+    }
+
+.review-list {
+
+}
+
+.border-round {
+    border-radius: 100%;
+}
 
 @media (max-width: 767.98px) {
     .row {

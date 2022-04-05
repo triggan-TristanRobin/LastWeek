@@ -41,6 +41,8 @@ jobs:
       with:
         files: '${{ env.PROJECT_DIRECTORY_PATH }}\bin\Release\net6.0\publish\appsettings.json'
       env:
+        AppSettings.JwtSecret : ${{ secrets.LASTWEEK_JWT_SECRET }}
+        AppSettings.apiBaseURL : ${{ secrets.LASTWEEK_API_BASE_URL }}
         ConnectionStrings.LastWeek: ${{ secrets.LASTWEEK_CONNECTIONSTRING }}
 
     - name: Deploy Application

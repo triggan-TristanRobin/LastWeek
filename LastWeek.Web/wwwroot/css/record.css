@@ -1,4 +1,29 @@
 ﻿.record-container {
     display: flex;
     flex-direction: column;
+    padding: 1em;
 }
+
+.record-box {
+    margin: 1em 0;
+}
+
+.record-box:hover {
+}
+
+    .record-box:hover .record-delete {
+        display: block !important;
+    }
+
+.record-delete {
+    position: relative;
+    top: -0.5em;
+    height: 0;
+    display: none;
+}
+
+    .record-delete button {
+        width: 25px;
+        height: 25px;
+        font-size: 0.5em;
+    }
