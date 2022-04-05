@@ -10,8 +10,8 @@ namespace LastWeek.Model
         public Range Boundaries { get; set; }
         [JsonIgnore]
         public double Start => Boundaries.Start.Value;
-        public double End => Boundaries.End.Value;
         [JsonIgnore]
+        public double End => Boundaries.End.Value;
         public double Selected { get; set; }
 
         public RangeRecord()

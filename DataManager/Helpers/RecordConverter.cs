@@ -69,6 +69,8 @@ namespace DataManager.Helpers
                     if (pi.PropertyType == typeof(Range))
                     {
                         des = DeserializeRange(value);
+                        for(int i = 0; i < 4; i++)
+                            reader.Read(); ;
                     }
 
                     pi.SetValue(data, des);
