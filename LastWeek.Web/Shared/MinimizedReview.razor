@@ -1,14 +1,24 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using LastWeek.Model.Enums
+@inject NavigationManager NavigationManager
 
 <div @onclick="Edit" class="review-line">
-        <label>@($"Review from {Review.StartDate.ToShortDateString()} to  {Review.EndDate.ToShortDateString()}")</label>
-        <label>@(Review.Status.ToString())</label>
-        @*<i class="fas fa-check"></i>*@
+    <div class="review-title"><label>There will be a title here</label></div>
+    <div class="review-fromdate"><label>@Review.StartDate.ToShortDateString()</label></div>
+    <div class="review-todate"><label>@Review.EndDate.ToShortDateString()</label></div>
+    <div class="review-status"><i class="@StatusClass"></i></div>
 </div>
 
 @code {
     [Parameter]
     public Review Review { get; set; } = new Review();
+    public string StatusClass => Review?.Status switch
+    {
+        ReviewStatus.New => "fa-solid fa-file-circle-exclamation",
+        ReviewStatus.Active => "fa-solid fa-file-pen",
+        ReviewStatus.Validated => "fa-solid fa-file-circle-check",
+        ReviewStatus.Archived => "fa-solid fa-file-lock",
+        _ => "fa-solid fa-circle-xmark"
+    };
 
     void Edit()
     {

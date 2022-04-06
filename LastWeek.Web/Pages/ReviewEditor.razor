@@ -17,26 +17,18 @@
     }
     else
     {
-        @if (!string.IsNullOrEmpty(message))
-        {
-            <div class="message">
-                <span>@message</span>
-            </div>
-        }
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="errorMessage">
-                <span>@errorMessage</span>
-            </div>
-        }
+        <div class="message @(string.IsNullOrEmpty(message) ? "" : "show")">
+            <span>@message</span>
+        </div>
+        <div class="message errorMessage @(string.IsNullOrEmpty(errorMessage) ? "" : "show")">
+            <span>@errorMessage</span>
+        </div>
         <h1>@Review.Status</h1>
         <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
             <div>
-                <label>Review from </label>
+                <label>Review from</label>
                 <InputDate @bind-Value="Review.StartDate"></InputDate>
-            </div>
-            <div>
-                <label>To </label>
+                <label>To</label>
                 <InputDate @bind-Value="Review.EndDate"></InputDate>
             </div>
             @if (Review.Records != null)
@@ -44,8 +36,8 @@
                 @foreach (var record in Review.Records)
                 {
                     <div class="record-box">
-                        <div class="record-delete">
-                            <button type="button" class="btn-link btn-primary border-round" @onclick="@(() => RemoveRecord(record))">X</button>
+                        <div class="delete-icon">
+                            <button type="button" class="fa-solid fa-circle-xmark" @onclick="@(() => RemoveRecord(record))"></button>
                         </div>
                         <RecordTemplate Record="@record" />
                     </div>
@@ -55,14 +47,14 @@
                 <InputSelect @bind-Value="newRecordType">
                     @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
                     {
-                        <option value="@type">@type</option>
+                    <option value="@type">@type</option>
                     }
-                </InputSelect>
-                <button type="button" class="btn btn-primary" @onclick="AddRecord">+</button>
-            </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-primary" @onclick="ExportReview">Export</button>
-        </EditForm>
+            </InputSelect>
+            <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus"></button>
+            <button type="submit">Save</button>
+            <button type="button" @onclick="ExportReview">Export</button>
+        </div>
+    </EditForm>
         <a href="/">Back</a>
     }
 </section>

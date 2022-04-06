@@ -1,36 +1,44 @@
 ﻿@namespace LastWeek.Shared.RecordModules
 
-<div>
-    @if (!edit)
-    {
-        <InputSelect @bind-Value="Record.Selected">
-            @if (Record?.Choices != null)
-            {
-            @foreach (var choice in Record.Choices)
-                {
-                <option value="@choice">@choice</option>
-                }
-            }
-        </InputSelect>
-    }
-    else
-    {
-        if (Record?.Choices != null)
+<div class="start-col">
+    <div class="d-flex">
+        @if (!edit)
         {
-            @foreach (var choice in Record.Choices.Select((a, i) => new { Choice = a, Index = i }))
+            <InputSelect @bind-Value="Record.Selected">
+                @if (Record?.Choices != null)
+                {
+                @foreach (var choice in Record.Choices)
+                    {
+                    <option value="@choice">@choice</option>
+                    }
+                }
+        </InputSelect>
+        }
+        else
+        {
+            if (Record?.Choices != null)
             {
-                <InputText placeholder="@Record.Question" Value="@choices[choice.Index].Value"
-               ValueExpression="@(() => choices[choice.Index].Value)"
-               @onkeyup="@(() => OnValueChanged(choice.Index))"
-               ValueChanged="@((string value) => OnValueChanged(choice.Index))" />
-                <button type="button" @onclick="@(() => RemoveOption(choice.Index))">X</button>
+                <div class="start-col">
+                    @foreach (var choice in Record.Choices.Select((a, i) => new { Choice = a, Index = i }))
+                    {
+                        <div class="answer-input">
+                            <div class="delete-icon">
+                                <button type="button" @onclick="@(() => RemoveOption(choice.Index))" class="fa-solid fa-circle-xmark"></button>
+                            </div>
+                            <InputText placeholder="@Record.Question" Value="@choices[choice.Index].Value"
+                           ValueExpression="@(() => choices[choice.Index].Value)"
+                           @onkeyup="@(() => OnValueChanged(choice.Index))"
+                           ValueChanged="@((string value) => OnValueChanged(choice.Index))" />
+                        </div>
+                    }
+                </div>
             }
         }
-    }
-    <input type="button" @onclick="ToggleEdit" value="Edit" />
+        <button type="button" @onclick="ToggleEdit" class="fas @(edit ? "fa-circle-check" : "fa-edit") btn-no-border"></button>
+    </div>
     <div>
         <InputText @bind-Value="newChoice" placeholder="Add new choice" />
-        <button type="button" @onclick="AddChoice">+</button>
+        <button type="button" @onclick="AddChoice" class="btn-no-border fa-solid fa-circle-plus"></button>
     </div>
 </div>
 
