@@ -14,5 +14,14 @@ namespace LastWeek.Model
         {
             return new List<string> { Answer };
         }
+
+        public override void Update(Record recordToUdpate)
+        {
+            base.Update(recordToUdpate);
+            if (recordToUdpate is TextRecord text)
+                Answer = text.Answer;
+            else
+                throw new ArgumentException("Cannot update record of different type");
+        }
     }
 }

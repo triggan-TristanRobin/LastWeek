@@ -17,52 +17,53 @@
     }
     else
     {
-        @if (!string.IsNullOrEmpty(message))
-        {
-            <div class="message">
-                <span>@message</span>
-            </div>
-        }
-        @if (!string.IsNullOrEmpty(errorMessage))
-        {
-            <div class="errorMessage">
-                <span>@errorMessage</span>
-            </div>
-        }
+        <div class="message @(string.IsNullOrEmpty(message) ? "" : "show")">
+            <span>@message</span>
+        </div>
+        <div class="message errorMessage @(string.IsNullOrEmpty(errorMessage) ? "" : "show")">
+            <span>@errorMessage</span>
+        </div>
         <h1>@Review.Status</h1>
         <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
             <div>
-                <label>Review from </label>
+                <label>Review from</label>
                 <InputDate @bind-Value="Review.StartDate"></InputDate>
-            </div>
-            <div>
-                <label>To </label>
+                <label>To</label>
                 <InputDate @bind-Value="Review.EndDate"></InputDate>
             </div>
-            @if (Review.Records != null)
-            {
-                @foreach (var record in Review.Records)
+            <div ondragover="event.preventDefault();">
+                @if (Review.Records != null)
                 {
-                    <div class="record-box">
-                        <div class="record-delete">
-                            <button type="button" class="btn-link btn-primary border-round" @onclick="@(() => RemoveRecord(record))">X</button>
+                    if (dragged != null)
+                    {
+                    }
+                    @foreach (var record in Review.Records.OrderBy(r => r.Order))
+                    {
+                        <div class="record-box @(record.Guid == dragged ? "record-placeholder" : "")" draggable="true"
+                 @key="record.Guid"
+                 @ondrop="@(()=> Drop(record))"
+                 @ondrag="@(()=> StartDrag(record))"
+                 @ondragover="@(()=> Drag(record))">
+                            <div class="delete-icon">
+                                <button type="button" class="fas fa-trash fa-fw" @onclick="@(() => RemoveRecord(record))"></button>
+                            </div>
+                            <RecordTemplate Record="@record" />
                         </div>
-                        <RecordTemplate Record="@record" />
-                    </div>
+                    }
                 }
-            }
+            </div>
             <div>
                 <InputSelect @bind-Value="newRecordType">
                     @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
                     {
-                        <option value="@type">@type</option>
+                    <option value="@type">@type</option>
                     }
-                </InputSelect>
-                <button type="button" class="btn btn-primary" @onclick="AddRecord">+</button>
-            </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-primary" @onclick="ExportReview">Export</button>
-        </EditForm>
+            </InputSelect>
+            <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus"></button>
+            <button type="submit">Save</button>
+            <button type="button" @onclick="ExportReview">Export</button>
+        </div>
+    </EditForm>
         <a href="/">Back</a>
     }
 </section>
@@ -77,6 +78,7 @@
     private string message = string.Empty;
     private string errorMessage = string.Empty;
     private RecordType newRecordType;
+    private Guid? dragged = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,6 +106,10 @@
     protected async Task GetUserReview()
     {
         Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
+        if(Review!.Records.All(r => r.Order == 0))
+        {
+            Review!.Records.ForEach(r => r.Order = Review!.Records.IndexOf(r));
+        }
     }
 
     private async Task HandleValidSubmit()
@@ -125,7 +131,7 @@
 
     private void AddRecord()
     {
-        Record newRevord = newRecordType switch
+        Record newRecord = newRecordType switch
         {
             RecordType.ChoiceRecord => new ChoiceRecord(),
             RecordType.RangeRecord => new RangeRecord(),
@@ -133,7 +139,8 @@
             RecordType.TextRecord => new TextRecord(),
             _ => new SimpleRecord(),
         };
-        Review!.Records.Add(newRevord);
+        newRecord.Order = Review!.Records.Max(r => r.Order) + 1;
+        Review!.Records.Add(newRecord);
     }
 
     private void RemoveRecord(Record record)
@@ -145,5 +152,39 @@
     {
         var file = exporter.WriteDoc(Review);
         await Downloader.DownloadFile("Review.docx", new MemoryStream(file), "application/octet-stream");
+    }
+    void StartDrag(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            dragged = record.Guid;
+        }
+    }
+
+    void Drop(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            var order = record.Order;
+            var current = Review.Records.Single(r => r.Guid == dragged);
+            record.Order = current.Order;
+            current.Order = order;
+
+            dragged = null;
+            StateHasChanged();
+        }
+    }
+
+    void Drag(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            var order = record.Order;
+            var current = Review.Records.Single(r => r.Guid == dragged);
+            record.Order = current.Order;
+            current.Order = order;
+
+            StateHasChanged();
+        }
     }
 }

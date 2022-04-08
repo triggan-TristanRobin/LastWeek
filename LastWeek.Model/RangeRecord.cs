@@ -30,5 +30,17 @@ namespace LastWeek.Model
         {
             return new List<string> { $"{Selected}, on a scale from {Start} to {End}" };
         }
+
+        public override void Update(Record recordToUdpate)
+        {
+            base.Update(recordToUdpate);
+            if (recordToUdpate is RangeRecord range)
+            {
+                Boundaries = range.Boundaries;
+                Selected = range.Selected;
+            }
+            else
+                throw new ArgumentException("Cannot update record of different type");
+        }
     }
 }

@@ -1,15 +1,15 @@
 ﻿@namespace LastWeek.Shared.RecordModules
 
-<div>
+<div class="full-col">
     @if (Record.Answers != null)
     {
         @foreach (var answer in Record.Answers.Select((a, i) => new { Answer = a, Index = i }))
         {
-            <InputText placeholder="@Record.Question" Value="@answers[answer.Index].Value" ValueExpression="@(() => answers[answer.Index].Value)"
-            ValueChanged="@((string value) => OnValueChanged(value, answer.Index))" />
+                <InputText placeholder="@Record.Question" Value="@answers[answer.Index].Value" ValueExpression="@(() => answers[answer.Index].Value)"
+                   ValueChanged="@((string value) => OnValueChanged(value, answer.Index))" class="answer-input" />
         }
     }
-    <input type="button" @onclick="AddAnswer" value="Add" />
+    <button type="button" @onclick="AddAnswer">Add</button>
 </div>
 
 @code {

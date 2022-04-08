@@ -14,5 +14,14 @@ namespace LastWeek.Model
         {
             return Answers;
         }
+
+        public override void Update(Record recordToUdpate)
+        {
+            base.Update(recordToUdpate);
+            if (recordToUdpate is SimpleRecord simple)
+                Answers = simple.Answers;
+            else
+                throw new ArgumentException("Cannot update record of different type");
+        }
     }
 }

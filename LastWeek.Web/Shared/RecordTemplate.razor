@@ -1,5 +1,5 @@
 ﻿<div class="record-container">
-    <InputTextArea Placeholder="Your question" @bind-Value="@Record.Question" />
+    <InputText Placeholder="Your question" @bind-Value="@Record.Question" class="record-question"/>
     @switch (Record)
         {
             case ChoiceRecord record:

@@ -60,8 +60,12 @@ namespace DataManager
             
             foreach (var record in dbReview.Records)
             {
-                if(reviewToUpdate.Records.Any(e => e.Guid == record.Guid))
+                var recordToUdpate = reviewToUpdate.Records.SingleOrDefault(e => e.Guid == record.Guid);
+                if (recordToUdpate != null)
+                {
+                    record.Update(recordToUdpate);
                     context.Entry(record).State = EntityState.Modified;
+                }
                 else
                     context.Entry(record).State = EntityState.Deleted;
             }
