@@ -15,5 +15,17 @@ namespace LastWeek.Model
         {
             return new List<string> { Selected };
         }
+
+        public override void Update(Record recordToUdpate)
+        {
+            base.Update(recordToUdpate);
+            if (recordToUdpate is ChoiceRecord choice)
+            {
+                Choices = choice.Choices;
+                Selected = choice.Selected;
+            }
+            else
+                throw new ArgumentException("Cannot update record of different type");
+        }
     }
 }

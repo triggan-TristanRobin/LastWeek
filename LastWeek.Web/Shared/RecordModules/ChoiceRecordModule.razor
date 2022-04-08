@@ -23,7 +23,7 @@
                     {
                         <div class="answer-input">
                             <div class="delete-icon">
-                                <button type="button" @onclick="@(() => RemoveOption(choice.Index))" class="fa-solid fa-circle-xmark"></button>
+                                <button type="button" @onclick="@(() => RemoveOption(choice.Index))" class="fas fa-trash fa-fw"></button>
                             </div>
                             <InputText placeholder="@Record.Question" Value="@choices[choice.Index].Value"
                            ValueExpression="@(() => choices[choice.Index].Value)"

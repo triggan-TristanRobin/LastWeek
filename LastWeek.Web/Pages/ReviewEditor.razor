@@ -31,18 +31,27 @@
                 <label>To</label>
                 <InputDate @bind-Value="Review.EndDate"></InputDate>
             </div>
-            @if (Review.Records != null)
-            {
-                @foreach (var record in Review.Records)
+            <div ondragover="event.preventDefault();">
+                @if (Review.Records != null)
                 {
-                    <div class="record-box">
-                        <div class="delete-icon">
-                            <button type="button" class="fa-solid fa-circle-xmark" @onclick="@(() => RemoveRecord(record))"></button>
+                    if (dragged != null)
+                    {
+                    }
+                    @foreach (var record in Review.Records.OrderBy(r => r.Order))
+                    {
+                        <div class="record-box @(record.Guid == dragged ? "record-placeholder" : "")" draggable="true"
+                 @key="record.Guid"
+                 @ondrop="@(()=> Drop(record))"
+                 @ondrag="@(()=> StartDrag(record))"
+                 @ondragover="@(()=> Drag(record))">
+                            <div class="delete-icon">
+                                <button type="button" class="fas fa-trash fa-fw" @onclick="@(() => RemoveRecord(record))"></button>
+                            </div>
+                            <RecordTemplate Record="@record" />
                         </div>
-                        <RecordTemplate Record="@record" />
-                    </div>
+                    }
                 }
-            }
+            </div>
             <div>
                 <InputSelect @bind-Value="newRecordType">
                     @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
@@ -69,6 +78,7 @@
     private string message = string.Empty;
     private string errorMessage = string.Empty;
     private RecordType newRecordType;
+    private Guid? dragged = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,6 +106,10 @@
     protected async Task GetUserReview()
     {
         Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
+        if(Review!.Records.All(r => r.Order == 0))
+        {
+            Review!.Records.ForEach(r => r.Order = Review!.Records.IndexOf(r));
+        }
     }
 
     private async Task HandleValidSubmit()
@@ -117,7 +131,7 @@
 
     private void AddRecord()
     {
-        Record newRevord = newRecordType switch
+        Record newRecord = newRecordType switch
         {
             RecordType.ChoiceRecord => new ChoiceRecord(),
             RecordType.RangeRecord => new RangeRecord(),
@@ -125,7 +139,8 @@
             RecordType.TextRecord => new TextRecord(),
             _ => new SimpleRecord(),
         };
-        Review!.Records.Add(newRevord);
+        newRecord.Order = Review!.Records.Max(r => r.Order) + 1;
+        Review!.Records.Add(newRecord);
     }
 
     private void RemoveRecord(Record record)
@@ -137,5 +152,39 @@
     {
         var file = exporter.WriteDoc(Review);
         await Downloader.DownloadFile("Review.docx", new MemoryStream(file), "application/octet-stream");
+    }
+    void StartDrag(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            dragged = record.Guid;
+        }
+    }
+
+    void Drop(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            var order = record.Order;
+            var current = Review.Records.Single(r => r.Guid == dragged);
+            record.Order = current.Order;
+            current.Order = order;
+
+            dragged = null;
+            StateHasChanged();
+        }
+    }
+
+    void Drag(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            var order = record.Order;
+            var current = Review.Records.Single(r => r.Guid == dragged);
+            record.Order = current.Order;
+            current.Order = order;
+
+            StateHasChanged();
+        }
     }
 }

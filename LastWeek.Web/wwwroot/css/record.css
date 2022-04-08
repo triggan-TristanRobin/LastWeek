@@ -12,31 +12,54 @@
     margin: 1em 0;
 }
 
-.record-box:hover {
+    .record-box:hover {
+    }
+
+.record-placeholder {
+    border: 1px solid var(--blue);
+    border-radius: 1em;
+    box-shadow: 0 0 0.5em var(--blue), inset 0 0 0.5em var(--blue);
 }
 
-    div:hover > .delete-icon {
-        display: block !important;
+    .record-placeholder * {
+        visibility: hidden;
     }
 
 .delete-icon {
     position: relative;
-    top: -1em;
-    left: -0.5em;
+    top: 0em;
+    left: 0em;
     height: 0;
     width: 0;
     display: none;
 }
 
-    .delete-icon button {
-        width: 25px;
-        height: 25px;
-        border: none;
-    }
+.answer-input .delete-icon {
+    left: -1.25em;
+}
 
-    .delete-icon button:hover {
-        background-color: unset;
-    }
+.delete-icon button {
+    width: 2em;
+    height: 2em;
+    color: var(--danger);
+    border: 0.25em solid var(--danger);
+    border-radius: 100%;
+    font-size: 0.75em;
+    padding: 0.25em;
+}
+
+        .delete-icon button:hover {
+            color: var(--white);
+            background-color: var(--danger);
+        }
+
+div:hover > .delete-icon {
+    display: block;
+}
+
+.record-placeholder > .delete-icon {
+    display: none;
+}
 
 .answer-input {
     border: 1px solid var(--gray-blue);
