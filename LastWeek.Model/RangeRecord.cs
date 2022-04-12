@@ -9,9 +9,9 @@ namespace LastWeek.Model
     {
         public Range Boundaries { get; set; }
         [JsonIgnore]
-        public double Start => Boundaries.Start.Value;
+        public int Start => Boundaries.Start.Value;
         [JsonIgnore]
-        public double End => Boundaries.End.Value;
+        public int End => Boundaries.End.Value;
         public double Selected { get; set; }
 
         public RangeRecord()
@@ -41,6 +41,13 @@ namespace LastWeek.Model
             }
             else
                 throw new ArgumentException("Cannot update record of different type");
+        }
+
+        public override Record GetTemplate()
+        {
+            Record template = new RangeRecord { Boundaries = new Range(Start, End) };
+            template.Question = Question;
+            return template;
         }
     }
 }

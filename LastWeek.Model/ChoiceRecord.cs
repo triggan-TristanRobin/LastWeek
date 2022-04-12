@@ -27,5 +27,12 @@ namespace LastWeek.Model
             else
                 throw new ArgumentException("Cannot update record of different type");
         }
+
+        public override Record GetTemplate()
+        {
+            Record template = new ChoiceRecord { Choices = new List<string>(Choices) };
+            template.Question = Question;
+            return template;
+        }
     }
 }

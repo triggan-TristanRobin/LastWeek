@@ -10,7 +10,7 @@ namespace LastWeek.Model
         public int Order { get; set; }
         public string Question { get; set; }
 
-        public Record GetTemplate()
+        public virtual Record GetTemplate()
         {
             Record template = (Record)Activator.CreateInstance(GetType());
             template.Question = Question;

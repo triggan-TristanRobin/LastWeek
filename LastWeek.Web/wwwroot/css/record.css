@@ -94,7 +94,7 @@ div:hover > .delete-icon {
     top: -0.25em;
 }
 
-    .slider-pointer:hover {
+    .slider-pointer:hover:not(.disabled) {
         cursor: grab;
     }
 
