@@ -9,6 +9,8 @@
 @inject IReviewExporter exporter
 @inject IBlazorDownloadFileService Downloader
 
+<PageTitle>Reviewkly @(Review?.StartDate.ToString("dd/MM")) - @(Review?.EndDate.ToString("dd/MM"))</PageTitle>
+
 <section disabled="@IsDisabled">
     @if (Review == null)
     {
