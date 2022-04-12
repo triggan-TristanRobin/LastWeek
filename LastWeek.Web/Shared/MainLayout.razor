@@ -8,8 +8,24 @@
     </div>
 
     <main>
+    <div class="message @(string.IsNullOrEmpty(message) ? "" : "show")">
+        <span>@message</span>
+    </div>
+    <div class="message errorMessage @(string.IsNullOrEmpty(errorMessage) ? "" : "show")">
+        <span>@errorMessage</span>
+    </div>
         <article class="content">
-            @Body
+            <CascadingValue Value="@message" Name="Message">
+                <CascadingValue Value="@errorMessage" Name="ErrorMessage">
+                    @Body
+                </CascadingValue>
+            </CascadingValue>
         </article>
     </main>
 </div>
+
+
+@code {
+    private string message = string.Empty;
+    private string errorMessage = string.Empty;
+}

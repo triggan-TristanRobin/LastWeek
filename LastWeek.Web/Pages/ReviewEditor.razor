@@ -3,33 +3,26 @@
 @using BlazorDownloadFile
 @using DataManager.Helpers
 @using LastWeek.Exporter.Interfaces
-@using LastWeek.Model.Enums
 @inject IAuthService AuthService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient apiClient
 @inject IReviewExporter exporter
 @inject IBlazorDownloadFileService Downloader
 
-<section>
+<section disabled="@IsDisabled">
     @if (Review == null)
     {
         <p><em>Loading...</em></p>
     }
     else
     {
-        <div class="message @(string.IsNullOrEmpty(message) ? "" : "show")">
-            <span>@message</span>
-        </div>
-        <div class="message errorMessage @(string.IsNullOrEmpty(errorMessage) ? "" : "show")">
-            <span>@errorMessage</span>
-        </div>
         <h1>@Review.Status</h1>
         <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
             <div>
                 <label>Review from</label>
-                <InputDate @bind-Value="Review.StartDate"></InputDate>
+                <InputDate @bind-Value="Review.StartDate" disabled="@IsDisabled"></InputDate>
                 <label>To</label>
-                <InputDate @bind-Value="Review.EndDate"></InputDate>
+                <InputDate @bind-Value="Review.EndDate" disabled="@IsDisabled"></InputDate>
             </div>
             <div ondragover="event.preventDefault();">
                 @if (Review.Records != null)
@@ -39,29 +32,41 @@
                     }
                     @foreach (var record in Review.Records.OrderBy(r => r.Order))
                     {
-                        <div class="record-box @(record.Guid == dragged ? "record-placeholder" : "")" draggable="true"
+                        <div class="record-box @(record.Guid == dragged ? "record-placeholder" : "")" draggable="@((!IsDisabled).ToString().ToLower())"
                  @key="record.Guid"
                  @ondrop="@(()=> Drop(record))"
                  @ondrag="@(()=> StartDrag(record))"
                  @ondragover="@(()=> Drag(record))">
-                            <div class="delete-icon">
-                                <button type="button" class="fas fa-trash fa-fw" @onclick="@(() => RemoveRecord(record))"></button>
-                            </div>
-                            <RecordTemplate Record="@record" />
+                            @if(!IsDisabled)
+                            {
+                                <div class="delete-icon">
+                                    <button type="button" class="fas fa-trash fa-fw" @onclick="@(() => RemoveRecord(record))"></button>
+                                </div> 
+                            }
+                            <CascadingValue Value="@Review.Status">
+                                <RecordTemplate Record="@record" />
+                            </CascadingValue>
                         </div>
                     }
                 }
             </div>
             <div>
+            @if(!IsDisabled)
+            {
                 <InputSelect @bind-Value="newRecordType">
                     @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
                     {
                     <option value="@type">@type</option>
                     }
-            </InputSelect>
-            <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus"></button>
-            <button type="submit">Save</button>
-            <button type="button" @onclick="ExportReview">Export</button>
+                </InputSelect>
+                <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus" ></button>
+            }
+            @if (Review?.Status == ReviewStatus.Active || Review?.Status == ReviewStatus.New)
+            {
+                <button type="submit">Save</button>
+                <button type="button" @onclick="ValidateReview">Validate</button>
+            }
+            <button type="button" @onclick="ExportReview">Download</button>
         </div>
     </EditForm>
         <a href="/">Back</a>
@@ -75,10 +80,14 @@
     public Review? Review { get; set; }
     private User signedUser = new User();
     JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
-    private string message = string.Empty;
-    private string errorMessage = string.Empty;
     private RecordType newRecordType;
     private Guid? dragged = null;
+    private bool IsDisabled => Review?.Status == ReviewStatus.Validated || Review?.Status == ReviewStatus.Archived;
+    
+    [CascadingParameter(Name = "Message")]
+    public string Message { get; set; } = string.Empty;
+    [CascadingParameter(Name = "ErrorMessage")]
+    public string ErrorMessage { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,16 +125,35 @@
     {
         if (Review == null) return;
         Review.Status = ReviewStatus.Active;
-        message = "";
-        errorMessage = "";
+        Message = "";
+        ErrorMessage = "";
         HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
         if (response.IsSuccessStatusCode)
         {
-            message = "Review saved!";
+            Message = "Review saved!";
         }
         else
         {
-            errorMessage = "Could not save your review.";
+            ErrorMessage = "Could not save your review.";
+        }
+    }
+
+    private async Task ValidateReview()
+    {
+        if (Review == null) return;
+        var status = Review.Status;
+        Review.Status = ReviewStatus.Validated;
+        Message = "";
+        ErrorMessage = "";
+        HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        if (response.IsSuccessStatusCode)
+        {
+            Message = "Review validated!";
+        }
+        else
+        {
+            Review.Status = status;
+            ErrorMessage = "Could not validate your review.";
         }
     }
 
@@ -155,6 +183,7 @@
     }
     void StartDrag(Record record)
     {
+        Console.WriteLine("Start drag");
         if (record != null && Review != null)
         {
             dragged = record.Guid;

@@ -4,7 +4,7 @@
     <div class="d-flex">
         @if (!edit)
         {
-            <InputSelect @bind-Value="Record.Selected">
+            <InputSelect @bind-Value="Record.Selected" disabled="@IsDisabled">
                 @if (Record?.Choices != null)
                 {
                 @foreach (var choice in Record.Choices)
@@ -34,17 +34,26 @@
                 </div>
             }
         }
-        <button type="button" @onclick="ToggleEdit" class="fas @(edit ? "fa-circle-check" : "fa-edit") btn-no-border"></button>
+        @if (!IsDisabled)
+        {
+            <button type="button" @onclick="ToggleEdit" class="fas @(edit ? "fa-circle-check" : "fa-edit") btn-no-border"></button>
+        }
     </div>
-    <div>
-        <InputText @bind-Value="newChoice" placeholder="Add new choice" />
-        <button type="button" @onclick="AddChoice" class="btn-no-border fa-solid fa-circle-plus"></button>
-    </div>
+    @if (!IsDisabled)
+    {
+        <div>
+            <InputText @bind-Value="newChoice" placeholder="Add new choice" />
+            <button type="button" @onclick="AddChoice" class="btn-no-border fa-solid fa-circle-plus"></button>
+        </div>
+    }
 </div>
 
 @code {
     [Parameter]
     public ChoiceRecord Record { get; set; } = new();
+    [CascadingParameter]
+    public ReviewStatus ReviewStatus { get; set; }
+    private bool IsDisabled => ReviewStatus == ReviewStatus.Validated || ReviewStatus == ReviewStatus.Archived;
     private bool edit = false;
     private string newChoice = string.Empty;
     private List<FormResponse> choices = new();

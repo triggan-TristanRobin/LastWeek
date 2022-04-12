@@ -292,8 +292,9 @@ select {
     z-index: 2;
     position: fixed;
     top: -100px;
-    left: 0;
-    width: 100%;
+    width: 250px;
+    left: calc(50% - 125px);
+    text-align: center;
 }
 
     .message.show {
@@ -306,8 +307,6 @@ select {
         border: 1px solid var(--gray-blue);
         box-shadow: 0 0 20px var(--background-color);
         padding: 0.5em 1em;
-        width: 250px;
-        margin-left: calc(50% - 125px);
     }
 
 @media (max-width: 767.98px) {
