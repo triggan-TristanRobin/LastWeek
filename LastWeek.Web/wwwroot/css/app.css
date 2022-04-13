@@ -1,7 +1,7 @@
 ﻿@import url('https://use.fontawesome.com/releases/v5.12.0/css/all.css');
 
 :root {
-    --background-color: #0c1526;
+    --darker-blue: #0c1526;
     --dark-blue: #052767;
     --blue: #007bff;
     --gray-blue: #1a3466;
@@ -27,7 +27,7 @@ html, body {
     font-family: 'Roboto', Georgia, Helvetica, Arial, sans-serif;
     font-size: 20px;
     line-height: 30px;
-    background-color: var(--dark-blue) !important;
+    background-color: var(--gray-blue) !important;
     color: var(--light);
     margin: 0;
 }
@@ -58,7 +58,7 @@ h1, h2, h3 {
 }
 
 .btn-dark {
-    background-color: var(--background-color);
+    background-color: var(--darker-blue);
 }
 
 .content {
@@ -138,12 +138,13 @@ form {
 }
 
 form input, form textarea, form select {
-    background-color: var(--background-color);
+    background-color: var(--darker-blue);
     color: var(--light);
     border: none;
     resize: none;
     padding: 0.5em;
     font-size: 1.1em;
+    opacity: unset;
 }
 
 .row div {
@@ -268,7 +269,7 @@ select {
 }
 
 .review-list {
-    background-color: var(--background-color);
+    background-color: var(--darker-blue);
 }
 
 .start-col {
@@ -305,7 +306,7 @@ select {
     .message > * {
         background-color: var(--dark-blue);
         border: 1px solid var(--gray-blue);
-        box-shadow: 0 0 20px var(--background-color);
+        box-shadow: 0 0 20px var(--darker-blue);
         padding: 0.5em 1em;
     }
 
