@@ -5,7 +5,7 @@
 }
 
 .record-question {
-    border-bottom: 1px solid var(--blue);
+    border-bottom: 1px solid var(--main-blue);
 }
 
 .record-box {
@@ -16,9 +16,9 @@
     }
 
 .record-placeholder {
-    border: 1px solid var(--blue);
+    border: 1px solid var(--main-blue);
     border-radius: 1em;
-    box-shadow: 0 0 0.5em var(--blue), inset 0 0 0.5em var(--blue);
+    box-shadow: 0 0 0.5em var(--main-blue), inset 0 0 0.5em var(--main-blue);
 }
 
     .record-placeholder * {
@@ -41,8 +41,8 @@
 .delete-icon button {
     width: 2em;
     height: 2em;
-    color: var(--danger);
-    border: 0.25em solid var(--danger);
+    color: var(--red);
+    border: 0.25em solid var(--red);
     border-radius: 100%;
     font-size: 0.75em;
     padding: 0.25em;
@@ -50,7 +50,7 @@
 
         .delete-icon button:hover {
             color: var(--white);
-            background-color: var(--danger);
+            background-color: var(--red);
         }
 
 div:hover > .delete-icon {
@@ -77,16 +77,16 @@ div:hover > .delete-icon {
 }
 
 .slider-range {
-    background-color: var(--darker-blue);
-    border: 0.125em solid var(--blue);
+    background-color: var(--dark-blue);
+    border: 0.125em solid var(--main-blue);
     border-radius: 1em;
     height: 0.5em;
     margin: 0.5em;
 }
 
 .slider-pointer {
-    background-color: var(--darker-blue);
-    border: 0.125em solid var(--blue);
+    background-color: var(--dark-blue);
+    border: 0.125em solid var(--main-blue);
     border-radius: 1em;
     height: 0.75em;
     width: 0.75em;

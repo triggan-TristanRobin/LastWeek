@@ -3,7 +3,10 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" >
                 <NotAuthorized>
+                @if(routeData.PageType != typeof(LastWeek.Web.Pages.Index))
+                {
                     <RedirectToLogin />
+                }
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>

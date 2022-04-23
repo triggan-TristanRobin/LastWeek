@@ -8,6 +8,7 @@
 @inject HttpClient apiClient
 @inject IReviewExporter exporter
 @inject IBlazorDownloadFileService Downloader
+@inject MessageService messageService
 
 <PageTitle>Reviewkly @(Review?.StartDate.ToString("dd/MM")) - @(Review?.EndDate.ToString("dd/MM"))</PageTitle>
 
@@ -39,11 +40,11 @@
                  @ondrop="@(()=> Drop(record))"
                  @ondrag="@(()=> StartDrag(record))"
                  @ondragover="@(()=> Drag(record))">
-                            @if(!IsDisabled)
+                            @if (!IsDisabled)
                             {
                                 <div class="delete-icon">
                                     <button type="button" class="fas fa-trash fa-fw" @onclick="@(() => RemoveRecord(record))"></button>
-                                </div> 
+                                </div>
                             }
                             <CascadingValue Value="@Review.Status">
                                 <RecordTemplate Record="@record" />
@@ -53,24 +54,26 @@
                 }
             </div>
             <div>
-            @if(!IsDisabled)
-            {
-                <InputSelect @bind-Value="newRecordType">
-                    @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
-                    {
-                    <option value="@type">@type</option>
-                    }
-                </InputSelect>
-                <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus" ></button>
-            }
-            @if (Review?.Status == ReviewStatus.Active || Review?.Status == ReviewStatus.New)
-            {
-                <button type="submit">Save</button>
-                <button type="button" @onclick="ValidateReview">Validate</button>
-            }
-            <button type="button" @onclick="ExportReview">Download</button>
-        </div>
-    </EditForm>
+                @if (!IsDisabled)
+                {
+                    <InputSelect @bind-Value="newRecordType">
+                        @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </InputSelect>
+                    <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus"></button>
+                }
+            </div>
+            <div>
+                @if (Review?.Status == ReviewStatus.Active || Review?.Status == ReviewStatus.New)
+                {
+                    <button type="submit">Save</button>
+                    <button type="button" @onclick="ValidateReview">Validate</button>
+                }
+                <button type="button" @onclick="ExportReview">Download</button>
+            </div>
+        </EditForm>
         <a href="/">Back</a>
     }
 </section>
@@ -85,10 +88,8 @@
     private RecordType newRecordType;
     private Guid? dragged = null;
     private bool IsDisabled => Review?.Status == ReviewStatus.Validated || Review?.Status == ReviewStatus.Archived;
-    
-    [CascadingParameter(Name = "Message")]
+
     public string Message { get; set; } = string.Empty;
-    [CascadingParameter(Name = "ErrorMessage")]
     public string ErrorMessage { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -117,7 +118,7 @@
     protected async Task GetUserReview()
     {
         Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
-        if(Review!.Records.All(r => r.Order == 0))
+        if (Review!.Records.All(r => r.Order == 0))
         {
             Review!.Records.ForEach(r => r.Order = Review!.Records.IndexOf(r));
         }
@@ -128,15 +129,18 @@
         if (Review == null) return;
         Review.Status = ReviewStatus.Active;
         Message = "";
+        messageService.Message = Message;
         ErrorMessage = "";
         HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
         if (response.IsSuccessStatusCode)
         {
             Message = "Review saved!";
+            messageService.Message = Message;
         }
         else
         {
             ErrorMessage = "Could not save your review.";
+            messageService.ErrorMessage = ErrorMessage;
         }
     }
 

@@ -2,39 +2,36 @@
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<div class="top-row">
-    <div class="navbar-brand">
-        <a href="">Reviewkly</a>
+<nav class="navbar topbar">
+    <a class="navbar-brand" href="#"><h2 style="margin:0">Reviewkly</h2></a>
+    <div class="navbar-toggler nav-link" @onclick="ToggleNavMenu">
+        <span class="fa fa-bars"></span>
     </div>
-</div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-<AuthorizeView>
-    <Authorized>
-    <nav class="nav">
-        <div class="nav-item">
-            <NavLink class="nav-link" @onclick="Logout">
-                Log out
-            </NavLink>
-        </div>
-    </nav>
-    </Authorized>
-    <NotAuthorized>
-        <nav class="nav">
-            <div class="nav-item">
-                <NavLink class="nav-link" href="Register">
-                    Register
-                </NavLink>
-            </div>
-            <div class="nav-item">
-                <NavLink class="nav-link" href="Signin">
-                    Signin
-                </NavLink>
-            </div>
-        </nav>
-    </NotAuthorized>
-</AuthorizeView>
-</div>
+    <ul class="nav nav-menu @NavMenuCssClass">
+        <AuthorizeView>
+            <Authorized>
+                <li class="nav-item">
+                    <NavLink class="nav-link" @onclick="Logout">
+                        Log out
+                    </NavLink>
+                </li>
+            </Authorized>
+            <NotAuthorized>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="Register">
+                        Register
+                    </NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="Signin">
+                        Signin
+                    </NavLink>
+                </li>
+            </NotAuthorized>
+        </AuthorizeView>
+    </ul>
+</nav>
 
 @code {
     private bool collapseNavMenu = true;
