@@ -1,31 +1,40 @@
 ﻿@inherits LayoutComponentBase
+@inject MessageService messageService
 
 <PageTitle>Reviewkly</PageTitle>
 
 <div class="page">
-    <div class="topbar">
+    <div class="sticky-top">
         <NavMenu />
     </div>
 
     <main>
-    <div class="message @(string.IsNullOrEmpty(message) ? "" : "show")">
-        <span>@message</span>
-    </div>
-    <div class="message errorMessage @(string.IsNullOrEmpty(errorMessage) ? "" : "show")">
-        <span>@errorMessage</span>
-    </div>
+        <div class="message @(string.IsNullOrEmpty(messageService.Message) ? "" : "show")">
+            <span>@messageService.Message</span>
+        </div>
+        <div class="message errorMessage @(string.IsNullOrEmpty(messageService.ErrorMessage) ? "" : "show")">
+            <span>@messageService.ErrorMessage</span>
+        </div>
         <article class="content">
-            <CascadingValue Value="@message" Name="Message">
-                <CascadingValue Value="@errorMessage" Name="ErrorMessage">
-                    @Body
-                </CascadingValue>
-            </CascadingValue>
+            @Body
         </article>
     </main>
 </div>
 
 
 @code {
-    private string message = string.Empty;
-    private string errorMessage = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        messageService.NotifyMessageUpdated += OnMessageUpdated;
+        messageService.NotifyErrorMessageUpdated += OnMessageUpdated;
+        await base.OnInitializedAsync();
+    }
+
+    public void OnMessageUpdated()
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
 }

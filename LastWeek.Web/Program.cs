@@ -16,6 +16,7 @@ using BlazorDownloadFile;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAsyncContentManager, MSSQLDBManager>();
 builder.Services.AddScoped<UserManager>();
+builder.Services.AddSingleton<MessageService>();
 builder.Services.AddSingleton<IReviewExporter, MainExporter>();
 builder.Services.AddSingleton<IFileSaver, OneDriveUploader>();
 builder.Services.AddBlazorDownloadFile();
