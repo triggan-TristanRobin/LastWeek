@@ -1,17 +1,40 @@
 ﻿@inherits LayoutComponentBase
+@inject MessageService messageService
+
+<PageTitle>Reviewkly</PageTitle>
 
 <div class="page">
-	<div class="sidebar">
-		<NavMenu />
-	</div>
+    <div class="sticky-top">
+        <NavMenu />
+    </div>
 
-	<main>
-		<div class="top-row px-4">
-			<a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-		</div>
-
-		<article class="content px-4">
-			@Body
-		</article>
-	</main>
+    <main>
+        <div class="message @(string.IsNullOrEmpty(messageService.Message) ? "" : "show")">
+            <span>@messageService.Message</span>
+        </div>
+        <div class="message errorMessage @(string.IsNullOrEmpty(messageService.ErrorMessage) ? "" : "show")">
+            <span>@messageService.ErrorMessage</span>
+        </div>
+        <article class="content">
+            @Body
+        </article>
+    </main>
 </div>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        messageService.NotifyMessageUpdated += OnMessageUpdated;
+        messageService.NotifyErrorMessageUpdated += OnMessageUpdated;
+        await base.OnInitializedAsync();
+    }
+
+    public void OnMessageUpdated()
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

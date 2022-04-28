@@ -1,0 +1,211 @@
+﻿@page "/Review/{ReviewId}"
+@using System.Text.Json
+@using DataManager.Helpers
+@using LastWeek.Exporter.Interfaces
+@inject IAuthService AuthService
+@inject HttpClient apiClient
+@*@inject IReviewExporter exporter*@
+@inject MessageService messageService
+
+<PageTitle>Reviewkly @(Review?.StartDate.ToString("dd/MM")) - @(Review?.EndDate.ToString("dd/MM"))</PageTitle>
+
+<section disabled="@IsDisabled">
+    @if (Review == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <h1>@Review.Status</h1>
+        <EditForm Model="@Review" OnValidSubmit="HandleValidSubmit">
+            <div>
+                <label>Review from</label>
+                <InputDate @bind-Value="Review.StartDate" disabled="@IsDisabled"></InputDate>
+                <label>To</label>
+                <InputDate @bind-Value="Review.EndDate" disabled="@IsDisabled"></InputDate>
+            </div>
+            <div ondragover="event.preventDefault();">
+                @if (Review.Records != null)
+                {
+                    if (dragged != null)
+                    {
+                    }
+                    @foreach (var record in Review.Records.OrderBy(r => r.Order))
+                    {
+                        <div class="record-box @(record.Guid == dragged ? "record-placeholder" : "")" draggable="@((!IsDisabled).ToString().ToLower())"
+                 @key="record.Guid"
+                 @ondrop="@(()=> Drop(record))"
+                 @ondrag="@(()=> StartDrag(record))"
+                 @ondragover="@(()=> Drag(record))">
+                            @if (!IsDisabled)
+                            {
+                                <div class="delete-icon">
+                                    <button type="button" class="fas fa-trash fa-fw" @onclick="@(() => RemoveRecord(record))"></button>
+                                </div>
+                            }
+                            <CascadingValue Value="@Review.Status">
+                                <RecordTemplate Record="@record" />
+                            </CascadingValue>
+                        </div>
+                    }
+                }
+            </div>
+            <div>
+                @if (!IsDisabled)
+                {
+                    <InputSelect @bind-Value="newRecordType">
+                        @foreach (var type in Enum.GetValues<RecordType>().Where(t => t != RecordType.Record))
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </InputSelect>
+                    <button type="button" @onclick="AddRecord" class="btn-no-border fa-solid fa-circle-plus"></button>
+                }
+            </div>
+            <div>
+                @if (Review?.Status == ReviewStatus.Active || Review?.Status == ReviewStatus.New)
+                {
+                    <button type="submit">Save</button>
+                    <button type="button" @onclick="ValidateReview">Validate</button>
+                }
+                @*<button type="button" @onclick="ExportReview">Download</button>*@
+            </div>
+        </EditForm>
+        <a href="/">Back</a>
+    }
+</section>
+
+@code {
+    [Parameter]
+    public string? ReviewId { get; set; }
+    [Parameter]
+    public Review? Review { get; set; }
+    private User signedUser = new User();
+    JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
+    private RecordType newRecordType;
+    private Guid? dragged = null;
+    private bool IsDisabled => Review?.Status == ReviewStatus.Validated || Review?.Status == ReviewStatus.Archived;
+
+    public string Message { get; set; } = string.Empty;
+    public string ErrorMessage { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serializeOptions.Converters.Add(new RecordConverter());
+
+        Review = new()
+            {
+                StartDate = DateTime.Today.AddDays(-19),
+                EndDate = DateTime.Today.AddDays(-12),
+            };
+    }
+
+    protected async Task GetUserReview()
+    {
+        //Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
+        //if (Review!.Records.All(r => r.Order == 0))
+        //{
+        //    Review!.Records.ForEach(r => r.Order = Review!.Records.IndexOf(r));
+        //}
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Review == null) return;
+        Review.Status = ReviewStatus.Active;
+        Message = "";
+        messageService.Message = Message;
+        ErrorMessage = "";
+        //HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        //if (response.IsSuccessStatusCode)
+        //{
+        //    Message = "Review saved!";
+        //    messageService.Message = Message;
+        //}
+        //else
+        //{
+        //    ErrorMessage = "Could not save your review.";
+        //    messageService.ErrorMessage = ErrorMessage;
+        //}
+    }
+
+    private async Task ValidateReview()
+    {
+        if (Review == null) return;
+        var status = Review.Status;
+        Review.Status = ReviewStatus.Validated;
+        Message = "";
+        ErrorMessage = "";
+        //HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        //if (response.IsSuccessStatusCode)
+        //{
+        //    Message = "Review validated!";
+        //}
+        //else
+        //{
+        //    Review.Status = status;
+        //    ErrorMessage = "Could not validate your review.";
+        //}
+    }
+
+    private void AddRecord()
+    {
+        Record newRecord = newRecordType switch
+        {
+            RecordType.ChoiceRecord => new ChoiceRecord(),
+            RecordType.RangeRecord => new RangeRecord(),
+            RecordType.SimpleRecord => new SimpleRecord(),
+            RecordType.TextRecord => new TextRecord(),
+            _ => new SimpleRecord(),
+        };
+        newRecord.Order = Review!.Records.Max(r => r.Order) + 1;
+        Review!.Records.Add(newRecord);
+    }
+
+    private void RemoveRecord(Record record)
+    {
+        Review!.Records.Remove(record);
+    }
+
+    //private async Task ExportReview()
+    //{
+    //    var file = exporter.WriteDoc(Review);
+    //    await Downloader.DownloadFile("Review.docx", new MemoryStream(file), "application/octet-stream");
+    //}
+
+    void StartDrag(Record record)
+    {
+        Console.WriteLine("Start drag");
+        if (record != null && Review != null)
+        {
+            dragged = record.Guid;
+        }
+    }
+
+    void Drop(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            var order = record.Order;
+            var current = Review.Records.Single(r => r.Guid == dragged);
+            record.Order = current.Order;
+            current.Order = order;
+
+            dragged = null;
+            StateHasChanged();
+        }
+    }
+
+    void Drag(Record record)
+    {
+        if (record != null && Review != null)
+        {
+            var order = record.Order;
+            var current = Review.Records.Single(r => r.Guid == dragged);
+            record.Order = current.Order;
+            current.Order = order;
+
+            StateHasChanged();
+        }
+    }
+}

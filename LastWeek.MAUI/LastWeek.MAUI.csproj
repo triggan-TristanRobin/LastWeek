@@ -50,12 +50,101 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiFont Remove="Resources\fonts\triggan-icons.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\fonts\Akshar\Akshar-VariableFont_wght.ttf" />
+	  <None Remove="Resources\fonts\Akshar\static\Akshar-Bold.ttf" />
+	  <None Remove="Resources\fonts\Akshar\static\Akshar-Light.ttf" />
+	  <None Remove="Resources\fonts\Akshar\static\Akshar-Medium.ttf" />
+	  <None Remove="Resources\fonts\Akshar\static\Akshar-Regular.ttf" />
+	  <None Remove="Resources\fonts\Akshar\static\Akshar-SemiBold.ttf" />
+	  <None Remove="Resources\fonts\Comfortaa\Comfortaa-VariableFont_wght.ttf" />
+	  <None Remove="Resources\fonts\Comfortaa\static\Comfortaa-Bold.ttf" />
+	  <None Remove="Resources\fonts\Comfortaa\static\Comfortaa-Light.ttf" />
+	  <None Remove="Resources\fonts\Comfortaa\static\Comfortaa-Medium.ttf" />
+	  <None Remove="Resources\fonts\Comfortaa\static\Comfortaa-Regular.ttf" />
+	  <None Remove="Resources\fonts\Comfortaa\static\Comfortaa-SemiBold.ttf" />
+	  <None Remove="Resources\fonts\triggan-icons.ttf" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\fonts\Akshar\Akshar-VariableFont_wght.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Akshar\static\Akshar-Bold.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Akshar\static\Akshar-Light.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Akshar\static\Akshar-Medium.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Akshar\static\Akshar-Regular.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Akshar\static\Akshar-SemiBold.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Comfortaa\Comfortaa-VariableFont_wght.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Comfortaa\static\Comfortaa-Bold.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Comfortaa\static\Comfortaa-Light.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Comfortaa\static\Comfortaa-Medium.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Comfortaa\static\Comfortaa-Regular.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\Comfortaa\static\Comfortaa-SemiBold.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Resources\fonts\triggan-icons.ttf">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-rtm.21520.4" />
 	  <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0-rtm.21520.4" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\DataManager\DataManager.csproj" />
+	  <ProjectReference Include="..\LastWeek.Exporter\LastWeek.Exporter.csproj" />
 	  <ProjectReference Include="..\LastWeek.Model\LastWeek.Model.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="wwwroot\css\app.css">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Data\" />
+	  <Folder Include="Resources\Fonts\" />
 	</ItemGroup>
 
 </Project>

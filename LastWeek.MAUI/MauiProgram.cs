@@ -1,5 +1,4 @@
 ﻿using LastWeek.MAUI.Services;
-using LastWeek.MAUI.Data;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace LastWeek.MAUI
@@ -13,11 +12,13 @@ namespace LastWeek.MAUI
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("Comfortaa/Comfortaa-VariableFont_wght.ttf", "Comfortaa");
+                    fonts.AddFont("Akshar/Akshar-VariableFont_wght.ttf", "Akshar");
                 });
 
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddAuthorizationCore();
+            builder.Services.AddSingleton<MessageService>();
             builder.Services.AddScoped<ApiAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(s => s.GetRequiredService<ApiAuthenticationStateProvider>());
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -26,8 +27,6 @@ namespace LastWeek.MAUI
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
-
-            builder.Services.AddSingleton<WeatherForecastService>();
 
             return builder.Build();
         }
