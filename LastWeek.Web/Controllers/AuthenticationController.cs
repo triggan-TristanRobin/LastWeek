@@ -31,6 +31,12 @@ namespace LastWeek.Web.Controllers
             this.appSettings = appSettings.Value;
         }
 
+        [HttpGet("User")]
+        public IActionResult GetUser()
+        {
+            return Ok(User);
+        }
+
         [AllowAnonymous]
         [HttpPost("Signup")]
         public async Task<IActionResult> Register([FromBody] User newUserCreds)

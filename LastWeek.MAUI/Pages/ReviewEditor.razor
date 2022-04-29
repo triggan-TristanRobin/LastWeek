@@ -1,5 +1,4 @@
 ﻿@page "/Review/{ReviewId}"
-@using System.Text.Json
 @using DataManager.Helpers
 @using LastWeek.Exporter.Interfaces
 @inject IAuthService AuthService
@@ -77,9 +76,9 @@
 
 @code {
     [Parameter]
-    public string? ReviewId { get; set; }
+    public string ReviewId { get; set; }
     [Parameter]
-    public Review? Review { get; set; }
+    public Review Review { get; set; }
     private User signedUser = new User();
     JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
     private RecordType newRecordType;
@@ -93,20 +92,27 @@
     {
         serializeOptions.Converters.Add(new RecordConverter());
 
-        Review = new()
-            {
-                StartDate = DateTime.Today.AddDays(-19),
-                EndDate = DateTime.Today.AddDays(-12),
-            };
+        if (signedUser != null)
+        {
+            await GetUserReview();
+        }
+        else
+        {
+            Review = new()
+                {
+                    StartDate = DateTime.Today.AddDays(-19),
+                    EndDate = DateTime.Today.AddDays(-12),
+                };
+        }
     }
 
     protected async Task GetUserReview()
     {
-        //Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
-        //if (Review!.Records.All(r => r.Order == 0))
-        //{
-        //    Review!.Records.ForEach(r => r.Order = Review!.Records.IndexOf(r));
-        //}
+        Review = await apiClient.GetFromJsonAsync<Review>($"Review?guid={ReviewId}", serializeOptions) ?? new();
+        if (Review!.Records.All(r => r.Order == 0))
+        {
+            Review!.Records.ForEach(r => r.Order = Review!.Records.IndexOf(r));
+        }
     }
 
     private async Task HandleValidSubmit()
@@ -116,17 +122,17 @@
         Message = "";
         messageService.Message = Message;
         ErrorMessage = "";
-        //HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    Message = "Review saved!";
-        //    messageService.Message = Message;
-        //}
-        //else
-        //{
-        //    ErrorMessage = "Could not save your review.";
-        //    messageService.ErrorMessage = ErrorMessage;
-        //}
+        HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        if (response.IsSuccessStatusCode)
+        {
+            Message = "Review saved!";
+            messageService.Message = Message;
+        }
+        else
+        {
+            ErrorMessage = "Could not save your review.";
+            messageService.ErrorMessage = ErrorMessage;
+        }
     }
 
     private async Task ValidateReview()
@@ -136,16 +142,16 @@
         Review.Status = ReviewStatus.Validated;
         Message = "";
         ErrorMessage = "";
-        //HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    Message = "Review validated!";
-        //}
-        //else
-        //{
-        //    Review.Status = status;
-        //    ErrorMessage = "Could not validate your review.";
-        //}
+        HttpResponseMessage response = await apiClient.PostAsJsonAsync<Review>($"Review", Review!, serializeOptions);
+        if (response.IsSuccessStatusCode)
+        {
+            Message = "Review validated!";
+        }
+        else
+        {
+            Review.Status = status;
+            ErrorMessage = "Could not validate your review.";
+        }
     }
 
     private void AddRecord()

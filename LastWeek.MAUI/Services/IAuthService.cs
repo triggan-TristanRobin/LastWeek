@@ -7,6 +7,8 @@ namespace LastWeek.MAUI.Services
 {
     public interface IAuthService
     {
+        User User { get; }
+        Task SetSignedInUser();
         Task<User> Register(User registerModel);
         Task<User> Signin(UserSigninInfos signinInfos);
         Task Signout();
