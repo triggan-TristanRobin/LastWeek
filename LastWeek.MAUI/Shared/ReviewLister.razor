@@ -37,7 +37,6 @@
     {
         serializeOptions.Converters.Add(new RecordConverter());
 
-        await AuthService.SetSignedInUser();
         if (signedUser != null)
         {
             await GetUserReviews();

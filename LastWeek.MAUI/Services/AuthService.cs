@@ -20,7 +20,7 @@ namespace LastWeek.MAUI.Services
         {
             this.httpClient = httpClient;
             this.authStateProvider = authStateProvider;
-            SetSignedInUser().Wait();
+            //SetSignedInUser().Wait();
 
             Console.WriteLine("Created AuthService instance.");
             Console.WriteLine($"(AuthService) HttpClient requestheader auth: {httpClient.DefaultRequestHeaders.Authorization}");
@@ -31,7 +31,7 @@ namespace LastWeek.MAUI.Services
             try
             {
                 var jsonUser = await SecureStorage.GetAsync("user");
-                if(jsonUser == null)
+                if(jsonUser != null)
                 {
                     User = JsonSerializer.Deserialize<User>(jsonUser);
                 }

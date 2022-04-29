@@ -164,7 +164,7 @@
             RecordType.TextRecord => new TextRecord(),
             _ => new SimpleRecord(),
         };
-        newRecord.Order = Review!.Records.Max(r => r.Order) + 1;
+        newRecord.Order = Review!.Records.Any() ? Review!.Records.Max(r => r.Order) + 1 : 0;
         Review!.Records.Add(newRecord);
     }
 
