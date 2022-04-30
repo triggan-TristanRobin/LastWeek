@@ -9,11 +9,13 @@
     </div>
 
     <main>
-        <div class="message @(string.IsNullOrEmpty(messageService.Message) ? "" : "show")">
-            <span>@messageService.Message</span>
-        </div>
-        <div class="message errorMessage @(string.IsNullOrEmpty(messageService.ErrorMessage) ? "" : "show")">
-            <span>@messageService.ErrorMessage</span>
+        <div id="message-box" class="@(string.IsNullOrEmpty(messageService.Message + messageService.ErrorMessage) ? "" : "show")">
+            <div class="message @(string.IsNullOrEmpty(messageService.Message) ? "" : "show")">
+                <span>@messageService.Message</span>
+            </div>
+            <div class="message errorMessage @(string.IsNullOrEmpty(messageService.ErrorMessage) ? "" : "show")">
+                <span>@messageService.ErrorMessage</span>
+            </div>
         </div>
         <article class="content">
             @Body

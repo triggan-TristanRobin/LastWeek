@@ -70,6 +70,10 @@ div:hover > .delete-icon {
     align-items: center;
 }
 
+.slider-box > * {
+    width: auto;
+}
+
 .slider {
     display: flex;
     flex-direction: column;
