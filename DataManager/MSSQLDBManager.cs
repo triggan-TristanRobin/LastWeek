@@ -23,7 +23,7 @@ namespace DataManager
         {
             var query = context.Reviews.AsQueryable();
             if (userId != null)
-                query = query.Where(review => review.User != null && review.User.Guid == userId);
+                query = query.Where(review => review.User != null && review.User.Guid == userId && !review.Deleted);
             return await query.AsNoTracking().Include(r => r.Records)
                                 .OrderByDescending(review => review.StartDate)
                                 .ToListAsync();
@@ -73,6 +73,7 @@ namespace DataManager
             {
                 context.Entry(record).State = EntityState.Added;
             }
+            dbReview.Update(reviewToUpdate);
             return await context.SaveChangesAsync();
         }
 
@@ -85,6 +86,22 @@ namespace DataManager
             else
             {
                 return await PostReviewAsync(reviewToSave, userId);
+            }
+        }
+
+        public async Task<bool> DeleteReviewAsync(Review reviewToSave, Guid? userId = null)
+        {
+            if (await AnyAsync(reviewToSave))
+            {
+                if (context.Entry(reviewToSave).State == EntityState.Detached)
+                    reviewToSave = await GetReviewAsync(reviewToSave.Guid, userId);
+
+                reviewToSave.Deleted = true;
+                return await context.SaveChangesAsync() == 1;
+            }
+            else
+            {
+                return false;
             }
         }
 

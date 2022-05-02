@@ -9,6 +9,7 @@
 @inject IReviewExporter exporter
 @inject IBlazorDownloadFileService Downloader
 @inject MessageService messageService
+@inject NavigationManager navigationManager
 
 <PageTitle>Reviewkly @(Review?.StartDate.ToString("dd/MM")) - @(Review?.EndDate.ToString("dd/MM"))</PageTitle>
 
@@ -70,6 +71,10 @@
                 {
                     <button type="submit">Save</button>
                     <button type="button" @onclick="ValidateReview">Validate</button>
+                }
+                @if (Review?.Status != ReviewStatus.New)
+                {
+                    <button type="button" @onclick="DeleteReview">Delete</button>
                 }
                 <button type="button" @onclick="ExportReview">Download</button>
             </div>
@@ -155,11 +160,34 @@
         if (response.IsSuccessStatusCode)
         {
             Message = "Review validated!";
+            messageService.Message = Message;
         }
         else
         {
             Review.Status = status;
             ErrorMessage = "Could not validate your review.";
+            messageService.ErrorMessage = ErrorMessage;
+        }
+    }
+
+    private async Task DeleteReview()
+    {
+        if (Review == null) return;
+        Message = "";
+        ErrorMessage = "";
+        Review.Deleted = true;
+        HttpResponseMessage response = await apiClient.DeleteAsync($"Review?reviewId={Review.Guid}");
+        if (response.IsSuccessStatusCode)
+        {
+            Message = "Review deleted, redirecting...";
+            messageService.Message = Message;
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            Review.Deleted = false;
+            ErrorMessage = "Could not delete your review.";
+            messageService.ErrorMessage = ErrorMessage;
         }
     }
 

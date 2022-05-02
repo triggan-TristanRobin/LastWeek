@@ -90,5 +90,18 @@ namespace DataManager
                 return await PostReviewAsync(reviewToSave);
             }
         }
+
+        public async Task<bool> DeleteReviewAsync(Review reviewToSave, Guid? userId = null)
+        {
+            if (await AnyAsync(reviewToSave))
+            {
+                reviewToSave.Deleted = true;
+                return await PutReviewAsync(reviewToSave) == 1;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
