@@ -1,0 +1,81 @@
+﻿@page "/Register"
+@using LastWeek.MAUI.Model
+@inject IAuthService AuthService
+@inject NavigationManager NavigationManager
+
+<h1>Register</h1>
+
+@if (ShowErrors)
+{
+    <div class="alert alert-danger" role="alert">
+        <p>@Error</p>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="RegisterModel" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="Username">Username</label>
+                <InputText Id="username" class="form-control" @bind-Value="RegisterModel.Username" />
+                <ValidationMessage For="@(() => RegisterModel.Username)" />
+            </div>
+
+            <div class="form-group">
+                <label for="FirstName">First name</label>
+                <InputText Id="firstName" class="form-control" @bind-Value="RegisterModel.FirstName" />
+                <ValidationMessage For="@(() => RegisterModel.FirstName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="LastName">Last name</label>
+                <InputText Id="lastName" class="form-control" @bind-Value="RegisterModel.LastName" />
+                <ValidationMessage For="@(() => RegisterModel.LastName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <InputText Id="email" class="form-control" @bind-Value="RegisterModel.Email" />
+                <ValidationMessage For="@(() => RegisterModel.Email)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password" class="form-control" @bind-Value="RegisterModel.Password" />
+                <ValidationMessage For="@(() => RegisterModel.Password)" />
+            </div>
+            <div class="form-group">
+                <label for="password">Confirm Password</label>
+                <InputText Id="passwordConfirmation" type="password" class="form-control" @bind-Value="RegisterModel.ConfirmPassword" />
+                <ValidationMessage For="@(() => RegisterModel.ConfirmPassword)" />
+            </div>
+            <button type="submit" class="btn-primary">Submit</button>
+        </EditForm>
+        <a href="Signin" class="small">Already have an account?</a>
+    </div>
+</div>
+
+@code {
+    private RegisterModel RegisterModel = new RegisterModel();
+    private bool ShowErrors;
+    private string? Error;
+
+    private async Task HandleRegistration()
+    {
+        ShowErrors = false;
+
+        var registeredUser = await AuthService.Register(RegisterModel);
+
+        if (registeredUser.Guid != new Guid())
+        {
+            NavigationManager.NavigateTo("/Signin");
+        }
+        else
+        {
+            Error = "There was an error during the registration process, please try again later.";
+            ShowErrors = true;
+        }
+    }
+}

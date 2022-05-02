@@ -1,0 +1,27 @@
+﻿@page "/"
+@inject IAuthService AuthService
+
+<PageTitle>Reviewkly</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <ReviewLister />
+    </Authorized>
+    <NotAuthorized>
+        <h1>Welcome to Reviewkly!</h1>
+        <p>
+            Reviewkly is an application based on Ryan Hildebrandt's habit called the <a href="http://ryanhildebrandt.com/weekly-review/">weekly review</a>.<br />
+            Since I started setting this as a habit for myself, I didn't do as many crazy stuff as he did.<br />
+            But slowly, it is becoming increasingly interesting as it helps my staying focused, productive and positive about my life!<br />
+            <br />
+            Currently, you can just subscribe and use this web app as is.<br />
+            It might seem limited and/or buggy, feel free to reach out on <a href="https://triggan.com">triggan</a> to provide any kind of feedback!<br />
+            <br />
+            Currently, this is all free of charge, join me while it lasts!
+        </p>
+        <div style="display:flex; justify-content:center;">
+            <a class="btn" href="Signin" style="margin: 0.5em">Signin</a>
+            <a class="btn" href="Register" style="margin: 0.5em">Register</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

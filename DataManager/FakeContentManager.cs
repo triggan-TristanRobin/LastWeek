@@ -9,6 +9,7 @@ namespace DataManager
 {
     public class FakeContentManager : IAsyncContentManager
     {
+
         public async Task<Review> GetReviewAsync(Guid guid, Guid? userId = null)
         {
             var date = DateTime.Today;
@@ -60,6 +61,11 @@ namespace DataManager
         {
             await Task.Delay(100);
             return 1;
+        }
+        public async Task<bool> DeleteReviewAsync(Review reviewToSave, Guid? userId = null)
+        {
+            await Task.Delay(100);
+            return true;
         }
     }
 }

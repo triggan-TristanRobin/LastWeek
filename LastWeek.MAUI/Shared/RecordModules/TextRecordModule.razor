@@ -1,0 +1,11 @@
+﻿@namespace LastWeek.MAUI.Shared.RecordModules
+
+<InputTextArea Placeholder="@Record.Question" @bind-Value="@Record.Answer" disabled="@IsDisabled" />
+
+@code {
+    [Parameter]
+    public TextRecord Record { get; set; } = new();
+    [CascadingParameter]
+    public ReviewStatus ReviewStatus { get; set; }
+    private bool IsDisabled => ReviewStatus == ReviewStatus.Validated || ReviewStatus == ReviewStatus.Archived;
+}

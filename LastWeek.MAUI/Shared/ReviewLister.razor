@@ -1,0 +1,87 @@
+﻿@using DataManager.Helpers
+@inject IAuthService AuthService
+@inject HttpClient apiClient
+@inject NavigationManager NavigationManager
+
+<div>
+    <AuthorizeView>
+        <Authorized>
+            @if (loading)
+            {
+                <div>Loading ...</div>
+            }
+            else
+            {
+                <button type="button" @onclick="NewReview">New review</button>
+                <div class="review-list">
+                    @foreach (var review in Reviews)
+                    {
+                        <MinimizedReview Review="@review" />
+                    }
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code
+{
+    private bool loading = true;
+    public List<Review> Reviews { get; private set; } = new();
+    private User signedUser => AuthService.User;
+    JsonSerializerOptions serializeOptions = new JsonSerializerOptions();
+
+    protected override async Task OnInitializedAsync()
+    {
+        serializeOptions.Converters.Add(new RecordConverter());
+
+        if (signedUser != null)
+        {
+            await GetUserReviews();
+        }
+        else
+        {
+            loading = false;
+            Reviews = new List<Review>
+            {
+                new Review
+                {
+                    StartDate = DateTime.Today.AddDays(-19),
+                    EndDate = DateTime.Today.AddDays(-12)
+                },
+                new Review
+                {
+                    StartDate = DateTime.Today.AddDays(-11),
+                    EndDate = DateTime.Today.AddDays(-4)
+                },
+                new Review
+                {
+                    StartDate = DateTime.Today.AddDays(-3),
+                    EndDate = DateTime.Today.AddDays(4)
+                }
+            };
+        }
+    }
+
+    protected async Task GetUserReviews()
+    {
+        Reviews = await apiClient.GetFromJsonAsync<List<Review>>("Review", serializeOptions) ?? new();
+        loading = false;
+    }
+
+    protected async Task NewReview()
+    {
+        Review templateReview = Reviews.FirstOrDefault()?.GetTemplate() ?? new Review { Records = new List<Record>() };
+        templateReview.StartDate = DateTime.Today.AddDays(-6);
+        templateReview.EndDate = DateTime.Today;
+        var response = await apiClient.PostAsJsonAsync<Review>("Review", templateReview, serializeOptions);
+        if (response.IsSuccessStatusCode)
+        {
+            var review = await response.Content.ReadFromJsonAsync<Review>(serializeOptions);
+            if (review == null) return;
+            NavigationManager.NavigateTo($"/Review/{review.Guid}");
+        }
+    }
+}

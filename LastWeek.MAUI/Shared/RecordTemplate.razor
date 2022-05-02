@@ -1,0 +1,26 @@
+﻿<div class="record-container">
+    <InputText Placeholder="Your question" @bind-Value="@Record.Question" class="record-question" disabled="@IsDisabled"/>
+    @switch (Record)
+        {
+            case ChoiceRecord record:
+                <ChoiceRecordModule Record="@record" />
+                break;
+            case RangeRecord record:
+                <RangeRecordModule Record="@record" />
+                break;
+            case SimpleRecord record:
+                <SimpleRecordModule Record="@record" />
+                break;
+            case TextRecord record:
+                <TextRecordModule Record="@record" />
+                break;
+        }
+</div>
+
+@code {
+    [Parameter]
+    public Record Record { get; set; } = new();
+    [CascadingParameter]
+    public ReviewStatus ReviewStatus { get; set; }
+    private bool IsDisabled => ReviewStatus == ReviewStatus.Validated || ReviewStatus == ReviewStatus.Archived;
+}

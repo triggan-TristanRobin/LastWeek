@@ -65,16 +65,16 @@ namespace LastWeek.Model
             return HashCode.Combine(Guid, Created, Updated, Deleted, Status, StartDate, EndDate, Records);
         }
 
-        public bool Update(Review updateDate)
+        public bool Update(Review updateData)
         {
-            if (updateDate.Guid != this.Guid)
+            if (updateData.Guid != this.Guid)
             {
                 return false;
             }
             foreach (var prop in typeof(Review).GetProperties())
             {
                 if (prop.Name == "User") continue;
-                var updatedProperty = prop.GetValue(updateDate);
+                var updatedProperty = prop.GetValue(updateData);
                 prop.SetValue(this, updatedProperty);
             }
             return true;

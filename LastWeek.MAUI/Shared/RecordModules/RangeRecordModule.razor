@@ -1,0 +1,98 @@
+﻿@namespace LastWeek.MAUI.Shared.RecordModules
+@using System.Text.Json
+@inject IJSRuntime JSRuntime
+
+<div class="slider-box" @onmousemove="Slide" @onmouseup="(() => ToggleSlide(false))">
+    <div>
+        <InputNumber Value="@startIndex" ValueExpression="@(() => startIndex)" disabled="@IsDisabled"
+                     ValueChanged="@((int value) => SetBoundaries(value, Record.Boundaries.End.Value))" />
+    </div>
+    <div class="slider">
+        <div class="slider-range" @ref=sliderRange>
+            <div @ref=slider class="slider-pointer @(sliderGrabbed ? "grabbed" : "") @(IsDisabled ? "disabled" : "")" style="left: @(sliderPos)px;"
+                    @onmousedown="(() => ToggleSlide())"
+                    @onmouseup="(() => ToggleSlide())"
+                    @onclick:stopPropagation="true"
+                    @ondrag:stopPropagation="true"
+                    @onclick:preventDefault="true"
+                    @onmousedown:preventDefault="true"
+                    @ondrag:preventDefault="true">
+                <div class="slider-value"><span>@Record.Selected</span></div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <InputNumber Value="@endIndex" ValueExpression="@(() => endIndex)" disabled="@IsDisabled"
+                     ValueChanged="@((int value) => SetBoundaries(Record.Boundaries.Start.Value, value))" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RangeRecord Record { get; set; } = new();
+    [CascadingParameter]
+    public ReviewStatus ReviewStatus { get; set; }
+    private bool IsDisabled => ReviewStatus == ReviewStatus.Validated || ReviewStatus == ReviewStatus.Archived;
+    private int startIndex;
+    private int endIndex;
+    private double sliderPos = 0;
+    private bool sliderGrabbed = false;
+    private ElementReference slider;
+    private ElementReference sliderRange;
+
+    private double sliderWidth = 0;
+    private double rangeMax = 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        startIndex = Record.Boundaries.Start.Value;
+        endIndex = Record.Boundaries.End.Value;
+
+        var sliderWidthJson = await JSRuntime.InvokeAsync<JsonDocument>("GetWidth", slider);
+        sliderWidth = sliderWidthJson.RootElement.GetDouble();
+        var rangeMaxJson = await JSRuntime.InvokeAsync<JsonDocument>("GetWidth", sliderRange);
+        rangeMax = rangeMaxJson.RootElement.GetDouble();
+
+        await ValidateInput(Record.Selected);
+    }
+
+    private async Task ValidateInput(double value)
+    {
+        var currentX = await GetSliderX();
+
+        Record.Selected = Math.Clamp(value, Record.Boundaries.Start.Value, Record.Boundaries.End.Value);
+        sliderPos = ((Record.Selected - Record.Boundaries.Start.Value) * (rangeMax - sliderWidth) / (Record.Boundaries.End.Value - Record.Boundaries.Start.Value));
+    }
+
+    private async Task SetBoundaries(int start, int end)
+    {
+        startIndex = start;
+        endIndex = end;
+        Record.Boundaries = new Range(start, end);
+        await ValidateInput(Record.Selected);
+    }
+
+    private async Task Slide(MouseEventArgs e)
+    {
+        if (IsDisabled || !sliderGrabbed) return;
+        var currentX = await GetSliderX();
+        var xMove = (int)(e.ClientX - currentX);
+
+        var unfilteredPos = Math.Clamp(sliderPos + xMove, sliderWidth / 2, rangeMax - sliderWidth);
+        Record.Selected = Math.Round(((unfilteredPos - sliderWidth / 2) * (Record.Boundaries.End.Value - Record.Boundaries.Start.Value) / (rangeMax - (sliderWidth * 3/2))) + Record.Boundaries.Start.Value, 1);
+        sliderPos = ((Record.Selected - Record.Boundaries.Start.Value) * (rangeMax - (sliderWidth * 3/2)) / (Record.Boundaries.End.Value - Record.Boundaries.Start.Value));
+    }
+
+    private async Task<double> GetSliderX()
+    {
+        var currentXJson = await JSRuntime.InvokeAsync<JsonDocument>("GetScreenXPosition", slider);
+        return currentXJson.RootElement.GetDouble();
+    }
+
+    private void ToggleSlide(bool? force = null)
+    {
+        if (IsDisabled) return;
+        sliderGrabbed = force ?? !sliderGrabbed;
+    }
+}

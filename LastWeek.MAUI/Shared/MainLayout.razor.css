@@ -1,0 +1,32 @@
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.top-row {
+    border-bottom: 1px solid #d6d5d5;
+}
+
+    .top-row ::deep a, .top-row .btn-link {
+        white-space: nowrap;
+        margin-left: 1.5rem;
+    }
+
+    .top-row a:first-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }

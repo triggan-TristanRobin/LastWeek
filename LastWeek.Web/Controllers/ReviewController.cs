@@ -47,7 +47,7 @@ namespace LastWeek.Web.Controllers
             review.Guid = review.Guid == new Guid() ? guid : review.Guid;
             var result = await contentManager.UpsertReviewAsync(review, userId);
 
-            if(result >= 0)
+            if (result >= 0)
             {
                 var serializeOptions = new JsonSerializerOptions();
                 serializeOptions.Converters.Add(new RecordConverter());
@@ -55,6 +55,15 @@ namespace LastWeek.Web.Controllers
                 return new JsonResult(savedReview, serializeOptions);
             }
             return StatusCode(500);
+        }
+
+        [HttpDelete(Name = "Reviews")]
+        public async Task<IActionResult> DeleteReviewAsync(Guid reviewId)
+        {
+            var review = await contentManager.GetReviewAsync(reviewId, userId);
+            var result = await contentManager.DeleteReviewAsync(review, userId);
+
+            return result ? Ok() : StatusCode(500);
         }
     }
 }

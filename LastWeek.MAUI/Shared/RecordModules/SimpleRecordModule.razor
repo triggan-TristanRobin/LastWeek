@@ -1,0 +1,45 @@
+﻿@namespace LastWeek.MAUI.Shared.RecordModules
+
+<div class="full-col">
+    @if (Record.Answers != null)
+    {
+        @foreach (var answer in Record.Answers.Select((a, i) => new { Answer = a, Index = i }))
+        {
+            <InputText placeholder="@Record.Question" Value="@answers[answer.Index].Value"
+                ValueExpression="@(() => answers[answer.Index].Value)" disabled="@IsDisabled"
+                ValueChanged="@((string value) => OnValueChanged(value, answer.Index))" class="answer-input" />
+        }
+    }
+    @if(!IsDisabled)
+    {
+        <button type="button" @onclick="AddAnswer">Add</button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public SimpleRecord Record { get; set; } = new() { Answers = new() };
+    [CascadingParameter]
+    public ReviewStatus ReviewStatus { get; set; }
+    private bool IsDisabled => ReviewStatus == ReviewStatus.Validated || ReviewStatus == ReviewStatus.Archived;
+    private List<FormResponse> answers = new();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Record.Answers == null) Record.Answers = new();
+        answers = Record.Answers.Select(s => new FormResponse { Value = s }).ToList();
+    }
+
+    protected void AddAnswer()
+    {
+        if (Record.Answers == null) Record.Answers = new();
+        Record.Answers.Add(string.Empty);
+        answers.Add(new FormResponse { Value = string.Empty });
+    }
+
+    private void OnValueChanged(string value, int index)
+    {
+        Record.Answers[index] = answers[index].Value = value;
+    }
+}

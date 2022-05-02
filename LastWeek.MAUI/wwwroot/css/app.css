@@ -1,0 +1,332 @@
+﻿@import url('https://use.fontawesome.com/releases/v5.12.0/css/all.css');
+
+:root {
+    --dark-blue: #002040;
+    --mate-blue: #004E9C;
+    --main-blue: #0080FF;
+    --light-blue: #33D7FF;
+    --accent-light-blue: #ABCDFF;
+    --gray-blue: #334E6B;
+    --red: #FF2819;
+    --light-green: #E7FF19;
+    --olive-green: #A1B309;
+    --white: #DDDDDD;
+    --gray: #646464;
+    --dark-gray: #353535;
+    --dark: #343a40;
+    --transparent: #00000000;
+}
+
+html, body {
+    font-family: Comfortaa, Akshar, sans-serif;
+    font-size: 1.2em;
+    background-color: var(--gray-blue);
+    color: var(--light-blue);
+    margin: 0;
+}
+
+a, .btn-link {
+    color: var(--light-green);
+    text-decoration: none;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+}
+
+h1, h2, h3, h4 {
+    color: var(--accent-light-blue);
+}
+
+.a:hover {
+    color: var(--white);
+}
+
+.btn-primary {
+    color: var(--light-blue);
+    background-color: var(--main-blue);
+    border-color: var(--main-blue);
+}
+
+.btn-no-border {
+    border-color: unset;
+    border: unset;
+}
+
+.btn-dark {
+    background-color: var(--dark-blue);
+}
+
+.content {
+    padding-top: 1.1em;
+}
+
+.small {
+    font-size: small;
+}
+
+.valid.modified:not([type=checkbox]) {
+    border: 0.05em solid var(--light-green);
+}
+
+.invalid {
+    border: 0.05em solid var(--red);
+}
+
+.validation-message {
+    color: var(--red);
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.sticky-top {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.collapse:not(.show) {
+    display: none;
+}
+
+form {
+    margin: 1.5em auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+    .form-group div {
+        width: 100%;
+    }
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+form input, form textarea, form select {
+    background-color: var(--dark-blue);
+    color: var(--light-blue);
+    border: none;
+    resize: none;
+    padding: 0.5em;
+    font-size: 1.1em;
+}
+
+.row div {
+    flex-shrink: 2;
+}
+
+form label {
+    padding: 0.5em;
+    color: var(--accent-light-blue);
+}
+
+form i {
+    padding-right: 0.5em;
+}
+
+form .row label, form .row input, form .row textarea {
+    max-width: max-content;
+    min-width: auto;
+}
+
+button, .btn {
+    background: 0 0;
+    outline: 0;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0.5em;
+    transition: all .3s ease-in-out;
+    background: var(--dark-blue);
+    border: 0.25em solid var(--dark-blue);
+    color: var(--light-blue);
+}
+
+    button:hover, .btn:hover {
+        color: var(--dark-blue);
+        background: var(--accent-light-blue);
+    }
+
+.scale-on-hover:hover {
+    transform: scale(1.05);
+}
+
+.grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.card {
+    max-width: 30%;
+    border: none;
+    cursor: pointer;
+}
+
+    .card:hover {
+        box-shadow: 0em 0em 0.5em var(--light-blue);
+    }
+
+        .card:hover img {
+            transform: scale(1.05);
+        }
+
+        .card-body {
+            padding: 0.25em;
+        }
+
+#blazor-error-ui {
+    width: auto !important;
+}
+
+select {
+}
+
+    select::-ms-expand {
+        display: none;
+    }
+
+    select + i.fa, select + i.fas {
+        float: right;
+        margin-top: -26px;
+        margin-right: 10px;
+        pointer-events: none;
+        padding-right: 5px;
+    }
+
+.review-line {
+    padding: 1em 0.5em;
+    transition: all .3s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap:wrap;
+}
+
+    .review-line:hover {
+        box-shadow: 0 0 20px var(--main-blue);
+        cursor: pointer;
+    }
+
+    .review-line:hover * {
+        cursor: pointer;
+    }
+
+.review-title {
+    min-width: 150px;
+    max-width: 100%;
+    flex-grow: 1;
+}
+
+.review-fromdate {
+    min-width: 100px;
+    max-width: 150px;
+    flex-grow: 1;
+}
+
+.review-todate {
+    min-width: 100px;
+    max-width: 150px;
+    flex-grow: 1;
+}
+
+.review-status {
+    max-width: 50px;
+    flex-grow: 1;
+}
+
+.review-list {
+    background-color: var(--dark-blue);
+}
+
+.start-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.full-col {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.d-flex {
+    display: flex;
+    align-items: flex-start;
+}
+
+#message-box {
+    z-index: 1100;
+    position: fixed;
+    top: -100px;
+    left: 0;
+    width: 100%;
+    height: 0;
+    text-align: center;
+}
+
+    #message-box.show {
+        top: 0;
+        transition: top 1s ease-in-out;
+    }
+
+    #message-box > * {
+        max-width: 25%;
+        margin: 0 auto;
+    }
+
+.message {
+    display: none;
+    background-color: var(--dark-blue);
+    border: 1px solid var(--light-blue);
+    box-shadow: 0 0 20px var(--gray-blue);
+    padding: 0.5em 1em;
+}
+
+    .message.show {
+        display: block;
+    }
+
+@media (max-width: 767.98px) {
+    .row {
+        flex-direction: column !important;
+    }
+
+    .card {
+        max-width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+}
