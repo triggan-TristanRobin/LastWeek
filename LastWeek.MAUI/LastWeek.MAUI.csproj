@@ -20,8 +20,8 @@
 		<ApplicationIdGuid>A9F13291-0B30-4E21-8E12-02DA5E85AF93</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.2</ApplicationDisplayVersion>
+		<ApplicationVersion>1000002</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">14.2</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
@@ -31,7 +31,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 	
-	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
 		<AndroidKeyStore>True</AndroidKeyStore>
 		<AndroidSigningKeyStore>reviewkly.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>revKey</AndroidSigningKeyAlias>

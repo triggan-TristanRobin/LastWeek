@@ -43,15 +43,23 @@
     {
         ShowErrors = false;
 
-        var signedInUser = await AuthService.Signin(signinInfos);
-        
-        if (signedInUser.Guid != new Guid())
+        try
         {
-            NavigationManager.NavigateTo("/");
+            var signedInUser = await AuthService.Signin(signinInfos);
+
+            if (signedInUser.Guid != new Guid())
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                Error = "There was an error during the signin process, please try again later.";
+                ShowErrors = true;
+            }
         }
-        else
+        catch (Exception e)
         {
-            Error = "There was an error during the signin process, please try again later.";
+            Error = $"Exception: {e.Message}";
             ShowErrors = true;
         }
     }
