@@ -13,10 +13,10 @@
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 
 		<!-- Display name -->
-		<ApplicationTitle>LastWeek.MAUI</ApplicationTitle>
+		<ApplicationTitle>Reviewkly</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.lastweek.maui</ApplicationId>
+		<ApplicationId>com.triggan.reviewkly.maui</ApplicationId>
 		<ApplicationIdGuid>A9F13291-0B30-4E21-8E12-02DA5E85AF93</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -30,7 +30,15 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
-
+	
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+		<AndroidKeyStore>True</AndroidKeyStore>
+		<AndroidSigningKeyStore>reviewkly.keystore</AndroidSigningKeyStore>
+		<AndroidSigningKeyAlias>revKey</AndroidSigningKeyAlias>
+		<AndroidSigningKeyPass></AndroidSigningKeyPass>
+		<AndroidSigningStorePass></AndroidSigningStorePass>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />
