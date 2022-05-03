@@ -139,7 +139,6 @@ form input, form textarea, form select {
     border: none;
     resize: none;
     padding: 0.5em;
-    font-size: 1.1em;
 }
 
 .row div {
@@ -163,7 +162,6 @@ form .row label, form .row input, form .row textarea {
 button, .btn {
     background: 0 0;
     outline: 0;
-    font-size: 1.2em;
     cursor: pointer;
     padding: 0.5em;
     transition: all .3s ease-in-out;
@@ -325,6 +323,12 @@ select {
 
     .card {
         max-width: 100%;
+    }
+}
+
+@media (max-width: 680px) {
+    html, body {
+        font-size: 1em;
     }
 }
 

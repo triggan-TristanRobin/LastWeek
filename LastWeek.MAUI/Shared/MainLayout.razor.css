@@ -30,3 +30,9 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+@media (max-width: 680px) {
+    main {
+        width: unset;
+    }
+}

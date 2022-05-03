@@ -68,12 +68,13 @@ div:hover > .delete-icon {
 .slider-box {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .slider {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    min-width: 50%;
 }
 
 .slider-range {
@@ -109,3 +110,34 @@ div:hover > .delete-icon {
         margin-top: 1em;
         font-size: 0.75em;
     }
+
+.slider-boundary {
+    max-width: 25%;
+}
+
+    .slider-boundary > input {
+        width: calc(100% - 1em);
+        text-align: center;
+    }
+
+@media (max-width: 680px) {
+    .slider-boundary {
+        max-width: 50%;
+    }
+
+    .slider-box {
+        justify-content: space-between;
+    }
+
+    .slider {
+        width: 100%;
+    }
+
+    .slider-box > .slider-boundary:first-child {
+        order: 2;
+    }
+
+    .slider-box > .slider-boundary:last-child {
+        order: 3;
+    }
+}

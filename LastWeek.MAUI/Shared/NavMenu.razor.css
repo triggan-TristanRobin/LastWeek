@@ -1,3 +1,19 @@
+.top-row {
+    height: 3.5em;
+}
+
+.navbar-brand {
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 2em;
+}
+
+.oi {
+    width: 2em;
+    vertical-align: text-top;
+    top: -2px;
+}
+
 .navbar {
     background-image: linear-gradient(90deg, var(--dark-blue) 25%, var(--mate-blue) 100%);
     width: 100%;
@@ -9,68 +25,69 @@
     padding: 0.25em 0;
 }
 
-.navbar-toggler {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.navbar-brand {
-    padding: 0 1em;
-}
-
-.oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
-}
-
 .nav-menu {
     -ms-flex-direction: column;
     flex-direction: column;
     flex-basis: 100%;
     margin: 0;
-    align-items: center;
+    align-items: flex-end;
 }
-
 
 .nav-item {
-    font-size: 0.9rem;
-    padding: 0 0.5em;
+    font-size: 0.83em;
 }
 
-    .nav-item ::deep a {
-        color: #d7d7d7;
-        border-radius: 4px;
+    .navbar-toggler, .nav-item ::deep a {
+        height: 2.5em;
         display: flex;
         align-items: center;
-        line-height: 2rem;
-        padding: 0 0.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        color: var(--light-blue);
+        border-bottom: solid 0.15em var(--transparent);
     }
 
-.nav-item ::deep a.active {
-    background-color: rgba(255,255,255,0.25);
-    color: white;
+        .nav-item ::deep a.active, .navbar-toggler:hover, .nav-item ::deep a:hover {
+            border-color: var(--main-blue);
+            color: var(--main-blue);
+        }
+
+.nav-link .fa, .nav-link .fa-solid, .nav-link .fa-regular {
+    margin-right: 0.5em;
+    margin-left: 0.5em;
 }
 
-.nav-item ::deep a:hover {
-    background-color: rgba(255,255,255,0.1);
-    color: white;
+.navbar-toggler .fa {
+    margin-right: 0;
+    margin-left: 0;
 }
 
-@media (min-width: 641px) {
-    .collapse {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
-    }
-
+@media (min-width: 1200px) {
     .navbar-toggler {
         display: none;
     }
 
     .nav-menu {
-        display: flex;
         -ms-flex-direction: row !important;
         flex-direction: row !important;
         flex-basis: auto !important;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: flex !important;
+    }
+}
+
+
+@media (max-width: 300px) {
+    .nav-menu {
+        align-items: flex-start;
+    }
+
+    .navbar-brand {
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-left: 0;
     }
 }
